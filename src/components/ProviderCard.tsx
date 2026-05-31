@@ -1,7 +1,9 @@
 import { Star, MapPin, BadgeCheck } from "lucide-react";
 import { motion } from "framer-motion";
+import { Link } from "@tanstack/react-router";
 
 interface Props {
+  id?: string;
   name: string;
   type: string;
   rating: number;
@@ -13,10 +15,10 @@ interface Props {
 }
 
 export function ProviderCard(p: Props) {
-  return (
+  const card = (
     <motion.div
       whileTap={{ scale: 0.97 }}
-      className="min-w-[240px] bg-card rounded-3xl shadow-card overflow-hidden border border-border/40"
+      className="min-w-[240px] bg-card rounded-3xl shadow-card overflow-hidden border border-border/40 cursor-pointer"
     >
       <div className="relative h-32">
         <img src={p.image} alt={p.name} loading="lazy" className="w-full h-full object-cover" />
@@ -50,4 +52,6 @@ export function ProviderCard(p: Props) {
       </div>
     </motion.div>
   );
+  if (p.id) return <Link to="/provider/$id" params={{ id: p.id }}>{card}</Link>;
+  return card;
 }

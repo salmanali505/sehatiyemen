@@ -9,38 +9,168 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SearchRouteImport } from './routes/search'
+import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as NotificationsRouteImport } from './routes/notifications'
+import { Route as BookingsRouteImport } from './routes/bookings'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ProviderIdRouteImport } from './routes/provider.$id'
+import { Route as BookProviderIdRouteImport } from './routes/book.$providerId'
 
+const SearchRoute = SearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NotificationsRoute = NotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BookingsRoute = BookingsRouteImport.update({
+  id: '/bookings',
+  path: '/bookings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProviderIdRoute = ProviderIdRouteImport.update({
+  id: '/provider/$id',
+  path: '/provider/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BookProviderIdRoute = BookProviderIdRouteImport.update({
+  id: '/book/$providerId',
+  path: '/book/$providerId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/bookings': typeof BookingsRoute
+  '/notifications': typeof NotificationsRoute
+  '/profile': typeof ProfileRoute
+  '/search': typeof SearchRoute
+  '/book/$providerId': typeof BookProviderIdRoute
+  '/provider/$id': typeof ProviderIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/bookings': typeof BookingsRoute
+  '/notifications': typeof NotificationsRoute
+  '/profile': typeof ProfileRoute
+  '/search': typeof SearchRoute
+  '/book/$providerId': typeof BookProviderIdRoute
+  '/provider/$id': typeof ProviderIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/bookings': typeof BookingsRoute
+  '/notifications': typeof NotificationsRoute
+  '/profile': typeof ProfileRoute
+  '/search': typeof SearchRoute
+  '/book/$providerId': typeof BookProviderIdRoute
+  '/provider/$id': typeof ProviderIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/bookings'
+    | '/notifications'
+    | '/profile'
+    | '/search'
+    | '/book/$providerId'
+    | '/provider/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/auth'
+    | '/bookings'
+    | '/notifications'
+    | '/profile'
+    | '/search'
+    | '/book/$providerId'
+    | '/provider/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/auth'
+    | '/bookings'
+    | '/notifications'
+    | '/profile'
+    | '/search'
+    | '/book/$providerId'
+    | '/provider/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthRoute: typeof AuthRoute
+  BookingsRoute: typeof BookingsRoute
+  NotificationsRoute: typeof NotificationsRoute
+  ProfileRoute: typeof ProfileRoute
+  SearchRoute: typeof SearchRoute
+  BookProviderIdRoute: typeof BookProviderIdRoute
+  ProviderIdRoute: typeof ProviderIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/notifications': {
+      id: '/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof NotificationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bookings': {
+      id: '/bookings'
+      path: '/bookings'
+      fullPath: '/bookings'
+      preLoaderRoute: typeof BookingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +178,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/provider/$id': {
+      id: '/provider/$id'
+      path: '/provider/$id'
+      fullPath: '/provider/$id'
+      preLoaderRoute: typeof ProviderIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/book/$providerId': {
+      id: '/book/$providerId'
+      path: '/book/$providerId'
+      fullPath: '/book/$providerId'
+      preLoaderRoute: typeof BookProviderIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthRoute: AuthRoute,
+  BookingsRoute: BookingsRoute,
+  NotificationsRoute: NotificationsRoute,
+  ProfileRoute: ProfileRoute,
+  SearchRoute: SearchRoute,
+  BookProviderIdRoute: BookProviderIdRoute,
+  ProviderIdRoute: ProviderIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
