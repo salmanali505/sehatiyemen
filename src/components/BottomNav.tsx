@@ -1,17 +1,18 @@
 import { Home, Search, Calendar, Bell, User } from "lucide-react";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { Link, useLocation } from "@tanstack/react-router";
 
 const items = [
-  { id: "home", label: "الرئيسية", icon: Home },
-  { id: "search", label: "البحث", icon: Search },
-  { id: "bookings", label: "الحجوزات", icon: Calendar },
-  { id: "notifications", label: "الإشعارات", icon: Bell },
-  { id: "profile", label: "حسابي", icon: User },
-];
+  { id: "home", label: "الرئيسية", icon: Home, to: "/" },
+  { id: "search", label: "البحث", icon: Search, to: "/search" },
+  { id: "bookings", label: "الحجوزات", icon: Calendar, to: "/bookings" },
+  { id: "notifications", label: "الإشعارات", icon: Bell, to: "/notifications" },
+  { id: "profile", label: "حسابي", icon: User, to: "/profile" },
+] as const;
 
 export function BottomNav() {
-  const [active, setActive] = useState("home");
+  const loc = useLocation();
+  const active = items.find((i) => i.to === loc.pathname)?.id ?? "home";
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 px-4 pb-4 pt-2 pointer-events-none">
@@ -20,10 +21,10 @@ export function BottomNav() {
           const Icon = item.icon;
           const isActive = active === item.id;
           return (
-            <button
+            <Link
               key={item.id}
-              onClick={() => setActive(item.id)}
-              className="relative flex-1 flex flex-col items-center gap-1 py-2 px-1 rounded-2xl transition-colors"
+              to={item.to}
+              className="relative flex-1 flex flex-col items-center gap-1 py-2 px-1 rounded-2xl"
             >
               {isActive && (
                 <motion.div
@@ -40,7 +41,7 @@ export function BottomNav() {
               <span className={`relative z-10 text-[10px] font-bold ${isActive ? "text-primary-foreground" : "text-muted-foreground"}`}>
                 {item.label}
               </span>
-            </button>
+            </Link>
           );
         })}
       </nav>
