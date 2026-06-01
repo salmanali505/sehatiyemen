@@ -10,8 +10,11 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SearchRouteImport } from './routes/search'
+import { Route as RecordsRouteImport } from './routes/records'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as NotificationsRouteImport } from './routes/notifications'
+import { Route as FavoritesRouteImport } from './routes/favorites'
+import { Route as FamilyRouteImport } from './routes/family'
 import { Route as BookingsRouteImport } from './routes/bookings'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
@@ -23,6 +26,11 @@ const SearchRoute = SearchRouteImport.update({
   path: '/search',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RecordsRoute = RecordsRouteImport.update({
+  id: '/records',
+  path: '/records',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -31,6 +39,16 @@ const ProfileRoute = ProfileRouteImport.update({
 const NotificationsRoute = NotificationsRouteImport.update({
   id: '/notifications',
   path: '/notifications',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FavoritesRoute = FavoritesRouteImport.update({
+  id: '/favorites',
+  path: '/favorites',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FamilyRoute = FamilyRouteImport.update({
+  id: '/family',
+  path: '/family',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BookingsRoute = BookingsRouteImport.update({
@@ -63,8 +81,11 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/bookings': typeof BookingsRoute
+  '/family': typeof FamilyRoute
+  '/favorites': typeof FavoritesRoute
   '/notifications': typeof NotificationsRoute
   '/profile': typeof ProfileRoute
+  '/records': typeof RecordsRoute
   '/search': typeof SearchRoute
   '/book/$providerId': typeof BookProviderIdRoute
   '/provider/$id': typeof ProviderIdRoute
@@ -73,8 +94,11 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/bookings': typeof BookingsRoute
+  '/family': typeof FamilyRoute
+  '/favorites': typeof FavoritesRoute
   '/notifications': typeof NotificationsRoute
   '/profile': typeof ProfileRoute
+  '/records': typeof RecordsRoute
   '/search': typeof SearchRoute
   '/book/$providerId': typeof BookProviderIdRoute
   '/provider/$id': typeof ProviderIdRoute
@@ -84,8 +108,11 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/bookings': typeof BookingsRoute
+  '/family': typeof FamilyRoute
+  '/favorites': typeof FavoritesRoute
   '/notifications': typeof NotificationsRoute
   '/profile': typeof ProfileRoute
+  '/records': typeof RecordsRoute
   '/search': typeof SearchRoute
   '/book/$providerId': typeof BookProviderIdRoute
   '/provider/$id': typeof ProviderIdRoute
@@ -96,8 +123,11 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/bookings'
+    | '/family'
+    | '/favorites'
     | '/notifications'
     | '/profile'
+    | '/records'
     | '/search'
     | '/book/$providerId'
     | '/provider/$id'
@@ -106,8 +136,11 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/bookings'
+    | '/family'
+    | '/favorites'
     | '/notifications'
     | '/profile'
+    | '/records'
     | '/search'
     | '/book/$providerId'
     | '/provider/$id'
@@ -116,8 +149,11 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/bookings'
+    | '/family'
+    | '/favorites'
     | '/notifications'
     | '/profile'
+    | '/records'
     | '/search'
     | '/book/$providerId'
     | '/provider/$id'
@@ -127,8 +163,11 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
   BookingsRoute: typeof BookingsRoute
+  FamilyRoute: typeof FamilyRoute
+  FavoritesRoute: typeof FavoritesRoute
   NotificationsRoute: typeof NotificationsRoute
   ProfileRoute: typeof ProfileRoute
+  RecordsRoute: typeof RecordsRoute
   SearchRoute: typeof SearchRoute
   BookProviderIdRoute: typeof BookProviderIdRoute
   ProviderIdRoute: typeof ProviderIdRoute
@@ -143,6 +182,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SearchRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/records': {
+      id: '/records'
+      path: '/records'
+      fullPath: '/records'
+      preLoaderRoute: typeof RecordsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/profile': {
       id: '/profile'
       path: '/profile'
@@ -155,6 +201,20 @@ declare module '@tanstack/react-router' {
       path: '/notifications'
       fullPath: '/notifications'
       preLoaderRoute: typeof NotificationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/favorites': {
+      id: '/favorites'
+      path: '/favorites'
+      fullPath: '/favorites'
+      preLoaderRoute: typeof FavoritesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/family': {
+      id: '/family'
+      path: '/family'
+      fullPath: '/family'
+      preLoaderRoute: typeof FamilyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/bookings': {
@@ -199,8 +259,11 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
   BookingsRoute: BookingsRoute,
+  FamilyRoute: FamilyRoute,
+  FavoritesRoute: FavoritesRoute,
   NotificationsRoute: NotificationsRoute,
   ProfileRoute: ProfileRoute,
+  RecordsRoute: RecordsRoute,
   SearchRoute: SearchRoute,
   BookProviderIdRoute: BookProviderIdRoute,
   ProviderIdRoute: ProviderIdRoute,
@@ -208,3 +271,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
