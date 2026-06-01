@@ -18,9 +18,9 @@ function ProfilePage() {
 
   const items = [
     { icon: Calendar, label: "حجوزاتي", to: "/bookings" as const },
-    { icon: Heart, label: "المفضلة", to: "/" as const },
-    { icon: Users, label: "أفراد العائلة", to: "/" as const },
-    { icon: FileText, label: "السجل الصحي", to: "/" as const },
+    { icon: Heart, label: "المفضلة", to: "/favorites" as const },
+    { icon: Users, label: "أفراد العائلة", to: "/family" as const },
+    { icon: FileText, label: "السجل الصحي", to: "/records" as const },
     { icon: Settings, label: "الإعدادات", to: "/" as const },
   ];
 
