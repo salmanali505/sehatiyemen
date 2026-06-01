@@ -2,8 +2,11 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ArrowRight, MapPin, Star, BadgeCheck, Phone, MessageCircle, Heart, Share2, Clock, ChevronLeft } from "lucide-react";
 import { motion } from "framer-motion";
 import { getProvider, doctors as allDoctors } from "@/lib/mockData";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { ReviewsSection } from "@/components/ReviewsSection";
+import { useAuth } from "@/lib/auth-context";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/provider/$id")({
   head: ({ params }) => {
@@ -16,9 +19,31 @@ export const Route = createFileRoute("/provider/$id")({
 function ProviderPage() {
   const { id } = Route.useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const p = getProvider(id);
-  const [tab, setTab] = useState<"about" | "services" | "doctors" | "gallery">("about");
-  const [following, setFollowing] = useState(false);
+  const [tab, setTab] = useState<"about" | "services" | "doctors" | "gallery" | "reviews">("about");
+  const [favId, setFavId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!user || !p) return;
+    supabase.from("favorites").select("id").eq("user_id", user.id).eq("kind", "provider").eq("target_id", p.id).maybeSingle()
+      .then(({ data }) => setFavId(data?.id ?? null));
+  }, [user, p?.id]);
+
+  async function toggleFav() {
+    if (!user) { toast.error("سجّل الدخول لإضافة المفضلة"); return; }
+    if (!p) return;
+    if (favId) {
+      await supabase.from("favorites").delete().eq("id", favId);
+      setFavId(null); toast.success("تم الحذف من المفضلة");
+    } else {
+      const { data } = await supabase.from("favorites").insert({
+        user_id: user.id, kind: "provider", target_id: p.id, target_name: p.name,
+        target_meta: { image: p.image, city: p.city, typeLabel: p.typeLabel },
+      }).select("id").single();
+      setFavId(data?.id ?? null); toast.success("تمت الإضافة للمفضلة");
+    }
+  }
 
   if (!p) return <div className="p-6 text-center">المزود غير موجود</div>;
   const providerDoctors = allDoctors.filter((d) => p.doctors.includes(d.id));
