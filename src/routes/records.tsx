@@ -11,7 +11,6 @@ export const Route = createFileRoute("/records")({
   component: RecordsPage,
 });
 
-type Record = { id: string; title: string; record_type: string; description: string | null; provider_name: string | null; doctor_name: string | null; record_date: string };
 const types: Record<string, { label: string; icon: any; color: string }> = {
   prescription: { label: "وصفة طبية", icon: Pill, color: "bg-emerald-500/15 text-emerald-600" },
   lab_result: { label: "نتيجة مختبر", icon: FlaskConical, color: "bg-blue-500/15 text-blue-600" },
