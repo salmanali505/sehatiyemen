@@ -160,6 +160,7 @@ function ProviderPage() {
               ))}
             </div>
           )}
+          {tab === "reviews" && <ReviewsSection providerId={p.id} />}
         </div>
       </div>
 
