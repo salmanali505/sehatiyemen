@@ -151,6 +151,51 @@ export type Database = {
         }
         Relationships: []
       }
+      health_records: {
+        Row: {
+          attachments: Json | null
+          created_at: string
+          description: string | null
+          doctor_name: string | null
+          family_member_id: string | null
+          id: string
+          provider_name: string | null
+          record_date: string
+          record_type: Database["public"]["Enums"]["record_type"]
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          attachments?: Json | null
+          created_at?: string
+          description?: string | null
+          doctor_name?: string | null
+          family_member_id?: string | null
+          id?: string
+          provider_name?: string | null
+          record_date?: string
+          record_type?: Database["public"]["Enums"]["record_type"]
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          attachments?: Json | null
+          created_at?: string
+          description?: string | null
+          doctor_name?: string | null
+          family_member_id?: string | null
+          id?: string
+          provider_name?: string | null
+          record_date?: string
+          record_type?: Database["public"]["Enums"]["record_type"]
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           age: number | null
@@ -237,6 +282,13 @@ export type Database = {
         | "other"
       favorite_kind: "provider" | "doctor"
       gender_type: "male" | "female"
+      record_type:
+        | "prescription"
+        | "lab_result"
+        | "radiology"
+        | "diagnosis"
+        | "vaccination"
+        | "other"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -381,6 +433,14 @@ export const Constants = {
       ],
       favorite_kind: ["provider", "doctor"],
       gender_type: ["male", "female"],
+      record_type: [
+        "prescription",
+        "lab_result",
+        "radiology",
+        "diagnosis",
+        "vaccination",
+        "other",
+      ],
     },
   },
 } as const
