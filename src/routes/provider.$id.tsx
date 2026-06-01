@@ -58,9 +58,9 @@ function ProviderPage() {
             <ArrowRight size={18} />
           </Link>
           <div className="flex gap-2">
-            <button onClick={() => { setFollowing(!following); toast.success(following ? "تم إلغاء المتابعة" : "تمت المتابعة"); }}
+            <button onClick={toggleFav}
               className="w-10 h-10 rounded-full glass flex items-center justify-center">
-              <Heart size={18} className={following ? "fill-destructive text-destructive" : ""} />
+              <Heart size={18} className={favId ? "fill-destructive text-destructive" : ""} />
             </button>
             <button className="w-10 h-10 rounded-full glass flex items-center justify-center">
               <Share2 size={18} />
@@ -102,10 +102,10 @@ function ProviderPage() {
           </div>
         </div>
 
-        <div className="flex gap-1 mt-5 bg-muted rounded-2xl p-1">
-          {[["about", "نبذة"], ["services", "خدمات"], ["doctors", "أطباء"], ["gallery", "صور"]].map(([k, l]) => (
+        <div className="flex gap-1 mt-5 bg-muted rounded-2xl p-1 overflow-x-auto scrollbar-hide">
+          {[["about", "نبذة"], ["services", "خدمات"], ["doctors", "أطباء"], ["gallery", "صور"], ["reviews", "تقييمات"]].map(([k, l]) => (
             <button key={k} onClick={() => setTab(k as typeof tab)}
-              className={`flex-1 py-2 rounded-xl text-xs font-bold ${tab === k ? "bg-card text-primary shadow-soft" : "text-muted-foreground"}`}>
+              className={`flex-1 min-w-[70px] py-2 rounded-xl text-xs font-bold ${tab === k ? "bg-card text-primary shadow-soft" : "text-muted-foreground"}`}>
               {l}
             </button>
           ))}
