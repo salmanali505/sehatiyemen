@@ -1,12 +1,12 @@
-import { Home, Search, Calendar, Bell, User } from "lucide-react";
+import { Home, Search, Sparkles, Calendar, User } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link, useLocation } from "@tanstack/react-router";
 
 const items = [
   { id: "home", label: "الرئيسية", icon: Home, to: "/" },
   { id: "search", label: "البحث", icon: Search, to: "/search" },
+  { id: "assistant", label: "المساعد", icon: Sparkles, to: "/assistant" },
   { id: "bookings", label: "الحجوزات", icon: Calendar, to: "/bookings" },
-  { id: "notifications", label: "الإشعارات", icon: Bell, to: "/notifications" },
   { id: "profile", label: "حسابي", icon: User, to: "/profile" },
 ] as const;
 
