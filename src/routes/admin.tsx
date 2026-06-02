@@ -75,7 +75,8 @@ function AdminDashboard() {
   }
 
   async function toggleField(id: string, field: "verified" | "featured", value: boolean) {
-    const { error } = await supabase.from("providers").update({ [field]: value }).eq("id", id);
+    const patch = field === "verified" ? { verified: value } : { featured: value };
+    const { error } = await supabase.from("providers").update(patch).eq("id", id);
     if (error) return toast.error(error.message);
     setProviders((p) => p.map((x) => (x.id === id ? { ...x, [field]: value } : x)));
     toast.success("تم التحديث");
