@@ -1,7 +1,8 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect } from "react";
-import { LogOut, User as UserIcon, Heart, Calendar, Users, FileText, Settings, ChevronLeft, ArrowRight } from "lucide-react";
+import { LogOut, User as UserIcon, Heart, Calendar, Users, FileText, Settings, ChevronLeft, ArrowRight, Shield, Building2, Sparkles } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
+import { useRoles } from "@/lib/useRoles";
 import { BottomNav } from "@/components/BottomNav";
 import { SehatiLogo } from "@/components/SehatiLogo";
 import { toast } from "sonner";
