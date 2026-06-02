@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_conversations: {
+        Row: {
+          created_at: string
+          id: string
+          messages: Json
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          messages?: Json
+          title?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          messages?: Json
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       bookings: {
         Row: {
           appointment_date: string
@@ -151,6 +178,48 @@ export type Database = {
         }
         Relationships: []
       }
+      featured_content: {
+        Row: {
+          active: boolean
+          created_at: string
+          ends_at: string | null
+          id: string
+          image_url: string | null
+          link_url: string | null
+          rank: number
+          starts_at: string | null
+          subtitle: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          ends_at?: string | null
+          id?: string
+          image_url?: string | null
+          link_url?: string | null
+          rank?: number
+          starts_at?: string | null
+          subtitle?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          ends_at?: string | null
+          id?: string
+          image_url?: string | null
+          link_url?: string | null
+          rank?: number
+          starts_at?: string | null
+          subtitle?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       health_records: {
         Row: {
           attachments: Json | null
@@ -232,6 +301,66 @@ export type Database = {
         }
         Relationships: []
       }
+      providers: {
+        Row: {
+          address: string | null
+          city: string | null
+          created_at: string
+          description: string | null
+          featured: boolean
+          featured_rank: number | null
+          id: string
+          image_url: string | null
+          name: string
+          owner_user_id: string | null
+          phone: string | null
+          rating: number | null
+          reviews_count: number | null
+          status: Database["public"]["Enums"]["provider_status"]
+          type: Database["public"]["Enums"]["provider_type"]
+          updated_at: string
+          verified: boolean
+        }
+        Insert: {
+          address?: string | null
+          city?: string | null
+          created_at?: string
+          description?: string | null
+          featured?: boolean
+          featured_rank?: number | null
+          id?: string
+          image_url?: string | null
+          name: string
+          owner_user_id?: string | null
+          phone?: string | null
+          rating?: number | null
+          reviews_count?: number | null
+          status?: Database["public"]["Enums"]["provider_status"]
+          type: Database["public"]["Enums"]["provider_type"]
+          updated_at?: string
+          verified?: boolean
+        }
+        Update: {
+          address?: string | null
+          city?: string | null
+          created_at?: string
+          description?: string | null
+          featured?: boolean
+          featured_rank?: number | null
+          id?: string
+          image_url?: string | null
+          name?: string
+          owner_user_id?: string | null
+          phone?: string | null
+          rating?: number | null
+          reviews_count?: number | null
+          status?: Database["public"]["Enums"]["provider_status"]
+          type?: Database["public"]["Enums"]["provider_type"]
+          updated_at?: string
+          verified?: boolean
+        }
+        Relationships: []
+      }
       reviews: {
         Row: {
           comment: string | null
@@ -259,14 +388,42 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
+      app_role: "admin" | "provider" | "patient"
       booking_status:
         | "pending"
         | "confirmed"
@@ -282,6 +439,8 @@ export type Database = {
         | "other"
       favorite_kind: "provider" | "doctor"
       gender_type: "male" | "female"
+      provider_status: "active" | "pending" | "suspended"
+      provider_type: "hospital" | "clinic" | "lab" | "radiology" | "pharmacy"
       record_type:
         | "prescription"
         | "lab_result"
@@ -416,6 +575,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      app_role: ["admin", "provider", "patient"],
       booking_status: [
         "pending",
         "confirmed",
@@ -433,6 +593,8 @@ export const Constants = {
       ],
       favorite_kind: ["provider", "doctor"],
       gender_type: ["male", "female"],
+      provider_status: ["active", "pending", "suspended"],
+      provider_type: ["hospital", "clinic", "lab", "radiology", "pharmacy"],
       record_type: [
         "prescription",
         "lab_result",
