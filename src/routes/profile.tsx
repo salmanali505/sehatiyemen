@@ -14,10 +14,12 @@ export const Route = createFileRoute("/profile")({
 
 function ProfilePage() {
   const { user, loading, signOut } = useAuth();
+  const { isAdmin, isProvider } = useRoles();
   const navigate = useNavigate();
   useEffect(() => { if (!loading && !user) navigate({ to: "/auth" }); }, [user, loading, navigate]);
 
   const items = [
+    { icon: Sparkles, label: "المساعد الصحي الذكي", to: "/assistant" as const, accent: true },
     { icon: Calendar, label: "حجوزاتي", to: "/bookings" as const },
     { icon: Heart, label: "المفضلة", to: "/favorites" as const },
     { icon: Users, label: "أفراد العائلة", to: "/family" as const },
