@@ -15,6 +15,7 @@ import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as FavoritesRouteImport } from './routes/favorites'
 import { Route as FamilyRouteImport } from './routes/family'
+import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as BookingsRouteImport } from './routes/bookings'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AssistantRouteImport } from './routes/assistant'
@@ -51,6 +52,11 @@ const FavoritesRoute = FavoritesRouteImport.update({
 const FamilyRoute = FamilyRouteImport.update({
   id: '/family',
   path: '/family',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BookingsRoute = BookingsRouteImport.update({
@@ -95,6 +101,7 @@ export interface FileRoutesByFullPath {
   '/assistant': typeof AssistantRoute
   '/auth': typeof AuthRoute
   '/bookings': typeof BookingsRoute
+  '/dashboard': typeof DashboardRoute
   '/family': typeof FamilyRoute
   '/favorites': typeof FavoritesRoute
   '/notifications': typeof NotificationsRoute
@@ -110,6 +117,7 @@ export interface FileRoutesByTo {
   '/assistant': typeof AssistantRoute
   '/auth': typeof AuthRoute
   '/bookings': typeof BookingsRoute
+  '/dashboard': typeof DashboardRoute
   '/family': typeof FamilyRoute
   '/favorites': typeof FavoritesRoute
   '/notifications': typeof NotificationsRoute
@@ -126,6 +134,7 @@ export interface FileRoutesById {
   '/assistant': typeof AssistantRoute
   '/auth': typeof AuthRoute
   '/bookings': typeof BookingsRoute
+  '/dashboard': typeof DashboardRoute
   '/family': typeof FamilyRoute
   '/favorites': typeof FavoritesRoute
   '/notifications': typeof NotificationsRoute
@@ -143,6 +152,7 @@ export interface FileRouteTypes {
     | '/assistant'
     | '/auth'
     | '/bookings'
+    | '/dashboard'
     | '/family'
     | '/favorites'
     | '/notifications'
@@ -158,6 +168,7 @@ export interface FileRouteTypes {
     | '/assistant'
     | '/auth'
     | '/bookings'
+    | '/dashboard'
     | '/family'
     | '/favorites'
     | '/notifications'
@@ -173,6 +184,7 @@ export interface FileRouteTypes {
     | '/assistant'
     | '/auth'
     | '/bookings'
+    | '/dashboard'
     | '/family'
     | '/favorites'
     | '/notifications'
@@ -189,6 +201,7 @@ export interface RootRouteChildren {
   AssistantRoute: typeof AssistantRoute
   AuthRoute: typeof AuthRoute
   BookingsRoute: typeof BookingsRoute
+  DashboardRoute: typeof DashboardRoute
   FamilyRoute: typeof FamilyRoute
   FavoritesRoute: typeof FavoritesRoute
   NotificationsRoute: typeof NotificationsRoute
@@ -241,6 +254,13 @@ declare module '@tanstack/react-router' {
       path: '/family'
       fullPath: '/family'
       preLoaderRoute: typeof FamilyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/bookings': {
@@ -301,6 +321,7 @@ const rootRouteChildren: RootRouteChildren = {
   AssistantRoute: AssistantRoute,
   AuthRoute: AuthRoute,
   BookingsRoute: BookingsRoute,
+  DashboardRoute: DashboardRoute,
   FamilyRoute: FamilyRoute,
   FavoritesRoute: FavoritesRoute,
   NotificationsRoute: NotificationsRoute,
@@ -313,3 +334,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
