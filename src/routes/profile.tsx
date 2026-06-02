@@ -52,13 +52,28 @@ function ProfilePage() {
           const Icon = it.icon;
           return (
             <Link key={it.label} to={it.to}
-              className="bg-card rounded-2xl p-4 shadow-card flex items-center gap-3 border border-border/40">
-              <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center"><Icon size={18} /></div>
+              className={`bg-card rounded-2xl p-4 shadow-card flex items-center gap-3 border ${it.accent ? "border-primary/40 ring-1 ring-primary/20" : "border-border/40"}`}>
+              <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${it.accent ? "gradient-primary text-primary-foreground shadow-glow" : "bg-primary/10 text-primary"}`}><Icon size={18} /></div>
               <span className="flex-1 font-bold text-sm">{it.label}</span>
               <ChevronLeft className="text-muted-foreground" size={18} />
             </Link>
           );
         })}
+
+        {isProvider && (
+          <Link to="/dashboard" className="bg-card rounded-2xl p-4 shadow-card flex items-center gap-3 border border-accent/40">
+            <div className="w-10 h-10 rounded-xl bg-accent/15 text-accent flex items-center justify-center"><Building2 size={18} /></div>
+            <span className="flex-1 font-bold text-sm">لوحة مزوّد الخدمة</span>
+            <ChevronLeft className="text-muted-foreground" size={18} />
+          </Link>
+        )}
+        {isAdmin && (
+          <Link to="/admin" className="bg-card rounded-2xl p-4 shadow-card flex items-center gap-3 border border-primary/40">
+            <div className="w-10 h-10 rounded-xl gradient-primary text-primary-foreground flex items-center justify-center shadow-glow"><Shield size={18} /></div>
+            <span className="flex-1 font-bold text-sm">لوحة المشرف العام</span>
+            <ChevronLeft className="text-muted-foreground" size={18} />
+          </Link>
+        )}
 
         <button onClick={async () => { await signOut(); toast.success("تم تسجيل الخروج"); navigate({ to: "/" }); }}
           className="w-full mt-4 bg-destructive/10 text-destructive rounded-2xl p-4 flex items-center justify-center gap-2 font-bold text-sm">
