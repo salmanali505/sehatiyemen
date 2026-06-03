@@ -22,7 +22,14 @@ import { Route as AssistantRouteImport } from './routes/assistant'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProviderIdRouteImport } from './routes/provider.$id'
+import { Route as MasterTokenRouteImport } from './routes/master.$token'
+import { Route as DashboardReceptionRouteImport } from './routes/dashboard.reception'
 import { Route as BookProviderIdRouteImport } from './routes/book.$providerId'
+import { Route as AdminTokensRouteImport } from './routes/admin.tokens'
+import { Route as AdminHomeRouteImport } from './routes/admin.home'
+import { Route as AdminCitiesRouteImport } from './routes/admin.cities'
+import { Route as PortalReceptionTokenRouteImport } from './routes/portal.reception.$token'
+import { Route as PortalProviderTokenRouteImport } from './routes/portal.provider.$token'
 
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
@@ -89,60 +96,116 @@ const ProviderIdRoute = ProviderIdRouteImport.update({
   path: '/provider/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MasterTokenRoute = MasterTokenRouteImport.update({
+  id: '/master/$token',
+  path: '/master/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardReceptionRoute = DashboardReceptionRouteImport.update({
+  id: '/reception',
+  path: '/reception',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const BookProviderIdRoute = BookProviderIdRouteImport.update({
   id: '/book/$providerId',
   path: '/book/$providerId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminTokensRoute = AdminTokensRouteImport.update({
+  id: '/tokens',
+  path: '/tokens',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminHomeRoute = AdminHomeRouteImport.update({
+  id: '/home',
+  path: '/home',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminCitiesRoute = AdminCitiesRouteImport.update({
+  id: '/cities',
+  path: '/cities',
+  getParentRoute: () => AdminRoute,
+} as any)
+const PortalReceptionTokenRoute = PortalReceptionTokenRouteImport.update({
+  id: '/portal/reception/$token',
+  path: '/portal/reception/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PortalProviderTokenRoute = PortalProviderTokenRouteImport.update({
+  id: '/portal/provider/$token',
+  path: '/portal/provider/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/assistant': typeof AssistantRoute
   '/auth': typeof AuthRoute
   '/bookings': typeof BookingsRoute
-  '/dashboard': typeof DashboardRoute
+  '/dashboard': typeof DashboardRouteWithChildren
   '/family': typeof FamilyRoute
   '/favorites': typeof FavoritesRoute
   '/notifications': typeof NotificationsRoute
   '/profile': typeof ProfileRoute
   '/records': typeof RecordsRoute
   '/search': typeof SearchRoute
+  '/admin/cities': typeof AdminCitiesRoute
+  '/admin/home': typeof AdminHomeRoute
+  '/admin/tokens': typeof AdminTokensRoute
   '/book/$providerId': typeof BookProviderIdRoute
+  '/dashboard/reception': typeof DashboardReceptionRoute
+  '/master/$token': typeof MasterTokenRoute
   '/provider/$id': typeof ProviderIdRoute
+  '/portal/provider/$token': typeof PortalProviderTokenRoute
+  '/portal/reception/$token': typeof PortalReceptionTokenRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/assistant': typeof AssistantRoute
   '/auth': typeof AuthRoute
   '/bookings': typeof BookingsRoute
-  '/dashboard': typeof DashboardRoute
+  '/dashboard': typeof DashboardRouteWithChildren
   '/family': typeof FamilyRoute
   '/favorites': typeof FavoritesRoute
   '/notifications': typeof NotificationsRoute
   '/profile': typeof ProfileRoute
   '/records': typeof RecordsRoute
   '/search': typeof SearchRoute
+  '/admin/cities': typeof AdminCitiesRoute
+  '/admin/home': typeof AdminHomeRoute
+  '/admin/tokens': typeof AdminTokensRoute
   '/book/$providerId': typeof BookProviderIdRoute
+  '/dashboard/reception': typeof DashboardReceptionRoute
+  '/master/$token': typeof MasterTokenRoute
   '/provider/$id': typeof ProviderIdRoute
+  '/portal/provider/$token': typeof PortalProviderTokenRoute
+  '/portal/reception/$token': typeof PortalReceptionTokenRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/assistant': typeof AssistantRoute
   '/auth': typeof AuthRoute
   '/bookings': typeof BookingsRoute
-  '/dashboard': typeof DashboardRoute
+  '/dashboard': typeof DashboardRouteWithChildren
   '/family': typeof FamilyRoute
   '/favorites': typeof FavoritesRoute
   '/notifications': typeof NotificationsRoute
   '/profile': typeof ProfileRoute
   '/records': typeof RecordsRoute
   '/search': typeof SearchRoute
+  '/admin/cities': typeof AdminCitiesRoute
+  '/admin/home': typeof AdminHomeRoute
+  '/admin/tokens': typeof AdminTokensRoute
   '/book/$providerId': typeof BookProviderIdRoute
+  '/dashboard/reception': typeof DashboardReceptionRoute
+  '/master/$token': typeof MasterTokenRoute
   '/provider/$id': typeof ProviderIdRoute
+  '/portal/provider/$token': typeof PortalProviderTokenRoute
+  '/portal/reception/$token': typeof PortalReceptionTokenRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -159,8 +222,15 @@ export interface FileRouteTypes {
     | '/profile'
     | '/records'
     | '/search'
+    | '/admin/cities'
+    | '/admin/home'
+    | '/admin/tokens'
     | '/book/$providerId'
+    | '/dashboard/reception'
+    | '/master/$token'
     | '/provider/$id'
+    | '/portal/provider/$token'
+    | '/portal/reception/$token'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -175,8 +245,15 @@ export interface FileRouteTypes {
     | '/profile'
     | '/records'
     | '/search'
+    | '/admin/cities'
+    | '/admin/home'
+    | '/admin/tokens'
     | '/book/$providerId'
+    | '/dashboard/reception'
+    | '/master/$token'
     | '/provider/$id'
+    | '/portal/provider/$token'
+    | '/portal/reception/$token'
   id:
     | '__root__'
     | '/'
@@ -191,17 +268,24 @@ export interface FileRouteTypes {
     | '/profile'
     | '/records'
     | '/search'
+    | '/admin/cities'
+    | '/admin/home'
+    | '/admin/tokens'
     | '/book/$providerId'
+    | '/dashboard/reception'
+    | '/master/$token'
     | '/provider/$id'
+    | '/portal/provider/$token'
+    | '/portal/reception/$token'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AdminRoute: typeof AdminRoute
+  AdminRoute: typeof AdminRouteWithChildren
   AssistantRoute: typeof AssistantRoute
   AuthRoute: typeof AuthRoute
   BookingsRoute: typeof BookingsRoute
-  DashboardRoute: typeof DashboardRoute
+  DashboardRoute: typeof DashboardRouteWithChildren
   FamilyRoute: typeof FamilyRoute
   FavoritesRoute: typeof FavoritesRoute
   NotificationsRoute: typeof NotificationsRoute
@@ -209,7 +293,10 @@ export interface RootRouteChildren {
   RecordsRoute: typeof RecordsRoute
   SearchRoute: typeof SearchRoute
   BookProviderIdRoute: typeof BookProviderIdRoute
+  MasterTokenRoute: typeof MasterTokenRoute
   ProviderIdRoute: typeof ProviderIdRoute
+  PortalProviderTokenRoute: typeof PortalProviderTokenRoute
+  PortalReceptionTokenRoute: typeof PortalReceptionTokenRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -305,6 +392,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProviderIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/master/$token': {
+      id: '/master/$token'
+      path: '/master/$token'
+      fullPath: '/master/$token'
+      preLoaderRoute: typeof MasterTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/reception': {
+      id: '/dashboard/reception'
+      path: '/reception'
+      fullPath: '/dashboard/reception'
+      preLoaderRoute: typeof DashboardReceptionRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/book/$providerId': {
       id: '/book/$providerId'
       path: '/book/$providerId'
@@ -312,16 +413,77 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BookProviderIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/tokens': {
+      id: '/admin/tokens'
+      path: '/tokens'
+      fullPath: '/admin/tokens'
+      preLoaderRoute: typeof AdminTokensRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/home': {
+      id: '/admin/home'
+      path: '/home'
+      fullPath: '/admin/home'
+      preLoaderRoute: typeof AdminHomeRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/cities': {
+      id: '/admin/cities'
+      path: '/cities'
+      fullPath: '/admin/cities'
+      preLoaderRoute: typeof AdminCitiesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/portal/reception/$token': {
+      id: '/portal/reception/$token'
+      path: '/portal/reception/$token'
+      fullPath: '/portal/reception/$token'
+      preLoaderRoute: typeof PortalReceptionTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/portal/provider/$token': {
+      id: '/portal/provider/$token'
+      path: '/portal/provider/$token'
+      fullPath: '/portal/provider/$token'
+      preLoaderRoute: typeof PortalProviderTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
+interface AdminRouteChildren {
+  AdminCitiesRoute: typeof AdminCitiesRoute
+  AdminHomeRoute: typeof AdminHomeRoute
+  AdminTokensRoute: typeof AdminTokensRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminCitiesRoute: AdminCitiesRoute,
+  AdminHomeRoute: AdminHomeRoute,
+  AdminTokensRoute: AdminTokensRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
+interface DashboardRouteChildren {
+  DashboardReceptionRoute: typeof DashboardReceptionRoute
+}
+
+const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardReceptionRoute: DashboardReceptionRoute,
+}
+
+const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
+  DashboardRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AdminRoute: AdminRoute,
+  AdminRoute: AdminRouteWithChildren,
   AssistantRoute: AssistantRoute,
   AuthRoute: AuthRoute,
   BookingsRoute: BookingsRoute,
-  DashboardRoute: DashboardRoute,
+  DashboardRoute: DashboardRouteWithChildren,
   FamilyRoute: FamilyRoute,
   FavoritesRoute: FavoritesRoute,
   NotificationsRoute: NotificationsRoute,
@@ -329,7 +491,10 @@ const rootRouteChildren: RootRouteChildren = {
   RecordsRoute: RecordsRoute,
   SearchRoute: SearchRoute,
   BookProviderIdRoute: BookProviderIdRoute,
+  MasterTokenRoute: MasterTokenRoute,
   ProviderIdRoute: ProviderIdRoute,
+  PortalProviderTokenRoute: PortalProviderTokenRoute,
+  PortalReceptionTokenRoute: PortalReceptionTokenRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
