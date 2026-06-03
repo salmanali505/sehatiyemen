@@ -14,6 +14,66 @@ export type Database = {
   }
   public: {
     Tables: {
+      access_tokens: {
+        Row: {
+          active: boolean
+          created_at: string
+          created_by: string | null
+          expires_at: string | null
+          id: string
+          kind: Database["public"]["Enums"]["token_kind"]
+          label: string | null
+          last_used_at: string | null
+          provider_id: string | null
+          reception_user_id: string | null
+          token: string
+          uses_count: number
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          created_by?: string | null
+          expires_at?: string | null
+          id?: string
+          kind: Database["public"]["Enums"]["token_kind"]
+          label?: string | null
+          last_used_at?: string | null
+          provider_id?: string | null
+          reception_user_id?: string | null
+          token: string
+          uses_count?: number
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          created_by?: string | null
+          expires_at?: string | null
+          id?: string
+          kind?: Database["public"]["Enums"]["token_kind"]
+          label?: string | null
+          last_used_at?: string | null
+          provider_id?: string | null
+          reception_user_id?: string | null
+          token?: string
+          uses_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "access_tokens_provider_id_fkey"
+            columns: ["provider_id"]
+            isOneToOne: false
+            referencedRelation: "providers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "access_tokens_reception_fk"
+            columns: ["reception_user_id"]
+            isOneToOne: false
+            referencedRelation: "reception_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ai_conversations: {
         Row: {
           created_at: string
@@ -114,6 +174,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      cities: {
+        Row: {
+          active: boolean
+          created_at: string
+          id: string
+          name_ar: string
+          name_en: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          name_ar: string
+          name_en: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          name_ar?: string
+          name_en?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
       }
       family_members: {
         Row: {
@@ -265,6 +355,84 @@ export type Database = {
         }
         Relationships: []
       }
+      home_sections: {
+        Row: {
+          config: Json
+          created_at: string
+          ends_at: string | null
+          id: string
+          key: string
+          section_type: string
+          sort_order: number
+          starts_at: string | null
+          title_ar: string
+          title_en: string | null
+          updated_at: string
+          visible: boolean
+        }
+        Insert: {
+          config?: Json
+          created_at?: string
+          ends_at?: string | null
+          id?: string
+          key: string
+          section_type?: string
+          sort_order?: number
+          starts_at?: string | null
+          title_ar: string
+          title_en?: string | null
+          updated_at?: string
+          visible?: boolean
+        }
+        Update: {
+          config?: Json
+          created_at?: string
+          ends_at?: string | null
+          id?: string
+          key?: string
+          section_type?: string
+          sort_order?: number
+          starts_at?: string | null
+          title_ar?: string
+          title_en?: string | null
+          updated_at?: string
+          visible?: boolean
+        }
+        Relationships: []
+      }
+      notifications: {
+        Row: {
+          body: string | null
+          created_at: string
+          id: string
+          kind: string
+          link: string | null
+          read: boolean
+          title: string
+          user_id: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          kind?: string
+          link?: string | null
+          read?: boolean
+          title: string
+          user_id: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          kind?: string
+          link?: string | null
+          read?: boolean
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           age: number | null
@@ -361,6 +529,53 @@ export type Database = {
         }
         Relationships: []
       }
+      reception_users: {
+        Row: {
+          active: boolean
+          created_at: string
+          employee_name: string | null
+          full_name: string
+          id: string
+          permissions: Json
+          phone: string | null
+          photo_url: string | null
+          provider_id: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          employee_name?: string | null
+          full_name: string
+          id?: string
+          permissions?: Json
+          phone?: string | null
+          photo_url?: string | null
+          provider_id: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          employee_name?: string | null
+          full_name?: string
+          id?: string
+          permissions?: Json
+          phone?: string | null
+          photo_url?: string | null
+          provider_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reception_users_provider_id_fkey"
+            columns: ["provider_id"]
+            isOneToOne: false
+            referencedRelation: "providers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       reviews: {
         Row: {
           comment: string | null
@@ -448,6 +663,7 @@ export type Database = {
         | "diagnosis"
         | "vaccination"
         | "other"
+      token_kind: "admin" | "provider" | "reception"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -603,6 +819,7 @@ export const Constants = {
         "vaccination",
         "other",
       ],
+      token_kind: ["admin", "provider", "reception"],
     },
   },
 } as const
