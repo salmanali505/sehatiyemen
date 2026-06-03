@@ -132,6 +132,14 @@ function AdminDashboard() {
       </header>
 
       <main className="mx-auto max-w-5xl px-4 py-6 space-y-6">
+        {/* Quick Nav */}
+        <section className="grid grid-cols-2 md:grid-cols-4 gap-2">
+          <Link to="/admin/tokens" className="rounded-2xl border bg-card hover:bg-muted p-3 flex items-center gap-2 text-sm font-bold"><Shield size={16} className="text-destructive" /> روابط الوصول</Link>
+          <Link to="/admin/cities" className="rounded-2xl border bg-card hover:bg-muted p-3 flex items-center gap-2 text-sm font-bold"><Building2 size={16} className="text-primary" /> المدن</Link>
+          <Link to="/admin/home" className="rounded-2xl border bg-card hover:bg-muted p-3 flex items-center gap-2 text-sm font-bold"><Sparkles size={16} className="text-warning" /> الشاشة الرئيسية</Link>
+          <Link to="/dashboard/reception" className="rounded-2xl border bg-card hover:bg-muted p-3 flex items-center gap-2 text-sm font-bold"><Users size={16} className="text-success" /> الاستقبال</Link>
+        </section>
+
         {/* Stats */}
         <section className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <StatCard icon={Users} label="المستخدمون" value={stats.users} hue="primary" />
@@ -139,6 +147,8 @@ function AdminDashboard() {
           <StatCard icon={Calendar} label="الحجوزات" value={stats.bookings} hue="success" />
           <StatCard icon={Star} label="التقييمات" value={stats.reviews} hue="warning" />
         </section>
+
+
 
         {/* Providers */}
         <section className="rounded-3xl border bg-card shadow-sm overflow-hidden">

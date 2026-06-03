@@ -133,6 +133,14 @@ function ProviderDashboard() {
           <Mini icon={CheckCircle2} value={completedCount} label="مكتملة" />
         </section>
 
+        <Link to="/dashboard/reception" className="block rounded-3xl border bg-card hover:bg-muted p-4 flex items-center gap-3">
+          <div className="w-10 h-10 rounded-2xl gradient-primary flex items-center justify-center shadow-glow"><User className="text-primary-foreground" size={18} /></div>
+          <div className="flex-1"><h3 className="font-bold text-sm">إدارة موظفي الاستقبال</h3><p className="text-xs text-muted-foreground">إنشاء حسابات وروابط دخول مستقلة</p></div>
+          <ArrowRight size={16} className="rotate-180" />
+        </Link>
+
+
+
         <section className="rounded-3xl border bg-card overflow-hidden shadow-sm">
           <div className="p-4 border-b flex items-center gap-2">
             <Star size={18} className="text-primary" />
