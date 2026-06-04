@@ -1,11 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import {
-  Loader2, ShieldAlert, QrCode, Calendar, Clock, User, Phone, CheckCircle2, LogOut, Search,
+  Loader2, ShieldAlert, QrCode, Calendar, Clock, User, Phone, CheckCircle2, LogOut, Search, Camera,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { QrScanner } from "@/components/QrScanner";
 
 export const Route = createFileRoute("/portal/reception/$token")({
   head: () => ({ meta: [{ title: "Reception Portal" }, { name: "robots", content: "noindex,nofollow" }] }),
@@ -27,6 +28,7 @@ function ReceptionPortal() {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [filter, setFilter] = useState<"today" | "upcoming" | "all">("today");
   const [query, setQuery] = useState("");
+  const [scannerOpen, setScannerOpen] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -48,6 +50,36 @@ function ReceptionPortal() {
       setState("ok");
     })();
   }, [token]);
+
+  // Realtime updates for this provider's bookings
+  useEffect(() => {
+    if (!provider?.name) return;
+    const channel = supabase
+      .channel(`reception-${provider.id}`)
+      .on("postgres_changes", { event: "*", schema: "public", table: "bookings" }, (payload) => {
+        const row: any = payload.new ?? payload.old;
+        if (row?.provider_name === provider.name) void loadBookings(provider.name);
+      })
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [provider?.id]);
+
+  async function handleScan(decoded: string) {
+    setScannerOpen(false);
+    const code = decoded.trim();
+    const match = bookings.find((b) => b.booking_number === code);
+    if (!match) {
+      const { data } = await supabase.from("bookings").select("*").eq("booking_number", code).maybeSingle();
+      if (!data) return toast.error("لم يتم العثور على الحجز");
+      if (data.provider_name !== provider?.name) return toast.error("هذا الحجز يخص منشأة أخرى");
+      await updateStatus(data.id, "completed");
+      await loadBookings(provider.name);
+      return;
+    }
+    await updateStatus(match.id, match.status === "pending" ? "confirmed" : "completed");
+  }
+
 
   async function loadBookings(providerName: string) {
     const { data } = await supabase
@@ -98,6 +130,12 @@ function ReceptionPortal() {
               {provider?.name} {reception?.full_name && `• ${reception.full_name}`}
             </p>
           </div>
+          <button
+            onClick={() => setScannerOpen(true)}
+            className="flex items-center gap-1.5 rounded-2xl gradient-primary text-primary-foreground font-bold px-3 py-2 text-xs shadow-glow"
+          >
+            <Camera size={14} /> مسح QR
+          </button>
           <button
             onClick={() => { sessionStorage.clear(); window.location.href = "/"; }}
             className="p-2 rounded-xl hover:bg-muted text-destructive"
@@ -188,6 +226,8 @@ function ReceptionPortal() {
           )}
         </div>
       </main>
+
+      <QrScanner open={scannerOpen} onClose={() => setScannerOpen(false)} onResult={handleScan} />
     </div>
   );
 }

@@ -191,9 +191,9 @@ function AdminDashboard() {
                   animate={{ opacity: 1 }}
                   className="p-4 flex flex-wrap items-center gap-3"
                 >
-                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary/15 to-accent/15 flex items-center justify-center font-extrabold text-primary">
+                  <Link to="/admin/providers/$id" params={{ id: p.id }} className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary/15 to-accent/15 flex items-center justify-center font-extrabold text-primary hover:opacity-80">
                     {p.name.charAt(0)}
-                  </div>
+                  </Link>
                   <div className="flex-1 min-w-[160px]">
                     <div className="flex items-center gap-2">
                       <h3 className="font-bold">{p.name}</h3>
@@ -223,13 +223,16 @@ function AdminDashboard() {
           )}
         </section>
 
-        <section className="rounded-3xl border bg-card p-4 flex items-center gap-3">
-          <Plus className="text-primary" />
+        <Link to="/admin/providers/$id" params={{ id: "new" }} className="rounded-3xl border bg-card hover:bg-muted p-4 flex items-center gap-3">
+          <div className="w-10 h-10 rounded-2xl gradient-primary flex items-center justify-center shadow-glow">
+            <Plus className="text-primary-foreground" size={18} />
+          </div>
           <div className="flex-1">
             <h3 className="font-bold text-sm">إضافة مزوّد جديد</h3>
-            <p className="text-xs text-muted-foreground">قريباً: نموذج إضافة كامل من اللوحة.</p>
+            <p className="text-xs text-muted-foreground">سجّل مستشفى، عيادة، مختبر، أشعة أو صيدلية.</p>
           </div>
-        </section>
+          <ArrowRight size={16} className="rotate-180 text-muted-foreground" />
+        </Link>
       </main>
     </div>
   );

@@ -35,25 +35,28 @@ export function useCities() {
 }
 
 export function useSelectedCity() {
-  const [city, setCityState] = useState<string>(() => {
-    if (typeof window === "undefined") return "صنعاء";
-    return localStorage.getItem(STORAGE_KEY) || "صنعاء";
-  });
+  const [city, setCityState] = useState<string>("صنعاء");
 
-  const setCity = useCallback((c: string) => {
-    setCityState(c);
-    if (typeof window !== "undefined") localStorage.setItem(STORAGE_KEY, c);
-    window.dispatchEvent(new CustomEvent("sehati:city-changed", { detail: c }));
-  }, []);
-
+  // Read from localStorage only after mount → keeps SSR/client markup identical.
   useEffect(() => {
+    const stored = typeof window !== "undefined" ? localStorage.getItem(STORAGE_KEY) : null;
+    if (stored && stored !== city) setCityState(stored);
     const handler = (e: Event) => {
       const ce = e as CustomEvent<string>;
-      if (ce.detail && ce.detail !== city) setCityState(ce.detail);
+      if (ce.detail) setCityState(ce.detail);
     };
     window.addEventListener("sehati:city-changed", handler);
     return () => window.removeEventListener("sehati:city-changed", handler);
-  }, [city]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const setCity = useCallback((c: string) => {
+    setCityState(c);
+    if (typeof window !== "undefined") {
+      localStorage.setItem(STORAGE_KEY, c);
+      window.dispatchEvent(new CustomEvent("sehati:city-changed", { detail: c }));
+    }
+  }, []);
 
   return { city, setCity };
 }
