@@ -223,13 +223,16 @@ function AdminDashboard() {
           )}
         </section>
 
-        <section className="rounded-3xl border bg-card p-4 flex items-center gap-3">
-          <Plus className="text-primary" />
+        <Link to="/admin/providers/$id" params={{ id: "new" }} className="rounded-3xl border bg-card hover:bg-muted p-4 flex items-center gap-3">
+          <div className="w-10 h-10 rounded-2xl gradient-primary flex items-center justify-center shadow-glow">
+            <Plus className="text-primary-foreground" size={18} />
+          </div>
           <div className="flex-1">
             <h3 className="font-bold text-sm">إضافة مزوّد جديد</h3>
-            <p className="text-xs text-muted-foreground">قريباً: نموذج إضافة كامل من اللوحة.</p>
+            <p className="text-xs text-muted-foreground">سجّل مستشفى، عيادة، مختبر، أشعة أو صيدلية.</p>
           </div>
-        </section>
+          <ArrowRight size={16} className="rotate-180 text-muted-foreground" />
+        </Link>
       </main>
     </div>
   );
