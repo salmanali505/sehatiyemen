@@ -30,6 +30,7 @@ import { Route as AdminHomeRouteImport } from './routes/admin.home'
 import { Route as AdminCitiesRouteImport } from './routes/admin.cities'
 import { Route as PortalReceptionTokenRouteImport } from './routes/portal.reception.$token'
 import { Route as PortalProviderTokenRouteImport } from './routes/portal.provider.$token'
+import { Route as AdminProvidersIdRouteImport } from './routes/admin.providers.$id'
 
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
@@ -136,6 +137,11 @@ const PortalProviderTokenRoute = PortalProviderTokenRouteImport.update({
   path: '/portal/provider/$token',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminProvidersIdRoute = AdminProvidersIdRouteImport.update({
+  id: '/providers/$id',
+  path: '/providers/$id',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -157,6 +163,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/reception': typeof DashboardReceptionRoute
   '/master/$token': typeof MasterTokenRoute
   '/provider/$id': typeof ProviderIdRoute
+  '/admin/providers/$id': typeof AdminProvidersIdRoute
   '/portal/provider/$token': typeof PortalProviderTokenRoute
   '/portal/reception/$token': typeof PortalReceptionTokenRoute
 }
@@ -180,6 +187,7 @@ export interface FileRoutesByTo {
   '/dashboard/reception': typeof DashboardReceptionRoute
   '/master/$token': typeof MasterTokenRoute
   '/provider/$id': typeof ProviderIdRoute
+  '/admin/providers/$id': typeof AdminProvidersIdRoute
   '/portal/provider/$token': typeof PortalProviderTokenRoute
   '/portal/reception/$token': typeof PortalReceptionTokenRoute
 }
@@ -204,6 +212,7 @@ export interface FileRoutesById {
   '/dashboard/reception': typeof DashboardReceptionRoute
   '/master/$token': typeof MasterTokenRoute
   '/provider/$id': typeof ProviderIdRoute
+  '/admin/providers/$id': typeof AdminProvidersIdRoute
   '/portal/provider/$token': typeof PortalProviderTokenRoute
   '/portal/reception/$token': typeof PortalReceptionTokenRoute
 }
@@ -229,6 +238,7 @@ export interface FileRouteTypes {
     | '/dashboard/reception'
     | '/master/$token'
     | '/provider/$id'
+    | '/admin/providers/$id'
     | '/portal/provider/$token'
     | '/portal/reception/$token'
   fileRoutesByTo: FileRoutesByTo
@@ -252,6 +262,7 @@ export interface FileRouteTypes {
     | '/dashboard/reception'
     | '/master/$token'
     | '/provider/$id'
+    | '/admin/providers/$id'
     | '/portal/provider/$token'
     | '/portal/reception/$token'
   id:
@@ -275,6 +286,7 @@ export interface FileRouteTypes {
     | '/dashboard/reception'
     | '/master/$token'
     | '/provider/$id'
+    | '/admin/providers/$id'
     | '/portal/provider/$token'
     | '/portal/reception/$token'
   fileRoutesById: FileRoutesById
@@ -448,6 +460,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PortalProviderTokenRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/providers/$id': {
+      id: '/admin/providers/$id'
+      path: '/providers/$id'
+      fullPath: '/admin/providers/$id'
+      preLoaderRoute: typeof AdminProvidersIdRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
@@ -455,12 +474,14 @@ interface AdminRouteChildren {
   AdminCitiesRoute: typeof AdminCitiesRoute
   AdminHomeRoute: typeof AdminHomeRoute
   AdminTokensRoute: typeof AdminTokensRoute
+  AdminProvidersIdRoute: typeof AdminProvidersIdRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminCitiesRoute: AdminCitiesRoute,
   AdminHomeRoute: AdminHomeRoute,
   AdminTokensRoute: AdminTokensRoute,
+  AdminProvidersIdRoute: AdminProvidersIdRoute,
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
