@@ -131,6 +131,12 @@ function ReceptionPortal() {
             </p>
           </div>
           <button
+            onClick={() => setScannerOpen(true)}
+            className="flex items-center gap-1.5 rounded-2xl gradient-primary text-primary-foreground font-bold px-3 py-2 text-xs shadow-glow"
+          >
+            <Camera size={14} /> مسح QR
+          </button>
+          <button
             onClick={() => { sessionStorage.clear(); window.location.href = "/"; }}
             className="p-2 rounded-xl hover:bg-muted text-destructive"
             title="خروج"
