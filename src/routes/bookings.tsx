@@ -1,9 +1,10 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Calendar, Clock, MapPin, ArrowRight } from "lucide-react";
+import { Calendar, Clock, ArrowRight, QrCode } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/integrations/supabase/client";
 import { BottomNav } from "@/components/BottomNav";
+import { QrCanvas } from "@/components/QrCanvas";
 
 export const Route = createFileRoute("/bookings")({
   head: () => ({ meta: [{ title: "حجوزاتي | صحتي" }] }),
