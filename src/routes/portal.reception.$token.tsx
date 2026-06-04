@@ -51,6 +51,36 @@ function ReceptionPortal() {
     })();
   }, [token]);
 
+  // Realtime updates for this provider's bookings
+  useEffect(() => {
+    if (!provider?.name) return;
+    const channel = supabase
+      .channel(`reception-${provider.id}`)
+      .on("postgres_changes", { event: "*", schema: "public", table: "bookings" }, (payload) => {
+        const row: any = payload.new ?? payload.old;
+        if (row?.provider_name === provider.name) void loadBookings(provider.name);
+      })
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [provider?.id]);
+
+  async function handleScan(decoded: string) {
+    setScannerOpen(false);
+    const code = decoded.trim();
+    const match = bookings.find((b) => b.booking_number === code);
+    if (!match) {
+      const { data } = await supabase.from("bookings").select("*").eq("booking_number", code).maybeSingle();
+      if (!data) return toast.error("لم يتم العثور على الحجز");
+      if (data.provider_name !== provider?.name) return toast.error("هذا الحجز يخص منشأة أخرى");
+      await updateStatus(data.id, "completed");
+      await loadBookings(provider.name);
+      return;
+    }
+    await updateStatus(match.id, match.status === "pending" ? "confirmed" : "completed");
+  }
+
+
   async function loadBookings(providerName: string) {
     const { data } = await supabase
       .from("bookings")
