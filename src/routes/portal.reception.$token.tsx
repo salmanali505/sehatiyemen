@@ -226,6 +226,8 @@ function ReceptionPortal() {
           )}
         </div>
       </main>
+
+      <QrScanner open={scannerOpen} onClose={() => setScannerOpen(false)} onResult={handleScan} />
     </div>
   );
 }
