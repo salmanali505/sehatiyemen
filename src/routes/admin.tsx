@@ -191,9 +191,9 @@ function AdminDashboard() {
                   animate={{ opacity: 1 }}
                   className="p-4 flex flex-wrap items-center gap-3"
                 >
-                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary/15 to-accent/15 flex items-center justify-center font-extrabold text-primary">
+                  <Link to="/admin/providers/$id" params={{ id: p.id }} className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary/15 to-accent/15 flex items-center justify-center font-extrabold text-primary hover:opacity-80">
                     {p.name.charAt(0)}
-                  </div>
+                  </Link>
                   <div className="flex-1 min-w-[160px]">
                     <div className="flex items-center gap-2">
                       <h3 className="font-bold">{p.name}</h3>
