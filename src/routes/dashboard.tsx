@@ -52,6 +52,20 @@ function ProviderDashboard() {
     void load();
   }, [user, isProvider, isAdmin]);
 
+  // Realtime: refresh when bookings change for our providers
+  useEffect(() => {
+    if (!providerNames.length) return;
+    const channel = supabase
+      .channel("dashboard-bookings")
+      .on("postgres_changes", { event: "*", schema: "public", table: "bookings" }, (payload) => {
+        const row: any = payload.new ?? payload.old;
+        if (row && providerNames.includes(row.provider_name)) void load();
+      })
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [providerNames.join("|")]);
+
   async function load() {
     if (!user) return;
     setLoading(true);
