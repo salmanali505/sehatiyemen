@@ -28,6 +28,7 @@ function ReceptionPortal() {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [filter, setFilter] = useState<"today" | "upcoming" | "all">("today");
   const [query, setQuery] = useState("");
+  const [scannerOpen, setScannerOpen] = useState(false);
 
   useEffect(() => {
     (async () => {
