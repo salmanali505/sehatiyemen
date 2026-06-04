@@ -68,7 +68,6 @@ function BookingsPage() {
         )}
         {filtered.map((b) => {
           const s = statusMap[b.status] ?? statusMap.pending;
-          const [showQr, ...rest] = [false]; void rest;
           return <BookingItem key={b.id} b={b} statusLabel={s.l} statusClass={s.c} />;
         })}
       </div>
