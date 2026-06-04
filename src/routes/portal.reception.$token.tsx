@@ -1,11 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import {
-  Loader2, ShieldAlert, QrCode, Calendar, Clock, User, Phone, CheckCircle2, LogOut, Search,
+  Loader2, ShieldAlert, QrCode, Calendar, Clock, User, Phone, CheckCircle2, LogOut, Search, Camera,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { QrScanner } from "@/components/QrScanner";
 
 export const Route = createFileRoute("/portal/reception/$token")({
   head: () => ({ meta: [{ title: "Reception Portal" }, { name: "robots", content: "noindex,nofollow" }] }),
