@@ -74,6 +74,57 @@ export type Database = {
           },
         ]
       }
+      ads: {
+        Row: {
+          active: boolean
+          created_at: string
+          ends_at: string | null
+          id: string
+          image_url: string | null
+          link_url: string | null
+          placement: string
+          priority: number
+          provider_id: string | null
+          starts_at: string | null
+          subtitle: string | null
+          title: string
+          updated_at: string
+          video_url: string | null
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          ends_at?: string | null
+          id?: string
+          image_url?: string | null
+          link_url?: string | null
+          placement?: string
+          priority?: number
+          provider_id?: string | null
+          starts_at?: string | null
+          subtitle?: string | null
+          title: string
+          updated_at?: string
+          video_url?: string | null
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          ends_at?: string | null
+          id?: string
+          image_url?: string | null
+          link_url?: string | null
+          placement?: string
+          priority?: number
+          provider_id?: string | null
+          starts_at?: string | null
+          subtitle?: string | null
+          title?: string
+          updated_at?: string
+          video_url?: string | null
+        }
+        Relationships: []
+      }
       ai_conversations: {
         Row: {
           created_at: string
@@ -98,6 +149,45 @@ export type Database = {
           title?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      audit_logs: {
+        Row: {
+          action: string
+          actor_email: string | null
+          actor_id: string | null
+          created_at: string
+          entity: string | null
+          entity_id: string | null
+          id: string
+          ip: string | null
+          meta: Json
+          user_agent: string | null
+        }
+        Insert: {
+          action: string
+          actor_email?: string | null
+          actor_id?: string | null
+          created_at?: string
+          entity?: string | null
+          entity_id?: string | null
+          id?: string
+          ip?: string | null
+          meta?: Json
+          user_agent?: string | null
+        }
+        Update: {
+          action?: string
+          actor_email?: string | null
+          actor_id?: string | null
+          created_at?: string
+          entity?: string | null
+          entity_id?: string | null
+          id?: string
+          ip?: string | null
+          meta?: Json
+          user_agent?: string | null
         }
         Relationships: []
       }
@@ -201,6 +291,54 @@ export type Database = {
           name_ar?: string
           name_en?: string
           sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      content_posts: {
+        Row: {
+          author: string | null
+          body: string | null
+          created_at: string
+          excerpt: string | null
+          featured: boolean
+          id: string
+          image_url: string | null
+          kind: string
+          published: boolean
+          published_at: string | null
+          tags: string[]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          author?: string | null
+          body?: string | null
+          created_at?: string
+          excerpt?: string | null
+          featured?: boolean
+          id?: string
+          image_url?: string | null
+          kind?: string
+          published?: boolean
+          published_at?: string | null
+          tags?: string[]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          author?: string | null
+          body?: string | null
+          created_at?: string
+          excerpt?: string | null
+          featured?: boolean
+          id?: string
+          image_url?: string | null
+          kind?: string
+          published?: boolean
+          published_at?: string | null
+          tags?: string[]
+          title?: string
           updated_at?: string
         }
         Relationships: []
@@ -433,6 +571,168 @@ export type Database = {
         }
         Relationships: []
       }
+      offers: {
+        Row: {
+          active: boolean
+          approved: boolean
+          code: string | null
+          created_at: string
+          description: string | null
+          discount_amount: number | null
+          discount_percent: number | null
+          ends_at: string | null
+          id: string
+          image_url: string | null
+          kind: string
+          provider_id: string | null
+          starts_at: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          approved?: boolean
+          code?: string | null
+          created_at?: string
+          description?: string | null
+          discount_amount?: number | null
+          discount_percent?: number | null
+          ends_at?: string | null
+          id?: string
+          image_url?: string | null
+          kind?: string
+          provider_id?: string | null
+          starts_at?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          approved?: boolean
+          code?: string | null
+          created_at?: string
+          description?: string | null
+          discount_amount?: number | null
+          discount_percent?: number | null
+          ends_at?: string | null
+          id?: string
+          image_url?: string | null
+          kind?: string
+          provider_id?: string | null
+          starts_at?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      packages: {
+        Row: {
+          active: boolean
+          ads_limit: number
+          code: string
+          created_at: string
+          features: Json
+          id: string
+          max_doctors: number
+          max_reception: number
+          max_staff: number
+          name_ar: string
+          name_en: string | null
+          notif_limit: number
+          offers_limit: number
+          permissions: Json
+          price_monthly: number
+          price_yearly: number
+          sort_order: number
+          tier: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          ads_limit?: number
+          code: string
+          created_at?: string
+          features?: Json
+          id?: string
+          max_doctors?: number
+          max_reception?: number
+          max_staff?: number
+          name_ar: string
+          name_en?: string | null
+          notif_limit?: number
+          offers_limit?: number
+          permissions?: Json
+          price_monthly?: number
+          price_yearly?: number
+          sort_order?: number
+          tier?: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          ads_limit?: number
+          code?: string
+          created_at?: string
+          features?: Json
+          id?: string
+          max_doctors?: number
+          max_reception?: number
+          max_staff?: number
+          name_ar?: string
+          name_en?: string | null
+          notif_limit?: number
+          offers_limit?: number
+          permissions?: Json
+          price_monthly?: number
+          price_yearly?: number
+          sort_order?: number
+          tier?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      payments: {
+        Row: {
+          amount: number
+          created_at: string
+          currency: string
+          id: string
+          kind: string
+          method: string | null
+          notes: string | null
+          provider_id: string | null
+          reference: string | null
+          status: string
+          user_id: string | null
+        }
+        Insert: {
+          amount?: number
+          created_at?: string
+          currency?: string
+          id?: string
+          kind?: string
+          method?: string | null
+          notes?: string | null
+          provider_id?: string | null
+          reference?: string | null
+          status?: string
+          user_id?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          currency?: string
+          id?: string
+          kind?: string
+          method?: string | null
+          notes?: string | null
+          provider_id?: string | null
+          reference?: string | null
+          status?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           age: number | null
@@ -473,61 +773,90 @@ export type Database = {
         Row: {
           address: string | null
           city: string | null
+          cover_url: string | null
           created_at: string
           description: string | null
           featured: boolean
           featured_rank: number | null
+          gallery_urls: string[]
           id: string
           image_url: string | null
+          logo_url: string | null
+          must_change_password: boolean
           name: string
           owner_user_id: string | null
+          package_id: string | null
           phone: string | null
           rating: number | null
           reviews_count: number | null
           status: Database["public"]["Enums"]["provider_status"]
+          subscription_status: string
           type: Database["public"]["Enums"]["provider_type"]
           updated_at: string
+          username: string | null
           verified: boolean
         }
         Insert: {
           address?: string | null
           city?: string | null
+          cover_url?: string | null
           created_at?: string
           description?: string | null
           featured?: boolean
           featured_rank?: number | null
+          gallery_urls?: string[]
           id?: string
           image_url?: string | null
+          logo_url?: string | null
+          must_change_password?: boolean
           name: string
           owner_user_id?: string | null
+          package_id?: string | null
           phone?: string | null
           rating?: number | null
           reviews_count?: number | null
           status?: Database["public"]["Enums"]["provider_status"]
+          subscription_status?: string
           type: Database["public"]["Enums"]["provider_type"]
           updated_at?: string
+          username?: string | null
           verified?: boolean
         }
         Update: {
           address?: string | null
           city?: string | null
+          cover_url?: string | null
           created_at?: string
           description?: string | null
           featured?: boolean
           featured_rank?: number | null
+          gallery_urls?: string[]
           id?: string
           image_url?: string | null
+          logo_url?: string | null
+          must_change_password?: boolean
           name?: string
           owner_user_id?: string | null
+          package_id?: string | null
           phone?: string | null
           rating?: number | null
           reviews_count?: number | null
           status?: Database["public"]["Enums"]["provider_status"]
+          subscription_status?: string
           type?: Database["public"]["Enums"]["provider_type"]
           updated_at?: string
+          username?: string | null
           verified?: boolean
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "providers_package_id_fkey"
+            columns: ["package_id"]
+            isOneToOne: false
+            referencedRelation: "packages"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       reception_users: {
         Row: {
@@ -600,6 +929,163 @@ export type Database = {
           provider_id?: string
           rating?: number
           user_id?: string
+        }
+        Relationships: []
+      }
+      specialties: {
+        Row: {
+          active: boolean
+          created_at: string
+          icon: string | null
+          id: string
+          kind: string
+          name_ar: string
+          name_en: string | null
+          parent_id: string | null
+          sort_order: number
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          icon?: string | null
+          id?: string
+          kind?: string
+          name_ar: string
+          name_en?: string | null
+          parent_id?: string | null
+          sort_order?: number
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          icon?: string | null
+          id?: string
+          kind?: string
+          name_ar?: string
+          name_en?: string | null
+          parent_id?: string | null
+          sort_order?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "specialties_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "specialties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      subscriptions: {
+        Row: {
+          amount: number
+          auto_renew: boolean
+          created_at: string
+          cycle: string
+          ends_at: string | null
+          id: string
+          notes: string | null
+          package_id: string
+          provider_id: string
+          starts_at: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          amount?: number
+          auto_renew?: boolean
+          created_at?: string
+          cycle?: string
+          ends_at?: string | null
+          id?: string
+          notes?: string | null
+          package_id: string
+          provider_id: string
+          starts_at?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          auto_renew?: boolean
+          created_at?: string
+          cycle?: string
+          ends_at?: string | null
+          id?: string
+          notes?: string | null
+          package_id?: string
+          provider_id?: string
+          starts_at?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subscriptions_package_id_fkey"
+            columns: ["package_id"]
+            isOneToOne: false
+            referencedRelation: "packages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      support_tickets: {
+        Row: {
+          assignee: string | null
+          created_at: string
+          id: string
+          kind: string
+          message: string | null
+          priority: string
+          status: string
+          subject: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          assignee?: string | null
+          created_at?: string
+          id?: string
+          kind?: string
+          message?: string | null
+          priority?: string
+          status?: string
+          subject: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          assignee?: string | null
+          created_at?: string
+          id?: string
+          kind?: string
+          message?: string | null
+          priority?: string
+          status?: string
+          subject?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      system_settings: {
+        Row: {
+          key: string
+          updated_at: string
+          updated_by: string | null
+          value: Json
+        }
+        Insert: {
+          key: string
+          updated_at?: string
+          updated_by?: string | null
+          value?: Json
+        }
+        Update: {
+          key?: string
+          updated_at?: string
+          updated_by?: string | null
+          value?: Json
         }
         Relationships: []
       }
