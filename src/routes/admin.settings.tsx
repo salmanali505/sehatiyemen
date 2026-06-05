@@ -73,13 +73,13 @@ function Section({ title, children }: any) {
     {children}
   </div>;
 }
-function Inp({ label, v, on }: any) {
+function Inp({ label, v, on }: { label: string; v: string; on: (v: string) => void }) {
   return <label className="block">
     <span className="text-xs font-bold text-muted-foreground">{label}</span>
     <input value={v} onChange={(e) => on(e.target.value)} className="w-full rounded-2xl border border-input bg-background px-3 py-2 text-sm mt-1" />
   </label>;
 }
-function Tog({ label, v, on }: any) {
+function Tog({ label, v, on }: { label: string; v: boolean; on: (v: boolean) => void }) {
   return <button onClick={() => on(!v)}
     className={`w-full rounded-2xl px-4 py-3 text-sm font-bold flex items-center justify-between ${v ? "gradient-primary text-primary-foreground shadow-glow" : "bg-muted text-muted-foreground"}`}>
     <span>{label}</span><span>{v ? "مفعّل" : "معطّل"}</span>
