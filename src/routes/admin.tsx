@@ -2,128 +2,88 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
-  ArrowRight, Users, Building2, Calendar, Star, Shield, Sparkles, TrendingUp,
-  CheckCircle2, XCircle, Plus, Search, Loader2,
+  Shield, ArrowRight, Loader2, Users, Building2, Calendar, Star, TrendingUp,
+  ChevronLeft, Sparkles, Search,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { useRoles } from "@/lib/useRoles";
 import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
+import { CENTERS, GROUPS, type Center } from "@/lib/adminCenters";
 
 export const Route = createFileRoute("/admin")({
-  component: AdminDashboard,
-  head: () => ({ meta: [{ title: "لوحة المشرف العام | صحتي" }] }),
+  component: AdminHub,
+  head: () => ({ meta: [{ title: "لوحة التحكم العليا | صحتي" }] }),
 });
 
-type Provider = {
-  id: string;
-  name: string;
-  type: "hospital" | "clinic" | "lab" | "radiology" | "pharmacy";
-  city: string | null;
-  status: "active" | "pending" | "suspended";
-  verified: boolean;
-  featured: boolean;
-  rating: number | null;
-  reviews_count: number | null;
-  created_at: string;
-};
-
-const TYPE_LABEL: Record<Provider["type"], string> = {
-  hospital: "مستشفى",
-  clinic: "عيادة",
-  lab: "مختبر",
-  radiology: "أشعة",
-  pharmacy: "صيدلية",
-};
-
-function AdminDashboard() {
-  const { user, loading: authLoading } = useAuth();
-  const { isAdmin, loading: rolesLoading } = useRoles();
+function AdminHub() {
+  const { user, loading: aL } = useAuth();
+  const { isAdmin, loading: rL } = useRoles();
   const nav = useNavigate();
+  const [q, setQ] = useState("");
+  const [stats, setStats] = useState({
+    users: 0, providers: 0, doctors: 0, bookings: 0, bookingsToday: 0,
+    bookingsMonth: 0, revenue: 0, subscriptions: 0, reviews: 0,
+    clinics: 0, hospitals: 0, labs: 0, radiology: 0, pharmacies: 0,
+  });
+  const [recent, setRecent] = useState<{ name: string; when: string; kind: string }[]>([]);
 
-  const [stats, setStats] = useState({ users: 0, providers: 0, bookings: 0, reviews: 0 });
-  const [providers, setProviders] = useState<Provider[]>([]);
-  const [query, setQuery] = useState("");
-  const [busy, setBusy] = useState(false);
+  useEffect(() => { if (!aL && !user) nav({ to: "/auth" }); }, [aL, user, nav]);
+  useEffect(() => { if (isAdmin) void load(); }, [isAdmin]);
 
-  useEffect(() => {
-    if (!authLoading && !user) nav({ to: "/auth" });
-  }, [authLoading, user, nav]);
-
-  useEffect(() => {
-    if (!isAdmin) return;
-    void loadAll();
-  }, [isAdmin]);
-
-  async function loadAll() {
-    setBusy(true);
-    const [profilesQ, providersQ, bookingsQ, reviewsQ, listQ] = await Promise.all([
+  async function load() {
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const monthStart = new Date(); monthStart.setDate(1); monthStart.setHours(0, 0, 0, 0);
+    const [u, p, b, r, bt, bm, subs, recB, recP, byType] = await Promise.all([
       supabase.from("profiles").select("*", { count: "exact", head: true }),
       supabase.from("providers").select("*", { count: "exact", head: true }),
       supabase.from("bookings").select("*", { count: "exact", head: true }),
       supabase.from("reviews").select("*", { count: "exact", head: true }),
-      supabase.from("providers").select("*").order("created_at", { ascending: false }).limit(100),
+      supabase.from("bookings").select("*", { count: "exact", head: true }).gte("created_at", today.toISOString()),
+      supabase.from("bookings").select("*", { count: "exact", head: true }).gte("created_at", monthStart.toISOString()),
+      supabase.from("subscriptions").select("amount", { count: "exact" }).eq("status", "active"),
+      supabase.from("bookings").select("patient_name, provider_name, created_at").order("created_at", { ascending: false }).limit(5),
+      supabase.from("providers").select("name, created_at").order("created_at", { ascending: false }).limit(5),
+      supabase.from("providers").select("type"),
     ]);
+    const revenue = (subs.data ?? []).reduce((s, x: any) => s + Number(x.amount || 0), 0);
+    const types = (byType.data ?? []).reduce((m: any, x: any) => { m[x.type] = (m[x.type] || 0) + 1; return m; }, {});
     setStats({
-      users: profilesQ.count ?? 0,
-      providers: providersQ.count ?? 0,
-      bookings: bookingsQ.count ?? 0,
-      reviews: reviewsQ.count ?? 0,
+      users: u.count ?? 0, providers: p.count ?? 0, doctors: 0, bookings: b.count ?? 0,
+      bookingsToday: bt.count ?? 0, bookingsMonth: bm.count ?? 0,
+      revenue, subscriptions: subs.count ?? 0, reviews: r.count ?? 0,
+      clinics: types.clinic || 0, hospitals: types.hospital || 0, labs: types.lab || 0,
+      radiology: types.radiology || 0, pharmacies: types.pharmacy || 0,
     });
-    setProviders((listQ.data ?? []) as Provider[]);
-    setBusy(false);
+    const ra = [
+      ...(recB.data ?? []).map((x: any) => ({ name: `حجز جديد: ${x.patient_name} → ${x.provider_name}`, when: x.created_at, kind: "booking" })),
+      ...(recP.data ?? []).map((x: any) => ({ name: `منشأة جديدة: ${x.name}`, when: x.created_at, kind: "provider" })),
+    ].sort((a, b) => +new Date(b.when) - +new Date(a.when)).slice(0, 8);
+    setRecent(ra);
   }
 
-  async function toggleField(id: string, field: "verified" | "featured", value: boolean) {
-    const patch = field === "verified" ? { verified: value } : { featured: value };
-    const { error } = await supabase.from("providers").update(patch).eq("id", id);
-    if (error) return toast.error(error.message);
-    setProviders((p) => p.map((x) => (x.id === id ? { ...x, [field]: value } : x)));
-    toast.success("تم التحديث");
-  }
-
-  async function setStatus(id: string, status: Provider["status"]) {
-    const { error } = await supabase.from("providers").update({ status }).eq("id", id);
-    if (error) return toast.error(error.message);
-    setProviders((p) => p.map((x) => (x.id === id ? { ...x, status } : x)));
-    toast.success("تم تحديث الحالة");
-  }
-
-  if (authLoading || rolesLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="animate-spin text-primary" />
+  if (aL || rL) return <div className="min-h-screen flex items-center justify-center"><Loader2 className="animate-spin text-primary" /></div>;
+  if (!isAdmin) return (
+    <div className="min-h-screen flex items-center justify-center px-6 text-center" dir="rtl">
+      <div>
+        <Shield className="mx-auto text-muted-foreground mb-3" size={40} />
+        <h1 className="font-extrabold text-xl">صلاحية غير متوفرة</h1>
+        <Link to="/" className="inline-block mt-4 rounded-2xl gradient-primary px-5 py-2.5 text-sm font-bold text-primary-foreground shadow-glow">العودة للرئيسية</Link>
       </div>
-    );
-  }
-
-  if (!isAdmin) {
-    return (
-      <div className="min-h-screen flex items-center justify-center px-6 text-center" dir="rtl">
-        <div>
-          <Shield className="mx-auto text-muted-foreground mb-3" size={40} />
-          <h1 className="font-extrabold text-xl">صلاحية غير متوفرة</h1>
-          <p className="text-sm text-muted-foreground mt-1">هذه اللوحة مخصصة للمشرف العام فقط.</p>
-          <Link to="/" className="inline-block mt-4 rounded-2xl gradient-primary px-5 py-2.5 text-sm font-bold text-primary-foreground shadow-glow">
-            العودة للرئيسية
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
-  const filtered = providers.filter(
-    (p) => !query || p.name.includes(query) || (p.city ?? "").includes(query),
+    </div>
   );
 
+  const filtered = CENTERS.filter((c) => !q || c.title.includes(q) || c.desc.includes(q));
+  const grouped: Record<string, Center[]> = {};
+  filtered.forEach((c) => { (grouped[c.group] ??= []).push(c); });
+
   return (
-    <div className="min-h-screen bg-background pb-12" dir="rtl">
+    <div className="min-h-screen bg-background pb-16" dir="rtl">
       <header className="sticky top-0 z-30 backdrop-blur-xl bg-background/85 border-b">
-        <div className="mx-auto max-w-5xl px-4 py-4 flex items-center gap-3">
+        <div className="mx-auto max-w-7xl px-4 py-4 flex items-center gap-3">
           <Link to="/" className="rounded-xl p-2 hover:bg-muted"><ArrowRight size={20} /></Link>
-          <div className="flex-1">
-            <h1 className="font-extrabold text-lg">لوحة المشرف العام</h1>
-            <p className="text-xs text-muted-foreground">إدارة المنصة بأكملها</p>
+          <div className="flex-1 min-w-0">
+            <h1 className="font-extrabold text-lg">لوحة التحكم العليا</h1>
+            <p className="text-xs text-muted-foreground">مركز إدارة وتشغيل منظومة صحتي بالكامل</p>
           </div>
           <div className="w-10 h-10 rounded-2xl gradient-primary flex items-center justify-center shadow-glow">
             <Shield className="text-primary-foreground" size={18} />
@@ -131,149 +91,106 @@ function AdminDashboard() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-5xl px-4 py-6 space-y-6">
-        {/* Quick Nav */}
-        <section className="grid grid-cols-2 md:grid-cols-4 gap-2">
-          <Link to="/admin/tokens" className="rounded-2xl border bg-card hover:bg-muted p-3 flex items-center gap-2 text-sm font-bold"><Shield size={16} className="text-destructive" /> روابط الوصول</Link>
-          <Link to="/admin/cities" className="rounded-2xl border bg-card hover:bg-muted p-3 flex items-center gap-2 text-sm font-bold"><Building2 size={16} className="text-primary" /> المدن</Link>
-          <Link to="/admin/home" className="rounded-2xl border bg-card hover:bg-muted p-3 flex items-center gap-2 text-sm font-bold"><Sparkles size={16} className="text-warning" /> الشاشة الرئيسية</Link>
-          <Link to="/dashboard/reception" className="rounded-2xl border bg-card hover:bg-muted p-3 flex items-center gap-2 text-sm font-bold"><Users size={16} className="text-success" /> الاستقبال</Link>
-        </section>
-
-        {/* Stats */}
+      <main className="mx-auto max-w-7xl px-4 py-6 space-y-6">
+        {/* Top metrics */}
         <section className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <StatCard icon={Users} label="المستخدمون" value={stats.users} hue="primary" />
-          <StatCard icon={Building2} label="مزوّدو الخدمة" value={stats.providers} hue="accent" />
-          <StatCard icon={Calendar} label="الحجوزات" value={stats.bookings} hue="success" />
-          <StatCard icon={Star} label="التقييمات" value={stats.reviews} hue="warning" />
+          <Stat label="المستخدمون" value={stats.users} icon={Users} hue="primary" />
+          <Stat label="المنشآت" value={stats.providers} icon={Building2} hue="accent" />
+          <Stat label="الحجوزات" value={stats.bookings} icon={Calendar} hue="success" />
+          <Stat label="إيراد الاشتراكات" value={`$${stats.revenue}`} icon={TrendingUp} hue="warning" />
         </section>
 
+        <section className="grid grid-cols-2 md:grid-cols-5 gap-2">
+          <Mini label="عيادات" value={stats.clinics} />
+          <Mini label="مستشفيات" value={stats.hospitals} />
+          <Mini label="مختبرات" value={stats.labs} />
+          <Mini label="أشعة" value={stats.radiology} />
+          <Mini label="صيدليات" value={stats.pharmacies} />
+        </section>
 
+        <section className="grid grid-cols-3 gap-2">
+          <Mini label="حجوزات اليوم" value={stats.bookingsToday} />
+          <Mini label="حجوزات الشهر" value={stats.bookingsMonth} />
+          <Mini label="اشتراكات نشطة" value={stats.subscriptions} />
+        </section>
 
-        {/* Providers */}
-        <section className="rounded-3xl border bg-card shadow-sm overflow-hidden">
-          <div className="p-4 flex flex-wrap items-center gap-3 border-b">
-            <div className="flex items-center gap-2 flex-1 min-w-[200px]">
-              <TrendingUp size={18} className="text-primary" />
-              <h2 className="font-extrabold">إدارة المزوّدين</h2>
-              <span className="text-xs text-muted-foreground">({filtered.length})</span>
-            </div>
-            <div className="relative flex-1 max-w-xs">
-              <Search size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-              <input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="بحث بالاسم أو المدينة..."
-                className="w-full rounded-2xl border border-input bg-background pr-9 pl-3 py-2 text-sm outline-none focus:border-primary"
-              />
-            </div>
-            <button
-              onClick={() => loadAll()}
-              className="rounded-2xl gradient-primary px-4 py-2 text-xs font-bold text-primary-foreground shadow-glow"
-            >
-              تحديث
-            </button>
+        {/* Recent activity */}
+        <section className="rounded-3xl border bg-card overflow-hidden">
+          <div className="p-4 border-b flex items-center gap-2">
+            <Sparkles size={16} className="text-warning" />
+            <h2 className="font-extrabold">أحدث الأنشطة</h2>
           </div>
-
-          {busy ? (
-            <div className="p-12 flex justify-center"><Loader2 className="animate-spin text-primary" /></div>
-          ) : filtered.length === 0 ? (
-            <div className="p-12 text-center text-sm text-muted-foreground">
-              <Building2 className="mx-auto mb-2 opacity-50" size={32} />
-              لا يوجد مزوّدون بعد. أضف بعض البيانات من قاعدة البيانات لتظهر هنا.
-            </div>
+          {recent.length === 0 ? (
+            <div className="p-8 text-center text-sm text-muted-foreground">لا توجد أنشطة بعد</div>
           ) : (
-            <div className="divide-y">
-              {filtered.map((p) => (
-                <motion.div
-                  key={p.id}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="p-4 flex flex-wrap items-center gap-3"
-                >
-                  <Link to="/admin/providers/$id" params={{ id: p.id }} className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary/15 to-accent/15 flex items-center justify-center font-extrabold text-primary hover:opacity-80">
-                    {p.name.charAt(0)}
-                  </Link>
-                  <div className="flex-1 min-w-[160px]">
-                    <div className="flex items-center gap-2">
-                      <h3 className="font-bold">{p.name}</h3>
-                      {p.verified && <CheckCircle2 size={14} className="text-primary fill-primary/15" />}
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                      {TYPE_LABEL[p.type]} • {p.city ?? "—"} • ⭐ {Number(p.rating ?? 0).toFixed(1)} ({p.reviews_count ?? 0})
-                    </p>
-                  </div>
-                  <StatusPill status={p.status} />
-                  <div className="flex items-center gap-2">
-                    <ToggleBtn active={p.verified} onClick={() => toggleField(p.id, "verified", !p.verified)} icon={CheckCircle2} label="موثّق" />
-                    <ToggleBtn active={p.featured} onClick={() => toggleField(p.id, "featured", !p.featured)} icon={Sparkles} label="مميّز" />
-                    <select
-                      value={p.status}
-                      onChange={(e) => setStatus(p.id, e.target.value as Provider["status"])}
-                      className="rounded-xl border border-input bg-background px-2 py-1.5 text-xs"
-                    >
-                      <option value="active">نشط</option>
-                      <option value="pending">قيد المراجعة</option>
-                      <option value="suspended">موقوف</option>
-                    </select>
-                  </div>
-                </motion.div>
+            <ul className="divide-y">
+              {recent.map((r, i) => (
+                <li key={i} className="p-3 flex items-center gap-3 text-sm">
+                  <span className={`w-2 h-2 rounded-full ${r.kind === "booking" ? "bg-success" : "bg-primary"}`} />
+                  <span className="flex-1">{r.name}</span>
+                  <span className="text-[10px] text-muted-foreground">{new Date(r.when).toLocaleString("ar")}</span>
+                </li>
               ))}
-            </div>
+            </ul>
           )}
         </section>
 
-        <Link to="/admin/providers/$id" params={{ id: "new" }} className="rounded-3xl border bg-card hover:bg-muted p-4 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl gradient-primary flex items-center justify-center shadow-glow">
-            <Plus className="text-primary-foreground" size={18} />
-          </div>
-          <div className="flex-1">
-            <h3 className="font-bold text-sm">إضافة مزوّد جديد</h3>
-            <p className="text-xs text-muted-foreground">سجّل مستشفى، عيادة، مختبر، أشعة أو صيدلية.</p>
-          </div>
-          <ArrowRight size={16} className="rotate-180 text-muted-foreground" />
-        </Link>
+        {/* Search centers */}
+        <div className="relative">
+          <Search size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+          <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="ابحث في مراكز الإدارة (32 مركز)..."
+            className="w-full rounded-2xl border border-input bg-card pr-9 pl-3 py-3 text-sm outline-none focus:border-primary" />
+        </div>
+
+        {/* Centers grid by group */}
+        {Object.entries(grouped).map(([g, items]) => (
+          <section key={g}>
+            <h3 className="text-xs font-bold text-muted-foreground mb-2 px-1">{GROUPS[g as keyof typeof GROUPS]}</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {items.map((c) => <CenterCard key={c.id} c={c} />)}
+            </div>
+          </section>
+        ))}
       </main>
     </div>
   );
 }
 
-function StatCard({ icon: Icon, label, value, hue }: { icon: any; label: string; value: number; hue: string }) {
+function Stat({ label, value, icon: Icon, hue }: { label: string; value: number | string; icon: any; hue: string }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="rounded-3xl border bg-card p-4 shadow-sm"
-    >
+    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="rounded-3xl border bg-card p-4 shadow-sm">
       <div className={`w-10 h-10 rounded-2xl flex items-center justify-center mb-3 bg-${hue}/10 text-${hue}`}>
         <Icon size={20} />
       </div>
-      <p className="text-2xl font-extrabold">{value.toLocaleString("ar")}</p>
+      <p className="text-2xl font-extrabold">{typeof value === "number" ? value.toLocaleString("ar") : value}</p>
       <p className="text-xs text-muted-foreground mt-1">{label}</p>
     </motion.div>
   );
 }
 
-function StatusPill({ status }: { status: Provider["status"] }) {
-  const map = {
-    active: { c: "bg-success/10 text-success", t: "نشط" },
-    pending: { c: "bg-warning/10 text-warning", t: "مراجعة" },
-    suspended: { c: "bg-destructive/10 text-destructive", t: "موقوف" },
-  } as const;
-  const s = map[status];
-  return <span className={`text-[10px] font-bold rounded-full px-2.5 py-1 ${s.c}`}>{s.t}</span>;
+function Mini({ label, value }: { label: string; value: number }) {
+  return (
+    <div className="rounded-2xl border bg-card p-3 text-center">
+      <p className="text-lg font-extrabold">{value.toLocaleString("ar")}</p>
+      <p className="text-[10px] text-muted-foreground">{label}</p>
+    </div>
+  );
 }
 
-function ToggleBtn({ active, onClick, icon: Icon, label }: { active: boolean; onClick: () => void; icon: any; label: string }) {
+function CenterCard({ c }: { c: Center }) {
   return (
-    <button
-      onClick={onClick}
-      className={`flex items-center gap-1 rounded-xl px-2.5 py-1.5 text-[11px] font-bold transition ${
-        active ? "gradient-primary text-primary-foreground shadow-glow" : "bg-muted text-muted-foreground hover:bg-muted/70"
-      }`}
-    >
-      {active ? <Icon size={12} /> : <XCircle size={12} />}
-      {label}
-    </button>
+    <Link to={c.to} className="group rounded-3xl border bg-card p-4 shadow-sm hover:shadow-glow hover:border-primary/40 transition flex items-start gap-3">
+      <div className={`w-12 h-12 rounded-2xl bg-${c.hue}/10 text-${c.hue} flex items-center justify-center shrink-0`}>
+        <c.icon size={22} />
+      </div>
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] font-bold rounded-full bg-muted text-muted-foreground px-2 py-0.5">#{c.num}</span>
+          <h4 className="font-extrabold truncate">{c.title}</h4>
+        </div>
+        <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{c.desc}</p>
+      </div>
+      <ChevronLeft size={16} className="text-muted-foreground group-hover:text-primary mt-2" />
+    </Link>
   );
 }
