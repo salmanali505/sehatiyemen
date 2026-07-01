@@ -21,6 +21,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AssistantRouteImport } from './routes/assistant'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as ProviderIdRouteImport } from './routes/provider.$id'
 import { Route as MasterTokenRouteImport } from './routes/master.$token'
 import { Route as DashboardReceptionRouteImport } from './routes/dashboard.reception'
@@ -32,6 +33,7 @@ import { Route as AdminTokensRouteImport } from './routes/admin.tokens'
 import { Route as AdminSupportRouteImport } from './routes/admin.support'
 import { Route as AdminSubscriptionsRouteImport } from './routes/admin.subscriptions'
 import { Route as AdminSpecialtiesRouteImport } from './routes/admin.specialties'
+import { Route as AdminSoonRouteImport } from './routes/admin.soon'
 import { Route as AdminSmartRouteImport } from './routes/admin.smart'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminServicesRouteImport } from './routes/admin.services'
@@ -118,6 +120,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
 const ProviderIdRoute = ProviderIdRouteImport.update({
   id: '/provider/$id',
   path: '/provider/$id',
@@ -171,6 +178,11 @@ const AdminSubscriptionsRoute = AdminSubscriptionsRouteImport.update({
 const AdminSpecialtiesRoute = AdminSpecialtiesRouteImport.update({
   id: '/specialties',
   path: '/specialties',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSoonRoute = AdminSoonRouteImport.update({
+  id: '/soon',
+  path: '/soon',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminSmartRoute = AdminSmartRouteImport.update({
@@ -334,6 +346,7 @@ export interface FileRoutesByFullPath {
   '/admin/services': typeof AdminServicesRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/smart': typeof AdminSmartRoute
+  '/admin/soon': typeof AdminSoonRoute
   '/admin/specialties': typeof AdminSpecialtiesRoute
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/support': typeof AdminSupportRoute
@@ -345,13 +358,13 @@ export interface FileRoutesByFullPath {
   '/dashboard/reception': typeof DashboardReceptionRoute
   '/master/$token': typeof MasterTokenRoute
   '/provider/$id': typeof ProviderIdRoute
+  '/admin/': typeof AdminIndexRoute
   '/admin/providers/$id': typeof AdminProvidersIdRoute
   '/portal/provider/$token': typeof PortalProviderTokenRoute
   '/portal/reception/$token': typeof PortalReceptionTokenRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRouteWithChildren
   '/assistant': typeof AssistantRoute
   '/auth': typeof AuthRoute
   '/bookings': typeof BookingsRoute
@@ -384,6 +397,7 @@ export interface FileRoutesByTo {
   '/admin/services': typeof AdminServicesRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/smart': typeof AdminSmartRoute
+  '/admin/soon': typeof AdminSoonRoute
   '/admin/specialties': typeof AdminSpecialtiesRoute
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/support': typeof AdminSupportRoute
@@ -395,6 +409,7 @@ export interface FileRoutesByTo {
   '/dashboard/reception': typeof DashboardReceptionRoute
   '/master/$token': typeof MasterTokenRoute
   '/provider/$id': typeof ProviderIdRoute
+  '/admin': typeof AdminIndexRoute
   '/admin/providers/$id': typeof AdminProvidersIdRoute
   '/portal/provider/$token': typeof PortalProviderTokenRoute
   '/portal/reception/$token': typeof PortalReceptionTokenRoute
@@ -435,6 +450,7 @@ export interface FileRoutesById {
   '/admin/services': typeof AdminServicesRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/smart': typeof AdminSmartRoute
+  '/admin/soon': typeof AdminSoonRoute
   '/admin/specialties': typeof AdminSpecialtiesRoute
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/support': typeof AdminSupportRoute
@@ -446,6 +462,7 @@ export interface FileRoutesById {
   '/dashboard/reception': typeof DashboardReceptionRoute
   '/master/$token': typeof MasterTokenRoute
   '/provider/$id': typeof ProviderIdRoute
+  '/admin/': typeof AdminIndexRoute
   '/admin/providers/$id': typeof AdminProvidersIdRoute
   '/portal/provider/$token': typeof PortalProviderTokenRoute
   '/portal/reception/$token': typeof PortalReceptionTokenRoute
@@ -487,6 +504,7 @@ export interface FileRouteTypes {
     | '/admin/services'
     | '/admin/settings'
     | '/admin/smart'
+    | '/admin/soon'
     | '/admin/specialties'
     | '/admin/subscriptions'
     | '/admin/support'
@@ -498,13 +516,13 @@ export interface FileRouteTypes {
     | '/dashboard/reception'
     | '/master/$token'
     | '/provider/$id'
+    | '/admin/'
     | '/admin/providers/$id'
     | '/portal/provider/$token'
     | '/portal/reception/$token'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/admin'
     | '/assistant'
     | '/auth'
     | '/bookings'
@@ -537,6 +555,7 @@ export interface FileRouteTypes {
     | '/admin/services'
     | '/admin/settings'
     | '/admin/smart'
+    | '/admin/soon'
     | '/admin/specialties'
     | '/admin/subscriptions'
     | '/admin/support'
@@ -548,6 +567,7 @@ export interface FileRouteTypes {
     | '/dashboard/reception'
     | '/master/$token'
     | '/provider/$id'
+    | '/admin'
     | '/admin/providers/$id'
     | '/portal/provider/$token'
     | '/portal/reception/$token'
@@ -587,6 +607,7 @@ export interface FileRouteTypes {
     | '/admin/services'
     | '/admin/settings'
     | '/admin/smart'
+    | '/admin/soon'
     | '/admin/specialties'
     | '/admin/subscriptions'
     | '/admin/support'
@@ -598,6 +619,7 @@ export interface FileRouteTypes {
     | '/dashboard/reception'
     | '/master/$token'
     | '/provider/$id'
+    | '/admin/'
     | '/admin/providers/$id'
     | '/portal/provider/$token'
     | '/portal/reception/$token'
@@ -709,6 +731,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/provider/$id': {
       id: '/provider/$id'
       path: '/provider/$id'
@@ -784,6 +813,13 @@ declare module '@tanstack/react-router' {
       path: '/specialties'
       fullPath: '/admin/specialties'
       preLoaderRoute: typeof AdminSpecialtiesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/soon': {
+      id: '/admin/soon'
+      path: '/soon'
+      fullPath: '/admin/soon'
+      preLoaderRoute: typeof AdminSoonRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/smart': {
@@ -987,6 +1023,7 @@ interface AdminRouteChildren {
   AdminServicesRoute: typeof AdminServicesRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
   AdminSmartRoute: typeof AdminSmartRoute
+  AdminSoonRoute: typeof AdminSoonRoute
   AdminSpecialtiesRoute: typeof AdminSpecialtiesRoute
   AdminSubscriptionsRoute: typeof AdminSubscriptionsRoute
   AdminSupportRoute: typeof AdminSupportRoute
@@ -994,6 +1031,7 @@ interface AdminRouteChildren {
   AdminUiRoute: typeof AdminUiRoute
   AdminUsersRoute: typeof AdminUsersRoute
   AdminVerificationRoute: typeof AdminVerificationRoute
+  AdminIndexRoute: typeof AdminIndexRoute
   AdminProvidersIdRoute: typeof AdminProvidersIdRoute
 }
 
@@ -1020,6 +1058,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminServicesRoute: AdminServicesRoute,
   AdminSettingsRoute: AdminSettingsRoute,
   AdminSmartRoute: AdminSmartRoute,
+  AdminSoonRoute: AdminSoonRoute,
   AdminSpecialtiesRoute: AdminSpecialtiesRoute,
   AdminSubscriptionsRoute: AdminSubscriptionsRoute,
   AdminSupportRoute: AdminSupportRoute,
@@ -1027,6 +1066,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminUiRoute: AdminUiRoute,
   AdminUsersRoute: AdminUsersRoute,
   AdminVerificationRoute: AdminVerificationRoute,
+  AdminIndexRoute: AdminIndexRoute,
   AdminProvidersIdRoute: AdminProvidersIdRoute,
 }
 
@@ -1066,13 +1106,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
