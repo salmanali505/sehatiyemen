@@ -19,8 +19,8 @@ import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as BookingsRouteImport } from './routes/bookings'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AssistantRouteImport } from './routes/assistant'
-import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as ProviderIdRouteImport } from './routes/provider.$id'
 import { Route as MasterTokenRouteImport } from './routes/master.$token'
 import { Route as DashboardReceptionRouteImport } from './routes/dashboard.reception'
@@ -109,14 +109,14 @@ const AssistantRoute = AssistantRouteImport.update({
   path: '/assistant',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminRoute = AdminRouteImport.update({
-  id: '/admin',
-  path: '/admin',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProviderIdRoute = ProviderIdRouteImport.update({
@@ -140,154 +140,154 @@ const BookProviderIdRoute = BookProviderIdRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminVerificationRoute = AdminVerificationRouteImport.update({
-  id: '/verification',
-  path: '/verification',
-  getParentRoute: () => AdminRoute,
+  id: '/admin/verification',
+  path: '/admin/verification',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminUsersRoute = AdminUsersRouteImport.update({
-  id: '/users',
-  path: '/users',
-  getParentRoute: () => AdminRoute,
+  id: '/admin/users',
+  path: '/admin/users',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminUiRoute = AdminUiRouteImport.update({
-  id: '/ui',
-  path: '/ui',
-  getParentRoute: () => AdminRoute,
+  id: '/admin/ui',
+  path: '/admin/ui',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminTokensRoute = AdminTokensRouteImport.update({
-  id: '/tokens',
-  path: '/tokens',
-  getParentRoute: () => AdminRoute,
+  id: '/admin/tokens',
+  path: '/admin/tokens',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminSupportRoute = AdminSupportRouteImport.update({
-  id: '/support',
-  path: '/support',
-  getParentRoute: () => AdminRoute,
+  id: '/admin/support',
+  path: '/admin/support',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminSubscriptionsRoute = AdminSubscriptionsRouteImport.update({
-  id: '/subscriptions',
-  path: '/subscriptions',
-  getParentRoute: () => AdminRoute,
+  id: '/admin/subscriptions',
+  path: '/admin/subscriptions',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminSpecialtiesRoute = AdminSpecialtiesRouteImport.update({
-  id: '/specialties',
-  path: '/specialties',
-  getParentRoute: () => AdminRoute,
+  id: '/admin/specialties',
+  path: '/admin/specialties',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminSoonRoute = AdminSoonRouteImport.update({
-  id: '/soon',
-  path: '/soon',
-  getParentRoute: () => AdminRoute,
+  id: '/admin/soon',
+  path: '/admin/soon',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminSmartRoute = AdminSmartRouteImport.update({
-  id: '/smart',
-  path: '/smart',
-  getParentRoute: () => AdminRoute,
+  id: '/admin/smart',
+  path: '/admin/smart',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminSettingsRoute = AdminSettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => AdminRoute,
+  id: '/admin/settings',
+  path: '/admin/settings',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminServicesRoute = AdminServicesRouteImport.update({
-  id: '/services',
-  path: '/services',
-  getParentRoute: () => AdminRoute,
+  id: '/admin/services',
+  path: '/admin/services',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminReportsRoute = AdminReportsRouteImport.update({
-  id: '/reports',
-  path: '/reports',
-  getParentRoute: () => AdminRoute,
+  id: '/admin/reports',
+  path: '/admin/reports',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminQrRoute = AdminQrRouteImport.update({
-  id: '/qr',
-  path: '/qr',
-  getParentRoute: () => AdminRoute,
+  id: '/admin/qr',
+  path: '/admin/qr',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminPermissionsRoute = AdminPermissionsRouteImport.update({
-  id: '/permissions',
-  path: '/permissions',
-  getParentRoute: () => AdminRoute,
+  id: '/admin/permissions',
+  path: '/admin/permissions',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminPaymentsRoute = AdminPaymentsRouteImport.update({
-  id: '/payments',
-  path: '/payments',
-  getParentRoute: () => AdminRoute,
+  id: '/admin/payments',
+  path: '/admin/payments',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminPackagesRoute = AdminPackagesRouteImport.update({
-  id: '/packages',
-  path: '/packages',
-  getParentRoute: () => AdminRoute,
+  id: '/admin/packages',
+  path: '/admin/packages',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminOffersRoute = AdminOffersRouteImport.update({
-  id: '/offers',
-  path: '/offers',
-  getParentRoute: () => AdminRoute,
+  id: '/admin/offers',
+  path: '/admin/offers',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminNotificationsRoute = AdminNotificationsRouteImport.update({
-  id: '/notifications',
-  path: '/notifications',
-  getParentRoute: () => AdminRoute,
+  id: '/admin/notifications',
+  path: '/admin/notifications',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminHomeRoute = AdminHomeRouteImport.update({
-  id: '/home',
-  path: '/home',
-  getParentRoute: () => AdminRoute,
+  id: '/admin/home',
+  path: '/admin/home',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminFinanceRoute = AdminFinanceRouteImport.update({
-  id: '/finance',
-  path: '/finance',
-  getParentRoute: () => AdminRoute,
+  id: '/admin/finance',
+  path: '/admin/finance',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminFacilitiesRoute = AdminFacilitiesRouteImport.update({
-  id: '/facilities',
-  path: '/facilities',
-  getParentRoute: () => AdminRoute,
+  id: '/admin/facilities',
+  path: '/admin/facilities',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminDoctorsRoute = AdminDoctorsRouteImport.update({
-  id: '/doctors',
-  path: '/doctors',
-  getParentRoute: () => AdminRoute,
+  id: '/admin/doctors',
+  path: '/admin/doctors',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminContentRoute = AdminContentRouteImport.update({
-  id: '/content',
-  path: '/content',
-  getParentRoute: () => AdminRoute,
+  id: '/admin/content',
+  path: '/admin/content',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminCitiesRoute = AdminCitiesRouteImport.update({
-  id: '/cities',
-  path: '/cities',
-  getParentRoute: () => AdminRoute,
+  id: '/admin/cities',
+  path: '/admin/cities',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminBookingsRoute = AdminBookingsRouteImport.update({
-  id: '/bookings',
-  path: '/bookings',
-  getParentRoute: () => AdminRoute,
+  id: '/admin/bookings',
+  path: '/admin/bookings',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminBackupRoute = AdminBackupRouteImport.update({
-  id: '/backup',
-  path: '/backup',
-  getParentRoute: () => AdminRoute,
+  id: '/admin/backup',
+  path: '/admin/backup',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminAuditRoute = AdminAuditRouteImport.update({
-  id: '/audit',
-  path: '/audit',
-  getParentRoute: () => AdminRoute,
+  id: '/admin/audit',
+  path: '/admin/audit',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminAnalyticsRoute = AdminAnalyticsRouteImport.update({
-  id: '/analytics',
-  path: '/analytics',
-  getParentRoute: () => AdminRoute,
+  id: '/admin/analytics',
+  path: '/admin/analytics',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminAiRoute = AdminAiRouteImport.update({
-  id: '/ai',
-  path: '/ai',
-  getParentRoute: () => AdminRoute,
+  id: '/admin/ai',
+  path: '/admin/ai',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminAdsRoute = AdminAdsRouteImport.update({
-  id: '/ads',
-  path: '/ads',
-  getParentRoute: () => AdminRoute,
+  id: '/admin/ads',
+  path: '/admin/ads',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const PortalReceptionTokenRoute = PortalReceptionTokenRouteImport.update({
   id: '/portal/reception/$token',
@@ -300,14 +300,13 @@ const PortalProviderTokenRoute = PortalProviderTokenRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminProvidersIdRoute = AdminProvidersIdRouteImport.update({
-  id: '/providers/$id',
-  path: '/providers/$id',
-  getParentRoute: () => AdminRoute,
+  id: '/admin/providers/$id',
+  path: '/admin/providers/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRouteWithChildren
   '/assistant': typeof AssistantRoute
   '/auth': typeof AuthRoute
   '/bookings': typeof BookingsRoute
@@ -352,13 +351,13 @@ export interface FileRoutesByFullPath {
   '/dashboard/reception': typeof DashboardReceptionRoute
   '/master/$token': typeof MasterTokenRoute
   '/provider/$id': typeof ProviderIdRoute
+  '/admin/': typeof AdminIndexRoute
   '/admin/providers/$id': typeof AdminProvidersIdRoute
   '/portal/provider/$token': typeof PortalProviderTokenRoute
   '/portal/reception/$token': typeof PortalReceptionTokenRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRouteWithChildren
   '/assistant': typeof AssistantRoute
   '/auth': typeof AuthRoute
   '/bookings': typeof BookingsRoute
@@ -403,6 +402,7 @@ export interface FileRoutesByTo {
   '/dashboard/reception': typeof DashboardReceptionRoute
   '/master/$token': typeof MasterTokenRoute
   '/provider/$id': typeof ProviderIdRoute
+  '/admin': typeof AdminIndexRoute
   '/admin/providers/$id': typeof AdminProvidersIdRoute
   '/portal/provider/$token': typeof PortalProviderTokenRoute
   '/portal/reception/$token': typeof PortalReceptionTokenRoute
@@ -410,7 +410,6 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/admin': typeof AdminRouteWithChildren
   '/assistant': typeof AssistantRoute
   '/auth': typeof AuthRoute
   '/bookings': typeof BookingsRoute
@@ -455,6 +454,7 @@ export interface FileRoutesById {
   '/dashboard/reception': typeof DashboardReceptionRoute
   '/master/$token': typeof MasterTokenRoute
   '/provider/$id': typeof ProviderIdRoute
+  '/admin/': typeof AdminIndexRoute
   '/admin/providers/$id': typeof AdminProvidersIdRoute
   '/portal/provider/$token': typeof PortalProviderTokenRoute
   '/portal/reception/$token': typeof PortalReceptionTokenRoute
@@ -463,7 +463,6 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/admin'
     | '/assistant'
     | '/auth'
     | '/bookings'
@@ -508,13 +507,13 @@ export interface FileRouteTypes {
     | '/dashboard/reception'
     | '/master/$token'
     | '/provider/$id'
+    | '/admin/'
     | '/admin/providers/$id'
     | '/portal/provider/$token'
     | '/portal/reception/$token'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/admin'
     | '/assistant'
     | '/auth'
     | '/bookings'
@@ -559,13 +558,13 @@ export interface FileRouteTypes {
     | '/dashboard/reception'
     | '/master/$token'
     | '/provider/$id'
+    | '/admin'
     | '/admin/providers/$id'
     | '/portal/provider/$token'
     | '/portal/reception/$token'
   id:
     | '__root__'
     | '/'
-    | '/admin'
     | '/assistant'
     | '/auth'
     | '/bookings'
@@ -610,6 +609,7 @@ export interface FileRouteTypes {
     | '/dashboard/reception'
     | '/master/$token'
     | '/provider/$id'
+    | '/admin/'
     | '/admin/providers/$id'
     | '/portal/provider/$token'
     | '/portal/reception/$token'
@@ -617,7 +617,6 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AdminRoute: typeof AdminRouteWithChildren
   AssistantRoute: typeof AssistantRoute
   AuthRoute: typeof AuthRoute
   BookingsRoute: typeof BookingsRoute
@@ -628,9 +627,41 @@ export interface RootRouteChildren {
   ProfileRoute: typeof ProfileRoute
   RecordsRoute: typeof RecordsRoute
   SearchRoute: typeof SearchRoute
+  AdminAdsRoute: typeof AdminAdsRoute
+  AdminAiRoute: typeof AdminAiRoute
+  AdminAnalyticsRoute: typeof AdminAnalyticsRoute
+  AdminAuditRoute: typeof AdminAuditRoute
+  AdminBackupRoute: typeof AdminBackupRoute
+  AdminBookingsRoute: typeof AdminBookingsRoute
+  AdminCitiesRoute: typeof AdminCitiesRoute
+  AdminContentRoute: typeof AdminContentRoute
+  AdminDoctorsRoute: typeof AdminDoctorsRoute
+  AdminFacilitiesRoute: typeof AdminFacilitiesRoute
+  AdminFinanceRoute: typeof AdminFinanceRoute
+  AdminHomeRoute: typeof AdminHomeRoute
+  AdminNotificationsRoute: typeof AdminNotificationsRoute
+  AdminOffersRoute: typeof AdminOffersRoute
+  AdminPackagesRoute: typeof AdminPackagesRoute
+  AdminPaymentsRoute: typeof AdminPaymentsRoute
+  AdminPermissionsRoute: typeof AdminPermissionsRoute
+  AdminQrRoute: typeof AdminQrRoute
+  AdminReportsRoute: typeof AdminReportsRoute
+  AdminServicesRoute: typeof AdminServicesRoute
+  AdminSettingsRoute: typeof AdminSettingsRoute
+  AdminSmartRoute: typeof AdminSmartRoute
+  AdminSoonRoute: typeof AdminSoonRoute
+  AdminSpecialtiesRoute: typeof AdminSpecialtiesRoute
+  AdminSubscriptionsRoute: typeof AdminSubscriptionsRoute
+  AdminSupportRoute: typeof AdminSupportRoute
+  AdminTokensRoute: typeof AdminTokensRoute
+  AdminUiRoute: typeof AdminUiRoute
+  AdminUsersRoute: typeof AdminUsersRoute
+  AdminVerificationRoute: typeof AdminVerificationRoute
   BookProviderIdRoute: typeof BookProviderIdRoute
   MasterTokenRoute: typeof MasterTokenRoute
   ProviderIdRoute: typeof ProviderIdRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+  AdminProvidersIdRoute: typeof AdminProvidersIdRoute
   PortalProviderTokenRoute: typeof PortalProviderTokenRoute
   PortalReceptionTokenRoute: typeof PortalReceptionTokenRoute
 }
@@ -707,18 +738,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AssistantRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin': {
-      id: '/admin'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AdminRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/admin'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/provider/$id': {
@@ -751,213 +782,213 @@ declare module '@tanstack/react-router' {
     }
     '/admin/verification': {
       id: '/admin/verification'
-      path: '/verification'
+      path: '/admin/verification'
       fullPath: '/admin/verification'
       preLoaderRoute: typeof AdminVerificationRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof rootRouteImport
     }
     '/admin/users': {
       id: '/admin/users'
-      path: '/users'
+      path: '/admin/users'
       fullPath: '/admin/users'
       preLoaderRoute: typeof AdminUsersRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof rootRouteImport
     }
     '/admin/ui': {
       id: '/admin/ui'
-      path: '/ui'
+      path: '/admin/ui'
       fullPath: '/admin/ui'
       preLoaderRoute: typeof AdminUiRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof rootRouteImport
     }
     '/admin/tokens': {
       id: '/admin/tokens'
-      path: '/tokens'
+      path: '/admin/tokens'
       fullPath: '/admin/tokens'
       preLoaderRoute: typeof AdminTokensRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof rootRouteImport
     }
     '/admin/support': {
       id: '/admin/support'
-      path: '/support'
+      path: '/admin/support'
       fullPath: '/admin/support'
       preLoaderRoute: typeof AdminSupportRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof rootRouteImport
     }
     '/admin/subscriptions': {
       id: '/admin/subscriptions'
-      path: '/subscriptions'
+      path: '/admin/subscriptions'
       fullPath: '/admin/subscriptions'
       preLoaderRoute: typeof AdminSubscriptionsRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof rootRouteImport
     }
     '/admin/specialties': {
       id: '/admin/specialties'
-      path: '/specialties'
+      path: '/admin/specialties'
       fullPath: '/admin/specialties'
       preLoaderRoute: typeof AdminSpecialtiesRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof rootRouteImport
     }
     '/admin/soon': {
       id: '/admin/soon'
-      path: '/soon'
+      path: '/admin/soon'
       fullPath: '/admin/soon'
       preLoaderRoute: typeof AdminSoonRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof rootRouteImport
     }
     '/admin/smart': {
       id: '/admin/smart'
-      path: '/smart'
+      path: '/admin/smart'
       fullPath: '/admin/smart'
       preLoaderRoute: typeof AdminSmartRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof rootRouteImport
     }
     '/admin/settings': {
       id: '/admin/settings'
-      path: '/settings'
+      path: '/admin/settings'
       fullPath: '/admin/settings'
       preLoaderRoute: typeof AdminSettingsRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof rootRouteImport
     }
     '/admin/services': {
       id: '/admin/services'
-      path: '/services'
+      path: '/admin/services'
       fullPath: '/admin/services'
       preLoaderRoute: typeof AdminServicesRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof rootRouteImport
     }
     '/admin/reports': {
       id: '/admin/reports'
-      path: '/reports'
+      path: '/admin/reports'
       fullPath: '/admin/reports'
       preLoaderRoute: typeof AdminReportsRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof rootRouteImport
     }
     '/admin/qr': {
       id: '/admin/qr'
-      path: '/qr'
+      path: '/admin/qr'
       fullPath: '/admin/qr'
       preLoaderRoute: typeof AdminQrRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof rootRouteImport
     }
     '/admin/permissions': {
       id: '/admin/permissions'
-      path: '/permissions'
+      path: '/admin/permissions'
       fullPath: '/admin/permissions'
       preLoaderRoute: typeof AdminPermissionsRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof rootRouteImport
     }
     '/admin/payments': {
       id: '/admin/payments'
-      path: '/payments'
+      path: '/admin/payments'
       fullPath: '/admin/payments'
       preLoaderRoute: typeof AdminPaymentsRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof rootRouteImport
     }
     '/admin/packages': {
       id: '/admin/packages'
-      path: '/packages'
+      path: '/admin/packages'
       fullPath: '/admin/packages'
       preLoaderRoute: typeof AdminPackagesRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof rootRouteImport
     }
     '/admin/offers': {
       id: '/admin/offers'
-      path: '/offers'
+      path: '/admin/offers'
       fullPath: '/admin/offers'
       preLoaderRoute: typeof AdminOffersRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof rootRouteImport
     }
     '/admin/notifications': {
       id: '/admin/notifications'
-      path: '/notifications'
+      path: '/admin/notifications'
       fullPath: '/admin/notifications'
       preLoaderRoute: typeof AdminNotificationsRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof rootRouteImport
     }
     '/admin/home': {
       id: '/admin/home'
-      path: '/home'
+      path: '/admin/home'
       fullPath: '/admin/home'
       preLoaderRoute: typeof AdminHomeRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof rootRouteImport
     }
     '/admin/finance': {
       id: '/admin/finance'
-      path: '/finance'
+      path: '/admin/finance'
       fullPath: '/admin/finance'
       preLoaderRoute: typeof AdminFinanceRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof rootRouteImport
     }
     '/admin/facilities': {
       id: '/admin/facilities'
-      path: '/facilities'
+      path: '/admin/facilities'
       fullPath: '/admin/facilities'
       preLoaderRoute: typeof AdminFacilitiesRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof rootRouteImport
     }
     '/admin/doctors': {
       id: '/admin/doctors'
-      path: '/doctors'
+      path: '/admin/doctors'
       fullPath: '/admin/doctors'
       preLoaderRoute: typeof AdminDoctorsRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof rootRouteImport
     }
     '/admin/content': {
       id: '/admin/content'
-      path: '/content'
+      path: '/admin/content'
       fullPath: '/admin/content'
       preLoaderRoute: typeof AdminContentRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof rootRouteImport
     }
     '/admin/cities': {
       id: '/admin/cities'
-      path: '/cities'
+      path: '/admin/cities'
       fullPath: '/admin/cities'
       preLoaderRoute: typeof AdminCitiesRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof rootRouteImport
     }
     '/admin/bookings': {
       id: '/admin/bookings'
-      path: '/bookings'
+      path: '/admin/bookings'
       fullPath: '/admin/bookings'
       preLoaderRoute: typeof AdminBookingsRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof rootRouteImport
     }
     '/admin/backup': {
       id: '/admin/backup'
-      path: '/backup'
+      path: '/admin/backup'
       fullPath: '/admin/backup'
       preLoaderRoute: typeof AdminBackupRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof rootRouteImport
     }
     '/admin/audit': {
       id: '/admin/audit'
-      path: '/audit'
+      path: '/admin/audit'
       fullPath: '/admin/audit'
       preLoaderRoute: typeof AdminAuditRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof rootRouteImport
     }
     '/admin/analytics': {
       id: '/admin/analytics'
-      path: '/analytics'
+      path: '/admin/analytics'
       fullPath: '/admin/analytics'
       preLoaderRoute: typeof AdminAnalyticsRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof rootRouteImport
     }
     '/admin/ai': {
       id: '/admin/ai'
-      path: '/ai'
+      path: '/admin/ai'
       fullPath: '/admin/ai'
       preLoaderRoute: typeof AdminAiRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof rootRouteImport
     }
     '/admin/ads': {
       id: '/admin/ads'
-      path: '/ads'
+      path: '/admin/ads'
       fullPath: '/admin/ads'
       preLoaderRoute: typeof AdminAdsRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof rootRouteImport
     }
     '/portal/reception/$token': {
       id: '/portal/reception/$token'
@@ -975,49 +1006,38 @@ declare module '@tanstack/react-router' {
     }
     '/admin/providers/$id': {
       id: '/admin/providers/$id'
-      path: '/providers/$id'
+      path: '/admin/providers/$id'
       fullPath: '/admin/providers/$id'
       preLoaderRoute: typeof AdminProvidersIdRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof rootRouteImport
     }
   }
 }
 
-interface AdminRouteChildren {
-  AdminAdsRoute: typeof AdminAdsRoute
-  AdminAiRoute: typeof AdminAiRoute
-  AdminAnalyticsRoute: typeof AdminAnalyticsRoute
-  AdminAuditRoute: typeof AdminAuditRoute
-  AdminBackupRoute: typeof AdminBackupRoute
-  AdminBookingsRoute: typeof AdminBookingsRoute
-  AdminCitiesRoute: typeof AdminCitiesRoute
-  AdminContentRoute: typeof AdminContentRoute
-  AdminDoctorsRoute: typeof AdminDoctorsRoute
-  AdminFacilitiesRoute: typeof AdminFacilitiesRoute
-  AdminFinanceRoute: typeof AdminFinanceRoute
-  AdminHomeRoute: typeof AdminHomeRoute
-  AdminNotificationsRoute: typeof AdminNotificationsRoute
-  AdminOffersRoute: typeof AdminOffersRoute
-  AdminPackagesRoute: typeof AdminPackagesRoute
-  AdminPaymentsRoute: typeof AdminPaymentsRoute
-  AdminPermissionsRoute: typeof AdminPermissionsRoute
-  AdminQrRoute: typeof AdminQrRoute
-  AdminReportsRoute: typeof AdminReportsRoute
-  AdminServicesRoute: typeof AdminServicesRoute
-  AdminSettingsRoute: typeof AdminSettingsRoute
-  AdminSmartRoute: typeof AdminSmartRoute
-  AdminSoonRoute: typeof AdminSoonRoute
-  AdminSpecialtiesRoute: typeof AdminSpecialtiesRoute
-  AdminSubscriptionsRoute: typeof AdminSubscriptionsRoute
-  AdminSupportRoute: typeof AdminSupportRoute
-  AdminTokensRoute: typeof AdminTokensRoute
-  AdminUiRoute: typeof AdminUiRoute
-  AdminUsersRoute: typeof AdminUsersRoute
-  AdminVerificationRoute: typeof AdminVerificationRoute
-  AdminProvidersIdRoute: typeof AdminProvidersIdRoute
+interface DashboardRouteChildren {
+  DashboardReceptionRoute: typeof DashboardReceptionRoute
 }
 
-const AdminRouteChildren: AdminRouteChildren = {
+const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardReceptionRoute: DashboardReceptionRoute,
+}
+
+const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
+  DashboardRouteChildren,
+)
+
+const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
+  AssistantRoute: AssistantRoute,
+  AuthRoute: AuthRoute,
+  BookingsRoute: BookingsRoute,
+  DashboardRoute: DashboardRouteWithChildren,
+  FamilyRoute: FamilyRoute,
+  FavoritesRoute: FavoritesRoute,
+  NotificationsRoute: NotificationsRoute,
+  ProfileRoute: ProfileRoute,
+  RecordsRoute: RecordsRoute,
+  SearchRoute: SearchRoute,
   AdminAdsRoute: AdminAdsRoute,
   AdminAiRoute: AdminAiRoute,
   AdminAnalyticsRoute: AdminAnalyticsRoute,
@@ -1048,39 +1068,11 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminUiRoute: AdminUiRoute,
   AdminUsersRoute: AdminUsersRoute,
   AdminVerificationRoute: AdminVerificationRoute,
-  AdminProvidersIdRoute: AdminProvidersIdRoute,
-}
-
-const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
-
-interface DashboardRouteChildren {
-  DashboardReceptionRoute: typeof DashboardReceptionRoute
-}
-
-const DashboardRouteChildren: DashboardRouteChildren = {
-  DashboardReceptionRoute: DashboardReceptionRoute,
-}
-
-const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
-  DashboardRouteChildren,
-)
-
-const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  AdminRoute: AdminRouteWithChildren,
-  AssistantRoute: AssistantRoute,
-  AuthRoute: AuthRoute,
-  BookingsRoute: BookingsRoute,
-  DashboardRoute: DashboardRouteWithChildren,
-  FamilyRoute: FamilyRoute,
-  FavoritesRoute: FavoritesRoute,
-  NotificationsRoute: NotificationsRoute,
-  ProfileRoute: ProfileRoute,
-  RecordsRoute: RecordsRoute,
-  SearchRoute: SearchRoute,
   BookProviderIdRoute: BookProviderIdRoute,
   MasterTokenRoute: MasterTokenRoute,
   ProviderIdRoute: ProviderIdRoute,
+  AdminIndexRoute: AdminIndexRoute,
+  AdminProvidersIdRoute: AdminProvidersIdRoute,
   PortalProviderTokenRoute: PortalProviderTokenRoute,
   PortalReceptionTokenRoute: PortalReceptionTokenRoute,
 }

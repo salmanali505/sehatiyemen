@@ -15,7 +15,7 @@ import { useRoles } from "@/lib/useRoles";
 import { supabase } from "@/integrations/supabase/client";
 import { CENTERS, GROUPS, type Center } from "@/lib/adminCenters";
 
-export const Route = createFileRoute("/admin")({
+export const Route = createFileRoute("/admin/")({
   component: AdminHub,
   head: () => ({ meta: [{ title: "لوحة التحكم العليا | صحتي" }] }),
 });
