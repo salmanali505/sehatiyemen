@@ -160,19 +160,8 @@ function AdminHub() {
   filtered.forEach((c) => { (grouped[c.group] ??= []).push(c); });
 
   return (
-    <div className="min-h-screen bg-background pb-20" dir="rtl">
-      <header className="sticky top-0 z-30 backdrop-blur-xl bg-background/85 border-b">
-        <div className="mx-auto max-w-7xl px-4 py-4 flex items-center gap-3">
-          <Link to="/" className="rounded-xl p-2 hover:bg-muted"><ArrowRight size={20} /></Link>
-          <div className="flex-1 min-w-0">
-            <h1 className="font-extrabold text-lg">لوحة التحكم العليا</h1>
-            <p className="text-xs text-muted-foreground">Enterprise Control Center — منظومة صحتي</p>
-          </div>
-          <div className="w-10 h-10 rounded-2xl gradient-primary flex items-center justify-center shadow-glow">
-            <Shield className="text-primary-foreground" size={18} />
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-background pb-8" dir="rtl">
+
 
       <main className="mx-auto max-w-7xl px-4 py-6 space-y-6">
         {/* Alerts */}
