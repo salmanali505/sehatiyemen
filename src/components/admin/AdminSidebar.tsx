@@ -191,8 +191,12 @@ export function AdminSidebar() {
   };
 
   return (
-    <Sidebar side="right" collapsible="icon">
-      <SidebarHeader className="border-b">
+    <Sidebar
+      side="right"
+      collapsible="icon"
+      className="border-l-0 [&>[data-sidebar=sidebar]]:bg-background [&>[data-sidebar=sidebar]]:border-l-0"
+    >
+      <SidebarHeader className="border-b-0 bg-transparent">
         <div className="flex items-center gap-2 px-2 py-2">
           <div className="w-8 h-8 rounded-xl gradient-primary flex items-center justify-center shadow-glow shrink-0">
             <Shield className="h-4 w-4 text-primary-foreground" />
