@@ -278,7 +278,7 @@ export function AdminSidebar() {
         })}
       </SidebarContent>
 
-      <SidebarFooter className="border-t">
+      <SidebarFooter className="border-t-0 bg-transparent">
         {!collapsed ? (
           <div className="px-2 py-2 text-[10px] text-muted-foreground">
             <p className="font-bold text-foreground text-xs">Sehati v3.0</p>
