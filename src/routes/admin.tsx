@@ -48,7 +48,7 @@ function AdminShell() {
       <div className="min-h-screen flex w-full bg-background" dir="rtl">
         <AdminSidebar />
         <div className="flex-1 flex flex-col min-w-0">
-          <header className="sticky top-0 z-30 h-12 flex items-center gap-2 bg-background/70 backdrop-blur-xl px-3">
+          <header className="sticky top-0 z-30 h-12 flex items-center gap-2 border-b border-border bg-card/90 backdrop-blur-xl px-3 shadow-sm">
             <SidebarTrigger className="rounded-lg">
               <Menu className="h-4 w-4" />
             </SidebarTrigger>
