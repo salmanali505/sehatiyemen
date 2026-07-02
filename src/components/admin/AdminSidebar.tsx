@@ -194,21 +194,25 @@ export function AdminSidebar() {
     <Sidebar
       side="right"
       collapsible="icon"
-      className="border-l-0 [&>[data-sidebar=sidebar]]:bg-background [&>[data-sidebar=sidebar]]:border-l-0"
+      className="[&>[data-sidebar=sidebar]]:bg-card [&>[data-sidebar=sidebar]]:border-l [&>[data-sidebar=sidebar]]:border-border [&>[data-sidebar=sidebar]]:shadow-card"
     >
-      <SidebarHeader className="border-b-0 bg-transparent">
-        <div className="flex items-center gap-2 px-2 py-2">
-          <div className="w-8 h-8 rounded-xl gradient-primary flex items-center justify-center shadow-glow shrink-0">
+      <SidebarHeader className="border-b border-border bg-card">
+        <div className="flex items-center gap-2 px-2 py-2.5">
+          <div className="w-9 h-9 rounded-xl gradient-primary flex items-center justify-center shadow-glow shrink-0">
             <Shield className="h-4 w-4 text-primary-foreground" />
           </div>
           {!collapsed && (
             <div className="min-w-0 flex-1">
-              <p className="font-extrabold text-sm truncate">صحتي — المشرف</p>
+              <p className="font-extrabold text-sm truncate text-foreground">صحتي — المشرف</p>
               <p className="text-[10px] text-muted-foreground">Enterprise Control</p>
             </div>
           )}
           {!collapsed && (
-            <button onClick={toggleDark} className="rounded-lg p-1.5 hover:bg-muted" aria-label="theme">
+            <button
+              onClick={toggleDark}
+              className="rounded-lg p-1.5 hover:bg-muted transition-colors border border-border"
+              aria-label="theme"
+            >
               {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </button>
           )}
@@ -216,22 +220,22 @@ export function AdminSidebar() {
         {!collapsed && (
           <div className="px-2 pb-2">
             <div className="relative">
-              <Search className="absolute right-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+              <Search className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
               <input
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
                 placeholder="بحث في القوائم..."
-                className="w-full rounded-lg border bg-background pr-7 pl-2 py-1.5 text-xs outline-none focus:border-primary"
+                className="w-full rounded-xl border border-border bg-muted/40 pr-8 pl-3 py-2 text-xs outline-none focus:border-primary focus:bg-background transition-colors"
               />
             </div>
           </div>
         )}
       </SidebarHeader>
 
-      <SidebarContent>
+      <SidebarContent className="bg-card px-1.5 py-2 gap-1.5">
         {!collapsed && searchResults.length > 0 && (
-          <SidebarGroup>
-            <SidebarGroupLabel>نتائج البحث</SidebarGroupLabel>
+          <SidebarGroup className="rounded-2xl border border-border bg-background/60 p-1.5">
+            <SidebarGroupLabel className="text-primary font-bold">نتائج البحث</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>{searchResults.map((i) => renderLeaf(i, 0))}</SidebarMenu>
             </SidebarGroupContent>
@@ -239,9 +243,9 @@ export function AdminSidebar() {
         )}
 
         {!collapsed && favItems.length > 0 && searchResults.length === 0 && (
-          <SidebarGroup>
-            <SidebarGroupLabel className="flex items-center gap-1">
-              <Sparkles className="h-3 w-3 text-warning" /> المفضلة
+          <SidebarGroup className="rounded-2xl border border-warning/30 bg-warning/5 p-1.5">
+            <SidebarGroupLabel className="flex items-center gap-1 text-warning font-bold">
+              <Sparkles className="h-3 w-3" /> المفضلة
             </SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>{favItems.map((i) => renderLeaf(i, 0))}</SidebarMenu>
@@ -255,21 +259,28 @@ export function AdminSidebar() {
           );
           const SIcon = section.icon;
           return (
-            <SidebarGroup key={section.id}>
+            <SidebarGroup
+              key={section.id}
+              className={`rounded-2xl border border-border bg-background/50 ${collapsed ? "p-1" : "p-1.5"} transition-colors hover:border-primary/30`}
+            >
               {!collapsed ? (
                 <SidebarGroupLabel
                   onClick={() => setOpenSections((p) => ({ ...p, [section.id]: !open }))}
-                  className="cursor-pointer flex items-center gap-2 select-none hover:text-foreground"
+                  className="cursor-pointer flex items-center gap-2 select-none rounded-xl px-2 py-1.5 hover:bg-muted text-foreground/80 hover:text-foreground font-bold"
                 >
-                  <SIcon className="h-3.5 w-3.5" />
-                  <span className="flex-1">{section.title}</span>
-                  <ChevronDown className={`h-3 w-3 transition ${open ? "rotate-180" : ""}`} />
+                  <span className="w-6 h-6 rounded-lg gradient-primary flex items-center justify-center shadow-sm">
+                    <SIcon className="h-3.5 w-3.5 text-primary-foreground" />
+                  </span>
+                  <span className="flex-1 text-xs">{section.title}</span>
+                  <ChevronDown className={`h-3.5 w-3.5 transition-transform ${open ? "rotate-180 text-primary" : ""}`} />
                 </SidebarGroupLabel>
               ) : (
-                <SidebarGroupLabel><SIcon className="h-3.5 w-3.5" /></SidebarGroupLabel>
+                <SidebarGroupLabel className="justify-center">
+                  <SIcon className="h-4 w-4 text-primary" />
+                </SidebarGroupLabel>
               )}
               {(open || collapsed) && (
-                <SidebarGroupContent>
+                <SidebarGroupContent className={collapsed ? "" : "mt-1 border-t border-border/60 pt-1"}>
                   <SidebarMenu>{section.items.map(renderItem)}</SidebarMenu>
                 </SidebarGroupContent>
               )}
@@ -278,14 +289,19 @@ export function AdminSidebar() {
         })}
       </SidebarContent>
 
-      <SidebarFooter className="border-t-0 bg-transparent">
+      <SidebarFooter className="border-t border-border bg-card">
         {!collapsed ? (
-          <div className="px-2 py-2 text-[10px] text-muted-foreground">
-            <p className="font-bold text-foreground text-xs">Sehati v3.0</p>
+          <div className="px-3 py-2.5 text-[10px] text-muted-foreground">
+            <p className="font-extrabold text-foreground text-xs">Sehati v3.0</p>
             <p>Enterprise Control Panel</p>
           </div>
-        ) : null}
+        ) : (
+          <div className="flex items-center justify-center py-2">
+            <Shield className="h-4 w-4 text-primary" />
+          </div>
+        )}
       </SidebarFooter>
     </Sidebar>
   );
 }
+
