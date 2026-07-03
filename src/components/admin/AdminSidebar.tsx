@@ -113,7 +113,7 @@ export function AdminSidebar() {
   const favItems = favs.map((id) => allLeaves[id]).filter(Boolean);
 
   const isActive = (to?: string) => !!to && (pathname === to || (to !== "/admin" && pathname.startsWith(to)));
-  const resolveTo = (i: MenuItem) => i.to ?? `/admin/soon?t=${encodeURIComponent(i.title)}`;
+  const resolveTo = (i: MenuItem) => i.to ?? `/admin/soon?id=${encodeURIComponent(i.id)}&t=${encodeURIComponent(i.title)}`;
 
   const renderLeaf = (i: MenuItem) => {
     const to = resolveTo(i);
