@@ -3,12 +3,12 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel,
   SidebarHeader, SidebarFooter, SidebarMenu, SidebarMenuButton, SidebarMenuItem,
-  SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, useSidebar,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { ADMIN_MENU, type MenuItem } from "@/lib/adminMenu";
 import { supabase } from "@/integrations/supabase/client";
 import {
-  ChevronDown, Search, Star, StarOff, Sun, Moon, Shield, Sparkles,
+  Search, Star, StarOff, Sun, Moon, Shield, Sparkles,
 } from "lucide-react";
 
 type Counters = Record<string, number>;
@@ -23,7 +23,7 @@ function saveFavs(ids: string[]) {
   try { localStorage.setItem(FAV_KEY, JSON.stringify(ids)); } catch {}
 }
 
-function flattenLeaves(items: MenuItem[]): MenuItem[] {
+function flattenAll(items: MenuItem[]): MenuItem[] {
   const out: MenuItem[] = [];
   const walk = (arr: MenuItem[]) => arr.forEach((i) => {
     if (i.children?.length) walk(i.children);
@@ -40,18 +40,14 @@ export function AdminSidebar() {
   const [q, setQ] = useState("");
   const [favs, setFavs] = useState<string[]>([]);
   const [dark, setDark] = useState(false);
-  const [openSections, setOpenSections] = useState<Record<string, boolean>>({ dashboard: true });
-  const [openSubs, setOpenSubs] = useState<Record<string, boolean>>({});
   const [counters, setCounters] = useState<Counters>({});
 
   useEffect(() => { setFavs(loadFavs()); }, []);
   useEffect(() => {
     if (typeof document === "undefined") return;
-    const isDark = document.documentElement.classList.contains("dark");
-    setDark(isDark);
+    setDark(document.documentElement.classList.contains("dark"));
   }, []);
 
-  // real-time counters
   useEffect(() => {
     let ignore = false;
     (async () => {
@@ -101,7 +97,7 @@ export function AdminSidebar() {
   const allLeaves = useMemo(() => {
     const map: Record<string, MenuItem & { section: string; sectionTitle: string }> = {};
     ADMIN_MENU.forEach((s) =>
-      flattenLeaves(s.items).forEach((i) => { map[i.id] = { ...i, section: s.id, sectionTitle: s.title }; })
+      flattenAll(s.items).forEach((i) => { map[i.id] = { ...i, section: s.id, sectionTitle: s.title }; })
     );
     return map;
   }, []);
@@ -117,77 +113,39 @@ export function AdminSidebar() {
   const favItems = favs.map((id) => allLeaves[id]).filter(Boolean);
 
   const isActive = (to?: string) => !!to && (pathname === to || (to !== "/admin" && pathname.startsWith(to)));
-
   const resolveTo = (i: MenuItem) => i.to ?? `/admin/soon?t=${encodeURIComponent(i.title)}`;
 
-  const renderLeaf = (i: MenuItem, depth = 0) => {
+  const renderLeaf = (i: MenuItem) => {
     const to = resolveTo(i);
     const active = isActive(i.to);
     const badge = i.badgeKey ? counters[i.badgeKey] : undefined;
     const Icon = i.icon;
     const isFav = favs.includes(i.id);
-    const inner = (
-      <>
-        {Icon ? <Icon className="h-4 w-4 shrink-0" /> : null}
-        {!collapsed && <span className="flex-1 truncate">{i.title}</span>}
-        {!collapsed && badge != null && badge > 0 && (
-          <span className="ml-auto rounded-full bg-primary/15 text-primary text-[10px] font-bold px-1.5 py-0.5 min-w-[20px] text-center">
-            {badge > 99 ? "99+" : badge}
-          </span>
-        )}
-        {!collapsed && (
-          <button
-            type="button"
-            onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleFav(i.id); }}
-            className="opacity-60 hover:opacity-100 shrink-0"
-            aria-label="مفضلة"
-          >
-            {isFav ? <Star className="h-3 w-3 fill-warning text-warning" /> : <StarOff className="h-3 w-3" />}
-          </button>
-        )}
-      </>
-    );
-    if (depth === 0) {
-      return (
-        <SidebarMenuItem key={i.id}>
-          <SidebarMenuButton asChild isActive={active} tooltip={i.title}>
-            <Link to={to} className="flex items-center gap-2">{inner}</Link>
-          </SidebarMenuButton>
-        </SidebarMenuItem>
-      );
-    }
     return (
-      <SidebarMenuSubItem key={i.id}>
-        <SidebarMenuSubButton asChild isActive={active}>
-          <Link to={to} className="flex items-center gap-2">{inner}</Link>
-        </SidebarMenuSubButton>
-      </SidebarMenuSubItem>
-    );
-  };
-
-  const renderItem = (i: MenuItem) => {
-    if (i.children?.length) {
-      const open = openSubs[i.id] ?? i.children.some((c) => isActive(c.to));
-      const Icon = i.icon;
-      return (
-        <SidebarMenuItem key={i.id}>
-          <SidebarMenuButton
-            onClick={() => setOpenSubs((p) => ({ ...p, [i.id]: !open }))}
-            tooltip={i.title}
-          >
+      <SidebarMenuItem key={i.id}>
+        <SidebarMenuButton asChild isActive={active} tooltip={i.title}>
+          <Link to={to} className="flex items-center gap-2">
             {Icon ? <Icon className="h-4 w-4 shrink-0" /> : null}
             {!collapsed && <span className="flex-1 truncate">{i.title}</span>}
-            {!collapsed && <ChevronDown className={`h-3 w-3 transition ${open ? "rotate-180" : ""}`} />}
-          </SidebarMenuButton>
-          {!collapsed && open && (
-            <SidebarMenuSub>
-              {i.children.map((c) => renderLeaf(c, 1))}
-            </SidebarMenuSub>
-          )}
-        </SidebarMenuItem>
-      );
-    }
-    return renderLeaf(i, 0);
+            {!collapsed && badge != null && badge > 0 && (
+              <span className="ml-auto rounded-full bg-primary/15 text-primary text-[10px] font-bold px-1.5 py-0.5 min-w-[20px] text-center">
+                {badge > 99 ? "99+" : badge}
+              </span>
+            )}
+            {!collapsed && (
+              <button
+                type="button"
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleFav(i.id); }}
+                className="opacity-60 hover:opacity-100 shrink-0"
+                aria-label="مفضلة"
+              >
+                {isFav ? <Star className="h-3 w-3 fill-warning text-warning" /> : <StarOff className="h-3 w-3" />}
+              </button>
+            )}
+          </Link>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+    );
   };
 
   return (
@@ -237,7 +195,7 @@ export function AdminSidebar() {
           <SidebarGroup className="rounded-2xl border border-border bg-background/60 p-1.5">
             <SidebarGroupLabel className="text-primary font-bold">نتائج البحث</SidebarGroupLabel>
             <SidebarGroupContent>
-              <SidebarMenu>{searchResults.map((i) => renderLeaf(i, 0))}</SidebarMenu>
+              <SidebarMenu>{searchResults.map(renderLeaf)}</SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
         )}
@@ -248,45 +206,33 @@ export function AdminSidebar() {
               <Sparkles className="h-3 w-3" /> المفضلة
             </SidebarGroupLabel>
             <SidebarGroupContent>
-              <SidebarMenu>{favItems.map((i) => renderLeaf(i, 0))}</SidebarMenu>
+              <SidebarMenu>{favItems.map(renderLeaf)}</SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
         )}
 
-        {searchResults.length === 0 && ADMIN_MENU.map((section) => {
-          const open = openSections[section.id] ?? section.items.some((it) =>
-            it.children?.some((c) => isActive(c.to)) || isActive(it.to)
-          );
-          const SIcon = section.icon;
-          return (
-            <SidebarGroup
-              key={section.id}
-              className={`rounded-2xl border border-border bg-background/50 ${collapsed ? "p-1" : "p-1.5"} transition-colors hover:border-primary/30`}
-            >
-              {!collapsed ? (
-                <SidebarGroupLabel
-                  onClick={() => setOpenSections((p) => ({ ...p, [section.id]: !open }))}
-                  className="cursor-pointer flex items-center gap-2 select-none rounded-xl px-2 py-1.5 hover:bg-muted text-foreground/80 hover:text-foreground font-bold"
-                >
-                  <span className="w-6 h-6 rounded-lg gradient-primary flex items-center justify-center shadow-sm">
-                    <SIcon className="h-3.5 w-3.5 text-primary-foreground" />
-                  </span>
-                  <span className="flex-1 text-xs">{section.title}</span>
-                  <ChevronDown className={`h-3.5 w-3.5 transition-transform ${open ? "rotate-180 text-primary" : ""}`} />
-                </SidebarGroupLabel>
-              ) : (
-                <SidebarGroupLabel className="justify-center">
-                  <SIcon className="h-4 w-4 text-primary" />
-                </SidebarGroupLabel>
-              )}
-              {(open || collapsed) && (
-                <SidebarGroupContent className={collapsed ? "" : "mt-1 border-t border-border/60 pt-1"}>
-                  <SidebarMenu>{section.items.map(renderItem)}</SidebarMenu>
-                </SidebarGroupContent>
-              )}
-            </SidebarGroup>
-          );
-        })}
+        {searchResults.length === 0 && ADMIN_MENU.map((section) => (
+          <SidebarGroup
+            key={section.id}
+            className={`rounded-2xl border border-border bg-background/50 ${collapsed ? "p-1" : "p-1.5"} transition-colors hover:border-primary/30`}
+          >
+            {!collapsed ? (
+              <SidebarGroupLabel className="flex items-center gap-2 select-none rounded-xl px-2 py-1.5 text-foreground/80 font-bold">
+                <span className="w-6 h-6 rounded-lg gradient-primary flex items-center justify-center shadow-sm">
+                  <section.icon className="h-3.5 w-3.5 text-primary-foreground" />
+                </span>
+                <span className="flex-1 text-xs">{section.title}</span>
+              </SidebarGroupLabel>
+            ) : (
+              <SidebarGroupLabel className="justify-center">
+                <section.icon className="h-4 w-4 text-primary" />
+              </SidebarGroupLabel>
+            )}
+            <SidebarGroupContent className={collapsed ? "" : "mt-1 border-t border-border/60 pt-1"}>
+              <SidebarMenu>{flattenAll(section.items).map(renderLeaf)}</SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        ))}
       </SidebarContent>
 
       <SidebarFooter className="border-t border-border bg-card">
@@ -304,4 +250,3 @@ export function AdminSidebar() {
     </Sidebar>
   );
 }
-
