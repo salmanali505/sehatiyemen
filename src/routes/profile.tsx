@@ -19,12 +19,12 @@ function ProfilePage() {
   useEffect(() => { if (!loading && !user) navigate({ to: "/auth" }); }, [user, loading, navigate]);
 
   const items = [
-    { icon: Sparkles, label: "المساعد الصحي الذكي", to: "/assistant" as const, accent: true },
+    { icon: Settings, label: "تعديل الملف الشخصي والتوثيق", to: "/profile/edit" as const, accent: true },
+    { icon: Sparkles, label: "المساعد الصحي الذكي", to: "/assistant" as const },
     { icon: Calendar, label: "حجوزاتي", to: "/bookings" as const },
     { icon: Heart, label: "المفضلة", to: "/favorites" as const },
     { icon: Users, label: "أفراد العائلة", to: "/family" as const },
     { icon: FileText, label: "السجل الصحي", to: "/records" as const },
-    { icon: Settings, label: "الإعدادات", to: "/" as const },
   ];
 
   return (

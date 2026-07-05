@@ -85,8 +85,8 @@ function FamilyPage() {
       </div>
 
       {open && (
-        <div className="fixed inset-0 z-50 bg-black/40 flex items-end" onClick={() => setOpen(false)}>
-          <div className="bg-card w-full rounded-t-3xl p-5 space-y-3" onClick={(e) => e.stopPropagation()}>
+        <div className="fixed inset-0 z-[80] bg-black/50 backdrop-blur-sm flex items-end" onClick={() => setOpen(false)}>
+          <div className="bg-card w-full rounded-t-3xl p-5 pb-8 space-y-3 max-h-[92vh] overflow-y-auto shadow-2xl" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between">
               <h3 className="font-black text-lg">إضافة فرد عائلة</h3>
               <button onClick={() => setOpen(false)} className="w-8 h-8 rounded-full bg-muted flex items-center justify-center"><X size={16} /></button>
@@ -113,7 +113,7 @@ function FamilyPage() {
           </div>
         </div>
       )}
-      <BottomNav />
+      {!open && <BottomNav />}
     </div>
   );
 }
