@@ -13,6 +13,7 @@ import { Route as SearchRouteImport } from './routes/search'
 import { Route as RecordsRouteImport } from './routes/records'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as NotificationsRouteImport } from './routes/notifications'
+import { Route as McpRouteImport } from './routes/mcp'
 import { Route as FavoritesRouteImport } from './routes/favorites'
 import { Route as FamilyRouteImport } from './routes/family'
 import { Route as DashboardRouteImport } from './routes/dashboard'
@@ -56,9 +57,12 @@ import { Route as AdminAuditRouteImport } from './routes/admin.audit'
 import { Route as AdminAnalyticsRouteImport } from './routes/admin.analytics'
 import { Route as AdminAiRouteImport } from './routes/admin.ai'
 import { Route as AdminAdsRouteImport } from './routes/admin.ads'
+import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
+import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
 import { Route as PortalReceptionTokenRouteImport } from './routes/portal.reception.$token'
 import { Route as PortalProviderTokenRouteImport } from './routes/portal.provider.$token'
 import { Route as AdminProvidersIdRouteImport } from './routes/admin.providers.$id'
+import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
@@ -78,6 +82,11 @@ const ProfileRoute = ProfileRouteImport.update({
 const NotificationsRoute = NotificationsRouteImport.update({
   id: '/notifications',
   path: '/notifications',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const McpRoute = McpRouteImport.update({
+  id: '/mcp',
+  path: '/mcp',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FavoritesRoute = FavoritesRouteImport.update({
@@ -295,6 +304,18 @@ const AdminAdsRoute = AdminAdsRouteImport.update({
   path: '/ads',
   getParentRoute: () => AdminRoute,
 } as any)
+const Char91DotwellKnownChar93OauthProtectedResourceRoute =
+  Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
+    id: '/.well-known/oauth-protected-resource',
+    path: '/.well-known/oauth-protected-resource',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const Char91DotmcpChar93ListToolsRoute =
+  Char91DotmcpChar93ListToolsRouteImport.update({
+    id: '/.mcp/list-tools',
+    path: '/.mcp/list-tools',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const PortalReceptionTokenRoute = PortalReceptionTokenRouteImport.update({
   id: '/portal/reception/$token',
   path: '/portal/reception/$token',
@@ -310,6 +331,12 @@ const AdminProvidersIdRoute = AdminProvidersIdRouteImport.update({
   path: '/providers/$id',
   getParentRoute: () => AdminRoute,
 } as any)
+const Char91DotmcpChar93InvokeToolToolRoute =
+  Char91DotmcpChar93InvokeToolToolRouteImport.update({
+    id: '/.mcp/invoke-tool/$tool',
+    path: '/.mcp/invoke-tool/$tool',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -320,10 +347,13 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRouteWithChildren
   '/family': typeof FamilyRoute
   '/favorites': typeof FavoritesRoute
+  '/mcp': typeof McpRoute
   '/notifications': typeof NotificationsRoute
   '/profile': typeof ProfileRoute
   '/records': typeof RecordsRoute
   '/search': typeof SearchRoute
+  '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/admin/ads': typeof AdminAdsRoute
   '/admin/ai': typeof AdminAiRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
@@ -359,6 +389,7 @@ export interface FileRoutesByFullPath {
   '/master/$token': typeof MasterTokenRoute
   '/provider/$id': typeof ProviderIdRoute
   '/admin/': typeof AdminIndexRoute
+  '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/admin/providers/$id': typeof AdminProvidersIdRoute
   '/portal/provider/$token': typeof PortalProviderTokenRoute
   '/portal/reception/$token': typeof PortalReceptionTokenRoute
@@ -371,10 +402,13 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardRouteWithChildren
   '/family': typeof FamilyRoute
   '/favorites': typeof FavoritesRoute
+  '/mcp': typeof McpRoute
   '/notifications': typeof NotificationsRoute
   '/profile': typeof ProfileRoute
   '/records': typeof RecordsRoute
   '/search': typeof SearchRoute
+  '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/admin/ads': typeof AdminAdsRoute
   '/admin/ai': typeof AdminAiRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
@@ -410,6 +444,7 @@ export interface FileRoutesByTo {
   '/master/$token': typeof MasterTokenRoute
   '/provider/$id': typeof ProviderIdRoute
   '/admin': typeof AdminIndexRoute
+  '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/admin/providers/$id': typeof AdminProvidersIdRoute
   '/portal/provider/$token': typeof PortalProviderTokenRoute
   '/portal/reception/$token': typeof PortalReceptionTokenRoute
@@ -424,10 +459,13 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRouteWithChildren
   '/family': typeof FamilyRoute
   '/favorites': typeof FavoritesRoute
+  '/mcp': typeof McpRoute
   '/notifications': typeof NotificationsRoute
   '/profile': typeof ProfileRoute
   '/records': typeof RecordsRoute
   '/search': typeof SearchRoute
+  '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/admin/ads': typeof AdminAdsRoute
   '/admin/ai': typeof AdminAiRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
@@ -463,6 +501,7 @@ export interface FileRoutesById {
   '/master/$token': typeof MasterTokenRoute
   '/provider/$id': typeof ProviderIdRoute
   '/admin/': typeof AdminIndexRoute
+  '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/admin/providers/$id': typeof AdminProvidersIdRoute
   '/portal/provider/$token': typeof PortalProviderTokenRoute
   '/portal/reception/$token': typeof PortalReceptionTokenRoute
@@ -478,10 +517,13 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/family'
     | '/favorites'
+    | '/mcp'
     | '/notifications'
     | '/profile'
     | '/records'
     | '/search'
+    | '/.mcp/list-tools'
+    | '/.well-known/oauth-protected-resource'
     | '/admin/ads'
     | '/admin/ai'
     | '/admin/analytics'
@@ -517,6 +559,7 @@ export interface FileRouteTypes {
     | '/master/$token'
     | '/provider/$id'
     | '/admin/'
+    | '/.mcp/invoke-tool/$tool'
     | '/admin/providers/$id'
     | '/portal/provider/$token'
     | '/portal/reception/$token'
@@ -529,10 +572,13 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/family'
     | '/favorites'
+    | '/mcp'
     | '/notifications'
     | '/profile'
     | '/records'
     | '/search'
+    | '/.mcp/list-tools'
+    | '/.well-known/oauth-protected-resource'
     | '/admin/ads'
     | '/admin/ai'
     | '/admin/analytics'
@@ -568,6 +614,7 @@ export interface FileRouteTypes {
     | '/master/$token'
     | '/provider/$id'
     | '/admin'
+    | '/.mcp/invoke-tool/$tool'
     | '/admin/providers/$id'
     | '/portal/provider/$token'
     | '/portal/reception/$token'
@@ -581,10 +628,13 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/family'
     | '/favorites'
+    | '/mcp'
     | '/notifications'
     | '/profile'
     | '/records'
     | '/search'
+    | '/.mcp/list-tools'
+    | '/.well-known/oauth-protected-resource'
     | '/admin/ads'
     | '/admin/ai'
     | '/admin/analytics'
@@ -620,6 +670,7 @@ export interface FileRouteTypes {
     | '/master/$token'
     | '/provider/$id'
     | '/admin/'
+    | '/.mcp/invoke-tool/$tool'
     | '/admin/providers/$id'
     | '/portal/provider/$token'
     | '/portal/reception/$token'
@@ -634,13 +685,17 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRouteWithChildren
   FamilyRoute: typeof FamilyRoute
   FavoritesRoute: typeof FavoritesRoute
+  McpRoute: typeof McpRoute
   NotificationsRoute: typeof NotificationsRoute
   ProfileRoute: typeof ProfileRoute
   RecordsRoute: typeof RecordsRoute
   SearchRoute: typeof SearchRoute
+  Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
+  Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   BookProviderIdRoute: typeof BookProviderIdRoute
   MasterTokenRoute: typeof MasterTokenRoute
   ProviderIdRoute: typeof ProviderIdRoute
+  Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
   PortalProviderTokenRoute: typeof PortalProviderTokenRoute
   PortalReceptionTokenRoute: typeof PortalReceptionTokenRoute
 }
@@ -673,6 +728,13 @@ declare module '@tanstack/react-router' {
       path: '/notifications'
       fullPath: '/notifications'
       preLoaderRoute: typeof NotificationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mcp': {
+      id: '/mcp'
+      path: '/mcp'
+      fullPath: '/mcp'
+      preLoaderRoute: typeof McpRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/favorites': {
@@ -976,6 +1038,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAdsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/.well-known/oauth-protected-resource': {
+      id: '/.well-known/oauth-protected-resource'
+      path: '/.well-known/oauth-protected-resource'
+      fullPath: '/.well-known/oauth-protected-resource'
+      preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/.mcp/list-tools': {
+      id: '/.mcp/list-tools'
+      path: '/.mcp/list-tools'
+      fullPath: '/.mcp/list-tools'
+      preLoaderRoute: typeof Char91DotmcpChar93ListToolsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/portal/reception/$token': {
       id: '/portal/reception/$token'
       path: '/portal/reception/$token'
@@ -996,6 +1072,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/providers/$id'
       preLoaderRoute: typeof AdminProvidersIdRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/.mcp/invoke-tool/$tool': {
+      id: '/.mcp/invoke-tool/$tool'
+      path: '/.mcp/invoke-tool/$tool'
+      fullPath: '/.mcp/invoke-tool/$tool'
+      preLoaderRoute: typeof Char91DotmcpChar93InvokeToolToolRouteImport
+      parentRoute: typeof rootRouteImport
     }
   }
 }
@@ -1093,13 +1176,18 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRouteWithChildren,
   FamilyRoute: FamilyRoute,
   FavoritesRoute: FavoritesRoute,
+  McpRoute: McpRoute,
   NotificationsRoute: NotificationsRoute,
   ProfileRoute: ProfileRoute,
   RecordsRoute: RecordsRoute,
   SearchRoute: SearchRoute,
+  Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
+  Char91DotwellKnownChar93OauthProtectedResourceRoute:
+    Char91DotwellKnownChar93OauthProtectedResourceRoute,
   BookProviderIdRoute: BookProviderIdRoute,
   MasterTokenRoute: MasterTokenRoute,
   ProviderIdRoute: ProviderIdRoute,
+  Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
   PortalProviderTokenRoute: PortalProviderTokenRoute,
   PortalReceptionTokenRoute: PortalReceptionTokenRoute,
 }
