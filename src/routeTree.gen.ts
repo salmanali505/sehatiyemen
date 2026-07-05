@@ -24,6 +24,7 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as ProviderIdRouteImport } from './routes/provider.$id'
+import { Route as ProfileEditRouteImport } from './routes/profile.edit'
 import { Route as MasterTokenRouteImport } from './routes/master.$token'
 import { Route as DashboardReceptionRouteImport } from './routes/dashboard.reception'
 import { Route as BookProviderIdRouteImport } from './routes/book.$providerId'
@@ -138,6 +139,11 @@ const ProviderIdRoute = ProviderIdRouteImport.update({
   id: '/provider/$id',
   path: '/provider/$id',
   getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileEditRoute = ProfileEditRouteImport.update({
+  id: '/edit',
+  path: '/edit',
+  getParentRoute: () => ProfileRoute,
 } as any)
 const MasterTokenRoute = MasterTokenRouteImport.update({
   id: '/master/$token',
@@ -349,7 +355,7 @@ export interface FileRoutesByFullPath {
   '/favorites': typeof FavoritesRoute
   '/mcp': typeof McpRoute
   '/notifications': typeof NotificationsRoute
-  '/profile': typeof ProfileRoute
+  '/profile': typeof ProfileRouteWithChildren
   '/records': typeof RecordsRoute
   '/search': typeof SearchRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
@@ -387,6 +393,7 @@ export interface FileRoutesByFullPath {
   '/book/$providerId': typeof BookProviderIdRoute
   '/dashboard/reception': typeof DashboardReceptionRoute
   '/master/$token': typeof MasterTokenRoute
+  '/profile/edit': typeof ProfileEditRoute
   '/provider/$id': typeof ProviderIdRoute
   '/admin/': typeof AdminIndexRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
@@ -404,7 +411,7 @@ export interface FileRoutesByTo {
   '/favorites': typeof FavoritesRoute
   '/mcp': typeof McpRoute
   '/notifications': typeof NotificationsRoute
-  '/profile': typeof ProfileRoute
+  '/profile': typeof ProfileRouteWithChildren
   '/records': typeof RecordsRoute
   '/search': typeof SearchRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
@@ -442,6 +449,7 @@ export interface FileRoutesByTo {
   '/book/$providerId': typeof BookProviderIdRoute
   '/dashboard/reception': typeof DashboardReceptionRoute
   '/master/$token': typeof MasterTokenRoute
+  '/profile/edit': typeof ProfileEditRoute
   '/provider/$id': typeof ProviderIdRoute
   '/admin': typeof AdminIndexRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
@@ -461,7 +469,7 @@ export interface FileRoutesById {
   '/favorites': typeof FavoritesRoute
   '/mcp': typeof McpRoute
   '/notifications': typeof NotificationsRoute
-  '/profile': typeof ProfileRoute
+  '/profile': typeof ProfileRouteWithChildren
   '/records': typeof RecordsRoute
   '/search': typeof SearchRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
@@ -499,6 +507,7 @@ export interface FileRoutesById {
   '/book/$providerId': typeof BookProviderIdRoute
   '/dashboard/reception': typeof DashboardReceptionRoute
   '/master/$token': typeof MasterTokenRoute
+  '/profile/edit': typeof ProfileEditRoute
   '/provider/$id': typeof ProviderIdRoute
   '/admin/': typeof AdminIndexRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
@@ -557,6 +566,7 @@ export interface FileRouteTypes {
     | '/book/$providerId'
     | '/dashboard/reception'
     | '/master/$token'
+    | '/profile/edit'
     | '/provider/$id'
     | '/admin/'
     | '/.mcp/invoke-tool/$tool'
@@ -612,6 +622,7 @@ export interface FileRouteTypes {
     | '/book/$providerId'
     | '/dashboard/reception'
     | '/master/$token'
+    | '/profile/edit'
     | '/provider/$id'
     | '/admin'
     | '/.mcp/invoke-tool/$tool'
@@ -668,6 +679,7 @@ export interface FileRouteTypes {
     | '/book/$providerId'
     | '/dashboard/reception'
     | '/master/$token'
+    | '/profile/edit'
     | '/provider/$id'
     | '/admin/'
     | '/.mcp/invoke-tool/$tool'
@@ -687,7 +699,7 @@ export interface RootRouteChildren {
   FavoritesRoute: typeof FavoritesRoute
   McpRoute: typeof McpRoute
   NotificationsRoute: typeof NotificationsRoute
-  ProfileRoute: typeof ProfileRoute
+  ProfileRoute: typeof ProfileRouteWithChildren
   RecordsRoute: typeof RecordsRoute
   SearchRoute: typeof SearchRoute
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
@@ -806,6 +818,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/provider/$id'
       preLoaderRoute: typeof ProviderIdRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/profile/edit': {
+      id: '/profile/edit'
+      path: '/edit'
+      fullPath: '/profile/edit'
+      preLoaderRoute: typeof ProfileEditRouteImport
+      parentRoute: typeof ProfileRoute
     }
     '/master/$token': {
       id: '/master/$token'
@@ -1167,6 +1186,17 @@ const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
   DashboardRouteChildren,
 )
 
+interface ProfileRouteChildren {
+  ProfileEditRoute: typeof ProfileEditRoute
+}
+
+const ProfileRouteChildren: ProfileRouteChildren = {
+  ProfileEditRoute: ProfileEditRoute,
+}
+
+const ProfileRouteWithChildren =
+  ProfileRoute._addFileChildren(ProfileRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
@@ -1178,7 +1208,7 @@ const rootRouteChildren: RootRouteChildren = {
   FavoritesRoute: FavoritesRoute,
   McpRoute: McpRoute,
   NotificationsRoute: NotificationsRoute,
-  ProfileRoute: ProfileRoute,
+  ProfileRoute: ProfileRouteWithChildren,
   RecordsRoute: RecordsRoute,
   SearchRoute: SearchRoute,
   Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,

@@ -89,7 +89,7 @@ function AssistantPage() {
       </header>
 
       <div ref={scrollerRef} className="flex-1 overflow-y-auto">
-        <div className="mx-auto max-w-md px-4 py-4 space-y-4">
+        <div className="mx-auto max-w-md px-4 py-4 pb-48 space-y-4">
           {messages.length === 0 && (
             <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
               <div className="rounded-3xl gradient-primary p-6 text-primary-foreground shadow-glow">
