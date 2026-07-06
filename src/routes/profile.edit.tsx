@@ -166,7 +166,7 @@ function ProfileEditPage() {
   const initial = (profile.full_name || user?.email || "?").trim().charAt(0).toUpperCase();
 
   return (
-    <div className="min-h-screen bg-background pb-32" dir="rtl">
+    <div className="min-h-screen bg-background pb-36" dir="rtl">
       <div className="gradient-hero pt-12 pb-16 px-4 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-60 h-60 bg-accent/20 rounded-full blur-3xl" />
         <div className="relative flex items-center justify-between mb-4">

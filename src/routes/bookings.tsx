@@ -42,7 +42,7 @@ function BookingsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background pb-32">
+    <div className="min-h-screen bg-background pb-36">
       <div className="px-4 pt-12 pb-4">
         <div className="flex items-center gap-3 mb-4">
           <Link to="/" className="w-10 h-10 rounded-full glass flex items-center justify-center"><ArrowRight size={18} /></Link>

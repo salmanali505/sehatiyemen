@@ -28,7 +28,7 @@ function ProfilePage() {
   ];
 
   return (
-    <div className="min-h-screen bg-background pb-32">
+    <div className="min-h-screen bg-background pb-36">
       <div className="gradient-hero pt-12 pb-20 px-4 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-60 h-60 bg-accent/20 rounded-full blur-3xl" />
         <div className="absolute bottom-0 left-0 w-60 h-60 bg-primary-glow/30 rounded-full blur-3xl" />

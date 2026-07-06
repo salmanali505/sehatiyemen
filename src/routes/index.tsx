@@ -34,7 +34,7 @@ function HomePage() {
     <>
       <AnimatePresence>{showSplash && <SplashScreen />}</AnimatePresence>
 
-      <main className="min-h-screen bg-background pb-28 relative">
+      <main className="min-h-screen bg-background pb-36 relative">
         {/* Decorative background */}
         <div className="absolute inset-x-0 top-0 h-80 gradient-health opacity-[0.08] -z-0" />
         <div className="absolute top-0 right-0 w-72 h-72 bg-primary/10 rounded-full blur-3xl -z-0" />
