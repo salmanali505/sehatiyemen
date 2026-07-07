@@ -125,15 +125,20 @@ function NavBtn({
       >
         {/* Hide icon when active (it lives in the elevated badge) */}
         <span
-          className={`transition-opacity ${active ? "opacity-0" : "opacity-100"}`}
+          className={`transition-opacity duration-200 ${active ? "opacity-0" : "opacity-100"}`}
         >
-          <Icon size={22} strokeWidth={2.2} className="text-white/75" />
+          <Icon size={22} strokeWidth={2.2} className="text-white/80" />
         </span>
+        {/* Label only shows for inactive tabs; active tab shows just the elevated icon */}
         <motion.span
-          animate={active ? { y: -2, opacity: 1 } : { y: 0, opacity: 0.75 }}
-          className={`text-[10px] font-bold tracking-tight ${
-            active ? "text-white" : "text-white/75"
-          }`}
+          initial={false}
+          animate={
+            active
+              ? { opacity: 0, y: 6, height: 0 }
+              : { opacity: 1, y: 0, height: "auto" }
+          }
+          transition={{ type: "spring", stiffness: 300, damping: 24 }}
+          className="text-[10px] font-bold tracking-tight text-white/85 overflow-hidden"
         >
           {item.label}
         </motion.span>
@@ -141,3 +146,4 @@ function NavBtn({
     </Link>
   );
 }
+
