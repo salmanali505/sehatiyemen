@@ -31,12 +31,11 @@ export function BottomNav() {
   );
   // In RTL, index 0 is on the right → visual x from left = last - idx
   const visualIdx = items.length - 1 - activeIdx;
-  const cx = (visualIdx + 0.5) * SLOT;
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50">
       <div className="relative w-full pb-[env(safe-area-inset-bottom)]">
-        {/* Curved bar */}
+        {/* Flat curved bar */}
         <svg
           viewBox={`0 0 ${VB_W} ${VB_H}`}
           preserveAspectRatio="none"
@@ -50,25 +49,19 @@ export function BottomNav() {
               <stop offset="100%" stopColor="oklch(0.62 0.20 240)" />
             </linearGradient>
           </defs>
-          <motion.path
-            fill="url(#navBrand)"
-            initial={false}
-            animate={{ d: notchPath(cx) }}
-            transition={{ type: "spring", stiffness: 260, damping: 26 }}
-          />
+          <path fill="url(#navBrand)" d={barPath()} />
         </svg>
 
-        {/* Circle that slides to active tab — sits inside the notch */}
+        {/* Circle that slides to active tab — centered inside the bar */}
         <motion.div
           className="absolute pointer-events-none"
           initial={false}
           animate={{ left: `${(visualIdx + 0.5) * 20}%` }}
           transition={{ type: "spring", stiffness: 260, damping: 26 }}
-          style={{ top: 28, transform: "translate(-50%, -50%)" }}
+          style={{ top: 39, transform: "translate(-50%, -50%)" }}
         >
           <ActiveBadge icon={items[activeIdx].icon} />
         </motion.div>
-
 
         {/* Row of tabs */}
         <nav
@@ -79,6 +72,7 @@ export function BottomNav() {
             <NavBtn key={item.id} item={item} active={i === activeIdx} />
           ))}
         </nav>
+
       </div>
     </div>
   );
