@@ -15,17 +15,12 @@ const VB_W = 500;
 const VB_H = 80;
 const SLOT = VB_W / 5; // 100
 
-function notchPath(cx: number) {
-  const r = 38; // notch radius influence
-  const top = 18;
-  const depth = 32; // shallower notch so the circle sits inside the bar
-  return `M0 ${top}
-    L${cx - r} ${top}
-    C${cx - r * 0.35} ${top} ${cx - r * 0.55} ${top + depth} ${cx} ${top + depth}
-    C${cx + r * 0.55} ${top + depth} ${cx + r * 0.35} ${top} ${cx + r} ${top}
-    L${VB_W} ${top}
-    L${VB_W} ${VB_H} L0 ${VB_H} Z`;
+function barPath() {
+  // Flat bar — circle sits centered inside without a raised notch
+  const top = 6;
+  return `M0 ${top} L${VB_W} ${top} L${VB_W} ${VB_H} L0 ${VB_H} Z`;
 }
+
 
 
 export function BottomNav() {
@@ -36,12 +31,11 @@ export function BottomNav() {
   );
   // In RTL, index 0 is on the right → visual x from left = last - idx
   const visualIdx = items.length - 1 - activeIdx;
-  const cx = (visualIdx + 0.5) * SLOT;
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50">
       <div className="relative w-full pb-[env(safe-area-inset-bottom)]">
-        {/* Curved bar */}
+        {/* Flat curved bar */}
         <svg
           viewBox={`0 0 ${VB_W} ${VB_H}`}
           preserveAspectRatio="none"
@@ -55,25 +49,19 @@ export function BottomNav() {
               <stop offset="100%" stopColor="oklch(0.62 0.20 240)" />
             </linearGradient>
           </defs>
-          <motion.path
-            fill="url(#navBrand)"
-            initial={false}
-            animate={{ d: notchPath(cx) }}
-            transition={{ type: "spring", stiffness: 260, damping: 26 }}
-          />
+          <path fill="url(#navBrand)" d={barPath()} />
         </svg>
 
-        {/* Circle that slides to active tab — sits inside the notch */}
+        {/* Circle that slides to active tab — centered inside the bar */}
         <motion.div
           className="absolute pointer-events-none"
           initial={false}
           animate={{ left: `${(visualIdx + 0.5) * 20}%` }}
           transition={{ type: "spring", stiffness: 260, damping: 26 }}
-          style={{ top: 28, transform: "translate(-50%, -50%)" }}
+          style={{ top: 39, transform: "translate(-50%, -50%)" }}
         >
           <ActiveBadge icon={items[activeIdx].icon} />
         </motion.div>
-
 
         {/* Row of tabs */}
         <nav
@@ -84,6 +72,7 @@ export function BottomNav() {
             <NavBtn key={item.id} item={item} active={i === activeIdx} />
           ))}
         </nav>
+
       </div>
     </div>
   );
@@ -91,24 +80,47 @@ export function BottomNav() {
 
 function ActiveBadge({ icon: Icon }: { icon: any }) {
   return (
-    <motion.div
-      key={Icon.displayName || Icon.name}
-      initial={{ scale: 0.6, opacity: 0, rotate: -20 }}
-      animate={{ scale: 1, opacity: 1, rotate: 0 }}
-      transition={{ type: "spring", stiffness: 320, damping: 18 }}
-      className="w-12 h-12 rounded-full flex items-center justify-center"
-      style={{
-        background:
-          "linear-gradient(135deg, oklch(0.78 0.19 145), oklch(0.66 0.22 155))",
-        boxShadow:
-          "0 10px 22px -8px rgba(0,200,83,0.5), inset 0 -2px 6px rgba(0,0,0,0.18)",
-      }}
-
-    >
-      <Icon size={24} strokeWidth={2.6} className="text-white" />
-    </motion.div>
+    <div className="relative w-14 h-14 flex items-center justify-center">
+      {/* Rotating dashed swirl ring around the circle */}
+      <motion.span
+        aria-hidden
+        className="absolute inset-0 rounded-full"
+        style={{
+          border: "2px dashed rgba(255,255,255,0.55)",
+          maskImage:
+            "conic-gradient(from 0deg, black 0deg, black 260deg, transparent 300deg, black 360deg)",
+        }}
+        animate={{ rotate: 360 }}
+        transition={{ duration: 6, ease: "linear", repeat: Infinity }}
+      />
+      {/* Soft pulsing halo */}
+      <motion.span
+        aria-hidden
+        className="absolute inset-1 rounded-full"
+        style={{ background: "rgba(0,200,120,0.25)" }}
+        animate={{ scale: [1, 1.15, 1], opacity: [0.6, 0.2, 0.6] }}
+        transition={{ duration: 2.2, ease: "easeInOut", repeat: Infinity }}
+      />
+      {/* Solid brand circle */}
+      <motion.div
+        key={Icon.displayName || Icon.name}
+        initial={{ scale: 0.6, opacity: 0, rotate: -20 }}
+        animate={{ scale: 1, opacity: 1, rotate: 0 }}
+        transition={{ type: "spring", stiffness: 320, damping: 18 }}
+        className="relative w-11 h-11 rounded-full flex items-center justify-center"
+        style={{
+          background:
+            "linear-gradient(135deg, oklch(0.78 0.19 145), oklch(0.66 0.22 155))",
+          boxShadow:
+            "0 8px 20px -6px rgba(0,200,83,0.55), inset 0 -2px 6px rgba(0,0,0,0.2)",
+        }}
+      >
+        <Icon size={22} strokeWidth={2.6} className="text-white" />
+      </motion.div>
+    </div>
   );
 }
+
 
 function NavBtn({
   item,
