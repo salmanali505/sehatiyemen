@@ -15,17 +15,12 @@ const VB_W = 500;
 const VB_H = 80;
 const SLOT = VB_W / 5; // 100
 
-function notchPath(cx: number) {
-  const r = 38; // notch radius influence
-  const top = 18;
-  const depth = 32; // shallower notch so the circle sits inside the bar
-  return `M0 ${top}
-    L${cx - r} ${top}
-    C${cx - r * 0.35} ${top} ${cx - r * 0.55} ${top + depth} ${cx} ${top + depth}
-    C${cx + r * 0.55} ${top + depth} ${cx + r * 0.35} ${top} ${cx + r} ${top}
-    L${VB_W} ${top}
-    L${VB_W} ${VB_H} L0 ${VB_H} Z`;
+function barPath() {
+  // Flat bar — circle sits centered inside without a raised notch
+  const top = 6;
+  return `M0 ${top} L${VB_W} ${top} L${VB_W} ${VB_H} L0 ${VB_H} Z`;
 }
+
 
 
 export function BottomNav() {
