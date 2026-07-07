@@ -80,24 +80,47 @@ export function BottomNav() {
 
 function ActiveBadge({ icon: Icon }: { icon: any }) {
   return (
-    <motion.div
-      key={Icon.displayName || Icon.name}
-      initial={{ scale: 0.6, opacity: 0, rotate: -20 }}
-      animate={{ scale: 1, opacity: 1, rotate: 0 }}
-      transition={{ type: "spring", stiffness: 320, damping: 18 }}
-      className="w-12 h-12 rounded-full flex items-center justify-center"
-      style={{
-        background:
-          "linear-gradient(135deg, oklch(0.78 0.19 145), oklch(0.66 0.22 155))",
-        boxShadow:
-          "0 10px 22px -8px rgba(0,200,83,0.5), inset 0 -2px 6px rgba(0,0,0,0.18)",
-      }}
-
-    >
-      <Icon size={24} strokeWidth={2.6} className="text-white" />
-    </motion.div>
+    <div className="relative w-14 h-14 flex items-center justify-center">
+      {/* Rotating dashed swirl ring around the circle */}
+      <motion.span
+        aria-hidden
+        className="absolute inset-0 rounded-full"
+        style={{
+          border: "2px dashed rgba(255,255,255,0.55)",
+          maskImage:
+            "conic-gradient(from 0deg, black 0deg, black 260deg, transparent 300deg, black 360deg)",
+        }}
+        animate={{ rotate: 360 }}
+        transition={{ duration: 6, ease: "linear", repeat: Infinity }}
+      />
+      {/* Soft pulsing halo */}
+      <motion.span
+        aria-hidden
+        className="absolute inset-1 rounded-full"
+        style={{ background: "rgba(0,200,120,0.25)" }}
+        animate={{ scale: [1, 1.15, 1], opacity: [0.6, 0.2, 0.6] }}
+        transition={{ duration: 2.2, ease: "easeInOut", repeat: Infinity }}
+      />
+      {/* Solid brand circle */}
+      <motion.div
+        key={Icon.displayName || Icon.name}
+        initial={{ scale: 0.6, opacity: 0, rotate: -20 }}
+        animate={{ scale: 1, opacity: 1, rotate: 0 }}
+        transition={{ type: "spring", stiffness: 320, damping: 18 }}
+        className="relative w-11 h-11 rounded-full flex items-center justify-center"
+        style={{
+          background:
+            "linear-gradient(135deg, oklch(0.78 0.19 145), oklch(0.66 0.22 155))",
+          boxShadow:
+            "0 8px 20px -6px rgba(0,200,83,0.55), inset 0 -2px 6px rgba(0,0,0,0.2)",
+        }}
+      >
+        <Icon size={22} strokeWidth={2.6} className="text-white" />
+      </motion.div>
+    </div>
   );
 }
+
 
 function NavBtn({
   item,
