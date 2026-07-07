@@ -96,13 +96,14 @@ function ActiveBadge({ icon: Icon }: { icon: any }) {
       initial={{ scale: 0.6, opacity: 0, rotate: -20 }}
       animate={{ scale: 1, opacity: 1, rotate: 0 }}
       transition={{ type: "spring", stiffness: 320, damping: 18 }}
-      className="w-14 h-14 rounded-full flex items-center justify-center ring-4 ring-background"
+      className="w-12 h-12 rounded-full flex items-center justify-center"
       style={{
         background:
           "linear-gradient(135deg, oklch(0.78 0.19 145), oklch(0.66 0.22 155))",
         boxShadow:
-          "0 12px 26px -8px rgba(0,200,83,0.55), inset 0 -3px 8px rgba(0,0,0,0.18)",
+          "0 10px 22px -8px rgba(0,200,83,0.5), inset 0 -2px 6px rgba(0,0,0,0.18)",
       }}
+
     >
       <Icon size={24} strokeWidth={2.6} className="text-white" />
     </motion.div>
