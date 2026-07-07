@@ -63,16 +63,17 @@ export function BottomNav() {
           />
         </svg>
 
-        {/* Elevated circle that slides to active tab */}
+        {/* Circle that slides to active tab — sits inside the notch */}
         <motion.div
-          className="absolute top-0 pointer-events-none"
+          className="absolute pointer-events-none"
           initial={false}
           animate={{ left: `${(visualIdx + 0.5) * 20}%` }}
           transition={{ type: "spring", stiffness: 260, damping: 26 }}
-          style={{ transform: "translate(-50%, -50%)" }}
+          style={{ top: 28, transform: "translate(-50%, -50%)" }}
         >
           <ActiveBadge icon={items[activeIdx].icon} />
         </motion.div>
+
 
         {/* Row of tabs */}
         <nav
