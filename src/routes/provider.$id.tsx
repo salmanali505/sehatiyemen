@@ -49,7 +49,7 @@ function ProviderPage() {
   const providerDoctors = allDoctors.filter((d) => p.doctors.includes(d.id));
 
   return (
-    <div className="min-h-screen bg-background pb-32">
+    <div className="min-h-screen bg-background pb-40">
       <div className="relative h-56">
         <img src={p.cover} alt={p.name} className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
