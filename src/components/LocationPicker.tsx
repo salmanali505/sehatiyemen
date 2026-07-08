@@ -37,8 +37,11 @@ export function LocationPicker() {
             <motion.div
               initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }}
               transition={{ type: "spring", damping: 30, stiffness: 300 }}
-              className="fixed inset-x-0 bottom-0 z-50 bg-card rounded-t-3xl shadow-2xl max-h-[80vh] overflow-hidden flex flex-col"
+              className="fixed inset-x-0 bottom-0 z-50 bg-card rounded-t-3xl shadow-2xl max-h-[80vh] overflow-hidden flex flex-col overscroll-contain touch-pan-y"
               dir="rtl"
+              role="dialog"
+              aria-modal="true"
+              onTouchMove={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between p-4 border-b">
                 <h3 className="font-extrabold">اختر مدينتك</h3>
