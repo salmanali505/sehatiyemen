@@ -1,7 +1,9 @@
 import { Star } from "lucide-react";
 import { motion } from "framer-motion";
+import { Link } from "@tanstack/react-router";
 
 interface Props {
+  id?: string;
   name: string;
   specialty: string;
   rating: number;
@@ -10,8 +12,8 @@ interface Props {
 }
 
 export function DoctorCard(d: Props) {
-  return (
-    <motion.div whileTap={{ scale: 0.96 }} className="min-w-[160px] bg-card rounded-3xl shadow-card p-3 border border-border/40">
+  const card = (
+    <motion.div whileTap={{ scale: 0.96 }} className="min-w-[160px] bg-card rounded-3xl shadow-card p-3 border border-border/40 cursor-pointer">
       <div className="relative">
         <div className="w-full aspect-square rounded-2xl overflow-hidden gradient-primary p-0.5">
           <img src={d.image} alt={d.name} loading="lazy" className="w-full h-full object-cover rounded-2xl" />
@@ -26,4 +28,6 @@ export function DoctorCard(d: Props) {
       <p className="text-[10px] text-muted-foreground mt-1">خبرة {d.exp}</p>
     </motion.div>
   );
+  if (d.id) return <Link to="/doctor/$id" params={{ id: d.id }}>{card}</Link>;
+  return card;
 }

@@ -11,7 +11,8 @@ import { ProviderCard } from "@/components/ProviderCard";
 import { DoctorCard } from "@/components/DoctorCard";
 import { OffersStrip } from "@/components/OffersStrip";
 import { BottomNav } from "@/components/BottomNav";
-import { featuredProviders, topDoctors } from "@/lib/mockData";
+import { featuredProviders, topDoctors, providers as allProviders, doctors as allDoctors } from "@/lib/mockData";
+import { useSelectedCity } from "@/lib/useCities";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -24,11 +25,26 @@ export const Route = createFileRoute("/")({
 });
 
 function HomePage() {
-  const [showSplash, setShowSplash] = useState(true);
+  const [showSplash, setShowSplash] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return !sessionStorage.getItem("sehati.splashSeen");
+  });
   useEffect(() => {
-    const t = setTimeout(() => setShowSplash(false), 2500);
+    if (!showSplash) return;
+    const t = setTimeout(() => {
+      setShowSplash(false);
+      try { sessionStorage.setItem("sehati.splashSeen", "1"); } catch {}
+    }, 2500);
     return () => clearTimeout(t);
-  }, []);
+  }, [showSplash]);
+
+  const { city } = useSelectedCity();
+  const cityFilter = <T extends { city: string }>(arr: T[]) => arr.filter((p) => p.city === city);
+  const providersInCity = cityFilter(allProviders);
+  const featuredInCity = featuredProviders.filter((p) => p.city === city);
+  const providerIds = new Set(providersInCity.map((p) => p.id));
+  const doctorsInCity = allDoctors.filter((d) => allProviders.some((p) => providerIds.has(p.id) && p.doctors.includes(d.id)));
+  const topDoctorsInCity = topDoctors.filter((d) => doctorsInCity.some((x) => x.id === d.id));
 
   return (
     <>
@@ -56,23 +72,31 @@ function HomePage() {
           </div>
 
           <div className="mt-6">
-            <SectionHeader title="مزودون مميزون" subtitle="الأعلى تقييماً والأكثر موثوقية" />
-            <div className="flex gap-3 overflow-x-auto scrollbar-hide px-4 pb-2">
-              {featuredProviders.map((p) => <ProviderCard key={p.id} {...p} />)}
-            </div>
+            <SectionHeader title={`مزودون مميزون في ${city}`} subtitle="الأعلى تقييماً والأكثر موثوقية" />
+            {featuredInCity.length === 0 ? (
+              <p className="px-4 text-sm text-muted-foreground">لا يوجد مزودون في {city} حالياً</p>
+            ) : (
+              <div className="flex gap-3 overflow-x-auto scrollbar-hide px-4 pb-2">
+                {featuredInCity.map((p) => <ProviderCard key={p.id} {...p} />)}
+              </div>
+            )}
           </div>
 
           <div className="mt-6">
-            <SectionHeader title="أطباء متميزون" subtitle="نخبة من أفضل الأطباء" />
-            <div className="flex gap-3 overflow-x-auto scrollbar-hide px-4 pb-2">
-              {topDoctors.map((d) => <DoctorCard key={d.id} {...d} />)}
-            </div>
+            <SectionHeader title="أطباء متميزون" subtitle={`في ${city}`} />
+            {topDoctorsInCity.length === 0 ? (
+              <p className="px-4 text-sm text-muted-foreground">لا يوجد أطباء في {city} حالياً</p>
+            ) : (
+              <div className="flex gap-3 overflow-x-auto scrollbar-hide px-4 pb-2">
+                {topDoctorsInCity.map((d) => <DoctorCard key={d.id} {...d} />)}
+              </div>
+            )}
           </div>
 
           <div className="mt-6">
             <SectionHeader title="مفتوح الآن" subtitle="مزودون متاحون لاستقبالك" />
             <div className="flex gap-3 overflow-x-auto scrollbar-hide px-4 pb-2">
-              {featuredProviders.filter((p) => p.open).map((p) => <ProviderCard key={p.id} {...p} />)}
+              {featuredInCity.filter((p) => p.open).map((p) => <ProviderCard key={p.id} {...p} />)}
             </div>
           </div>
 

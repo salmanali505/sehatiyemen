@@ -49,7 +49,7 @@ function ProviderPage() {
   const providerDoctors = allDoctors.filter((d) => p.doctors.includes(d.id));
 
   return (
-    <div className="min-h-screen bg-background pb-32">
+    <div className="min-h-screen bg-background pb-40">
       <div className="relative h-56">
         <img src={p.cover} alt={p.name} className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
@@ -141,7 +141,7 @@ function ProviderPage() {
             <div className="grid grid-cols-2 gap-3">
               {providerDoctors.length === 0 && <p className="col-span-2 text-center text-muted-foreground text-sm py-8">لا يوجد أطباء</p>}
               {providerDoctors.map((d) => (
-                <div key={d.id} className="bg-card rounded-2xl p-3 shadow-card">
+                <Link key={d.id} to="/doctor/$id" params={{ id: d.id }} className="bg-card rounded-2xl p-3 shadow-card block">
                   <img src={d.image} alt={d.name} className="w-full aspect-square rounded-xl object-cover" />
                   <h4 className="font-bold text-sm mt-2 line-clamp-1">{d.name}</h4>
                   <p className="text-[11px] text-primary font-semibold">{d.specialty}</p>
@@ -149,7 +149,7 @@ function ProviderPage() {
                     <Star size={10} className="text-warning fill-warning" />
                     <span className="text-[10px] font-bold">{d.rating}</span>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           )}
