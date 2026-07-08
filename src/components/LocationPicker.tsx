@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MapPin, Check, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCities, useSelectedCity } from "@/lib/useCities";
@@ -7,6 +7,13 @@ export function LocationPicker() {
   const [open, setOpen] = useState(false);
   const { cities, loading } = useCities();
   const { city, setCity } = useSelectedCity();
+
+  useEffect(() => {
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = prev; };
+  }, [open]);
 
   return (
     <>
