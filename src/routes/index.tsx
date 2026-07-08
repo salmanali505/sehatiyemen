@@ -11,7 +11,8 @@ import { ProviderCard } from "@/components/ProviderCard";
 import { DoctorCard } from "@/components/DoctorCard";
 import { OffersStrip } from "@/components/OffersStrip";
 import { BottomNav } from "@/components/BottomNav";
-import { featuredProviders, topDoctors } from "@/lib/mockData";
+import { featuredProviders, topDoctors, providers as allProviders, doctors as allDoctors } from "@/lib/mockData";
+import { useSelectedCity } from "@/lib/useCities";
 
 export const Route = createFileRoute("/")({
   head: () => ({
