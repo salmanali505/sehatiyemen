@@ -25,11 +25,26 @@ export const Route = createFileRoute("/")({
 });
 
 function HomePage() {
-  const [showSplash, setShowSplash] = useState(true);
+  const [showSplash, setShowSplash] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return !sessionStorage.getItem("sehati.splashSeen");
+  });
   useEffect(() => {
-    const t = setTimeout(() => setShowSplash(false), 2500);
+    if (!showSplash) return;
+    const t = setTimeout(() => {
+      setShowSplash(false);
+      try { sessionStorage.setItem("sehati.splashSeen", "1"); } catch {}
+    }, 2500);
     return () => clearTimeout(t);
-  }, []);
+  }, [showSplash]);
+
+  const { city } = useSelectedCity();
+  const cityFilter = <T extends { city: string }>(arr: T[]) => arr.filter((p) => p.city === city);
+  const providersInCity = cityFilter(allProviders);
+  const featuredInCity = featuredProviders.filter((p) => p.city === city);
+  const providerIds = new Set(providersInCity.map((p) => p.id));
+  const doctorsInCity = allDoctors.filter((d) => allProviders.some((p) => providerIds.has(p.id) && p.doctors.includes(d.id)));
+  const topDoctorsInCity = topDoctors.filter((d) => doctorsInCity.some((x) => x.id === d.id));
 
   return (
     <>
