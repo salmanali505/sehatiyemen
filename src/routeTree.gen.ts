@@ -26,6 +26,7 @@ import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as ProviderIdRouteImport } from './routes/provider.$id'
 import { Route as ProfileEditRouteImport } from './routes/profile.edit'
 import { Route as MasterTokenRouteImport } from './routes/master.$token'
+import { Route as DoctorIdRouteImport } from './routes/doctor.$id'
 import { Route as DashboardReceptionRouteImport } from './routes/dashboard.reception'
 import { Route as BookProviderIdRouteImport } from './routes/book.$providerId'
 import { Route as AdminVerificationRouteImport } from './routes/admin.verification'
@@ -148,6 +149,11 @@ const ProfileEditRoute = ProfileEditRouteImport.update({
 const MasterTokenRoute = MasterTokenRouteImport.update({
   id: '/master/$token',
   path: '/master/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DoctorIdRoute = DoctorIdRouteImport.update({
+  id: '/doctor/$id',
+  path: '/doctor/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardReceptionRoute = DashboardReceptionRouteImport.update({
@@ -392,6 +398,7 @@ export interface FileRoutesByFullPath {
   '/admin/verification': typeof AdminVerificationRoute
   '/book/$providerId': typeof BookProviderIdRoute
   '/dashboard/reception': typeof DashboardReceptionRoute
+  '/doctor/$id': typeof DoctorIdRoute
   '/master/$token': typeof MasterTokenRoute
   '/profile/edit': typeof ProfileEditRoute
   '/provider/$id': typeof ProviderIdRoute
@@ -448,6 +455,7 @@ export interface FileRoutesByTo {
   '/admin/verification': typeof AdminVerificationRoute
   '/book/$providerId': typeof BookProviderIdRoute
   '/dashboard/reception': typeof DashboardReceptionRoute
+  '/doctor/$id': typeof DoctorIdRoute
   '/master/$token': typeof MasterTokenRoute
   '/profile/edit': typeof ProfileEditRoute
   '/provider/$id': typeof ProviderIdRoute
@@ -506,6 +514,7 @@ export interface FileRoutesById {
   '/admin/verification': typeof AdminVerificationRoute
   '/book/$providerId': typeof BookProviderIdRoute
   '/dashboard/reception': typeof DashboardReceptionRoute
+  '/doctor/$id': typeof DoctorIdRoute
   '/master/$token': typeof MasterTokenRoute
   '/profile/edit': typeof ProfileEditRoute
   '/provider/$id': typeof ProviderIdRoute
@@ -565,6 +574,7 @@ export interface FileRouteTypes {
     | '/admin/verification'
     | '/book/$providerId'
     | '/dashboard/reception'
+    | '/doctor/$id'
     | '/master/$token'
     | '/profile/edit'
     | '/provider/$id'
@@ -621,6 +631,7 @@ export interface FileRouteTypes {
     | '/admin/verification'
     | '/book/$providerId'
     | '/dashboard/reception'
+    | '/doctor/$id'
     | '/master/$token'
     | '/profile/edit'
     | '/provider/$id'
@@ -678,6 +689,7 @@ export interface FileRouteTypes {
     | '/admin/verification'
     | '/book/$providerId'
     | '/dashboard/reception'
+    | '/doctor/$id'
     | '/master/$token'
     | '/profile/edit'
     | '/provider/$id'
@@ -705,6 +717,7 @@ export interface RootRouteChildren {
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   BookProviderIdRoute: typeof BookProviderIdRoute
+  DoctorIdRoute: typeof DoctorIdRoute
   MasterTokenRoute: typeof MasterTokenRoute
   ProviderIdRoute: typeof ProviderIdRoute
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
@@ -831,6 +844,13 @@ declare module '@tanstack/react-router' {
       path: '/master/$token'
       fullPath: '/master/$token'
       preLoaderRoute: typeof MasterTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/doctor/$id': {
+      id: '/doctor/$id'
+      path: '/doctor/$id'
+      fullPath: '/doctor/$id'
+      preLoaderRoute: typeof DoctorIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard/reception': {
@@ -1215,6 +1235,7 @@ const rootRouteChildren: RootRouteChildren = {
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
   BookProviderIdRoute: BookProviderIdRoute,
+  DoctorIdRoute: DoctorIdRoute,
   MasterTokenRoute: MasterTokenRoute,
   ProviderIdRoute: ProviderIdRoute,
   Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
