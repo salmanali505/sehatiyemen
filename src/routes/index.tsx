@@ -72,23 +72,31 @@ function HomePage() {
           </div>
 
           <div className="mt-6">
-            <SectionHeader title="مزودون مميزون" subtitle="الأعلى تقييماً والأكثر موثوقية" />
-            <div className="flex gap-3 overflow-x-auto scrollbar-hide px-4 pb-2">
-              {featuredProviders.map((p) => <ProviderCard key={p.id} {...p} />)}
-            </div>
+            <SectionHeader title={`مزودون مميزون في ${city}`} subtitle="الأعلى تقييماً والأكثر موثوقية" />
+            {featuredInCity.length === 0 ? (
+              <p className="px-4 text-sm text-muted-foreground">لا يوجد مزودون في {city} حالياً</p>
+            ) : (
+              <div className="flex gap-3 overflow-x-auto scrollbar-hide px-4 pb-2">
+                {featuredInCity.map((p) => <ProviderCard key={p.id} {...p} />)}
+              </div>
+            )}
           </div>
 
           <div className="mt-6">
-            <SectionHeader title="أطباء متميزون" subtitle="نخبة من أفضل الأطباء" />
-            <div className="flex gap-3 overflow-x-auto scrollbar-hide px-4 pb-2">
-              {topDoctors.map((d) => <DoctorCard key={d.id} {...d} />)}
-            </div>
+            <SectionHeader title="أطباء متميزون" subtitle={`في ${city}`} />
+            {topDoctorsInCity.length === 0 ? (
+              <p className="px-4 text-sm text-muted-foreground">لا يوجد أطباء في {city} حالياً</p>
+            ) : (
+              <div className="flex gap-3 overflow-x-auto scrollbar-hide px-4 pb-2">
+                {topDoctorsInCity.map((d) => <DoctorCard key={d.id} {...d} />)}
+              </div>
+            )}
           </div>
 
           <div className="mt-6">
             <SectionHeader title="مفتوح الآن" subtitle="مزودون متاحون لاستقبالك" />
             <div className="flex gap-3 overflow-x-auto scrollbar-hide px-4 pb-2">
-              {featuredProviders.filter((p) => p.open).map((p) => <ProviderCard key={p.id} {...p} />)}
+              {featuredInCity.filter((p) => p.open).map((p) => <ProviderCard key={p.id} {...p} />)}
             </div>
           </div>
 
