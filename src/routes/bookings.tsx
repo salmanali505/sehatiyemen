@@ -15,7 +15,10 @@ type Booking = {
   id: string; booking_number: string; provider_name: string; provider_type: string | null;
   doctor_name: string | null; service_name: string | null;
   appointment_date: string; appointment_time: string; status: string;
+  amount: number | null; currency: string | null;
+  payment_method_code: string | null; payment_status: string | null;
 };
+
 
 function BookingsPage() {
   const { user, loading } = useAuth();
