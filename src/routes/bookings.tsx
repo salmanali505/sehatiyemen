@@ -121,3 +121,16 @@ function BookingItem({ b, statusLabel, statusClass }: { b: Booking; statusLabel:
     </div>
   );
 }
+
+function PayBadge({ status }: { status: string }) {
+  const map: Record<string, { l: string; c: string }> = {
+    unpaid: { l: "غير مدفوع", c: "bg-muted text-muted-foreground" },
+    on_arrival: { l: "دفع عند الوصول", c: "bg-primary/10 text-primary" },
+    pending_review: { l: "بانتظار التحقق", c: "bg-warning/15 text-warning" },
+    paid: { l: "مدفوع", c: "bg-success/15 text-success" },
+    refunded: { l: "مسترجع", c: "bg-destructive/10 text-destructive" },
+  };
+  const s = map[status] ?? map.unpaid;
+  return <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${s.c}`}>{s.l}</span>;
+}
+
