@@ -25,18 +25,19 @@ export const Route = createFileRoute("/")({
 });
 
 function HomePage() {
-  const [showSplash, setShowSplash] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return !sessionStorage.getItem("sehati.splashSeen");
-  });
+  const [showSplash, setShowSplash] = useState(false);
   useEffect(() => {
-    if (!showSplash) return;
-    const t = setTimeout(() => {
-      setShowSplash(false);
-      try { sessionStorage.setItem("sehati.splashSeen", "1"); } catch {}
-    }, 2500);
-    return () => clearTimeout(t);
-  }, [showSplash]);
+    if (typeof window === "undefined") return;
+    if (!sessionStorage.getItem("sehati.splashSeen")) {
+      setShowSplash(true);
+      const t = setTimeout(() => {
+        setShowSplash(false);
+        try { sessionStorage.setItem("sehati.splashSeen", "1"); } catch {}
+      }, 2500);
+      return () => clearTimeout(t);
+    }
+  }, []);
+
 
   const { city } = useSelectedCity();
   const cityFilter = <T extends { city: string }>(arr: T[]) => arr.filter((p) => p.city === city);
