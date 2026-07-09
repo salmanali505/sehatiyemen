@@ -44,6 +44,7 @@ import { Route as AdminReportsRouteImport } from './routes/admin.reports'
 import { Route as AdminQrRouteImport } from './routes/admin.qr'
 import { Route as AdminPermissionsRouteImport } from './routes/admin.permissions'
 import { Route as AdminPaymentsRouteImport } from './routes/admin.payments'
+import { Route as AdminPaymentMethodsRouteImport } from './routes/admin.payment-methods'
 import { Route as AdminPackagesRouteImport } from './routes/admin.packages'
 import { Route as AdminOffersRouteImport } from './routes/admin.offers'
 import { Route as AdminNotificationsRouteImport } from './routes/admin.notifications'
@@ -241,6 +242,11 @@ const AdminPaymentsRoute = AdminPaymentsRouteImport.update({
   path: '/payments',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminPaymentMethodsRoute = AdminPaymentMethodsRouteImport.update({
+  id: '/payment-methods',
+  path: '/payment-methods',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminPackagesRoute = AdminPackagesRouteImport.update({
   id: '/packages',
   path: '/packages',
@@ -381,6 +387,7 @@ export interface FileRoutesByFullPath {
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/offers': typeof AdminOffersRoute
   '/admin/packages': typeof AdminPackagesRoute
+  '/admin/payment-methods': typeof AdminPaymentMethodsRoute
   '/admin/payments': typeof AdminPaymentsRoute
   '/admin/permissions': typeof AdminPermissionsRoute
   '/admin/qr': typeof AdminQrRoute
@@ -438,6 +445,7 @@ export interface FileRoutesByTo {
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/offers': typeof AdminOffersRoute
   '/admin/packages': typeof AdminPackagesRoute
+  '/admin/payment-methods': typeof AdminPaymentMethodsRoute
   '/admin/payments': typeof AdminPaymentsRoute
   '/admin/permissions': typeof AdminPermissionsRoute
   '/admin/qr': typeof AdminQrRoute
@@ -497,6 +505,7 @@ export interface FileRoutesById {
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/offers': typeof AdminOffersRoute
   '/admin/packages': typeof AdminPackagesRoute
+  '/admin/payment-methods': typeof AdminPaymentMethodsRoute
   '/admin/payments': typeof AdminPaymentsRoute
   '/admin/permissions': typeof AdminPermissionsRoute
   '/admin/qr': typeof AdminQrRoute
@@ -557,6 +566,7 @@ export interface FileRouteTypes {
     | '/admin/notifications'
     | '/admin/offers'
     | '/admin/packages'
+    | '/admin/payment-methods'
     | '/admin/payments'
     | '/admin/permissions'
     | '/admin/qr'
@@ -614,6 +624,7 @@ export interface FileRouteTypes {
     | '/admin/notifications'
     | '/admin/offers'
     | '/admin/packages'
+    | '/admin/payment-methods'
     | '/admin/payments'
     | '/admin/permissions'
     | '/admin/qr'
@@ -672,6 +683,7 @@ export interface FileRouteTypes {
     | '/admin/notifications'
     | '/admin/offers'
     | '/admin/packages'
+    | '/admin/payment-methods'
     | '/admin/payments'
     | '/admin/permissions'
     | '/admin/qr'
@@ -972,6 +984,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminPaymentsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/payment-methods': {
+      id: '/admin/payment-methods'
+      path: '/payment-methods'
+      fullPath: '/admin/payment-methods'
+      preLoaderRoute: typeof AdminPaymentMethodsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/packages': {
       id: '/admin/packages'
       path: '/packages'
@@ -1138,6 +1157,7 @@ interface AdminRouteChildren {
   AdminNotificationsRoute: typeof AdminNotificationsRoute
   AdminOffersRoute: typeof AdminOffersRoute
   AdminPackagesRoute: typeof AdminPackagesRoute
+  AdminPaymentMethodsRoute: typeof AdminPaymentMethodsRoute
   AdminPaymentsRoute: typeof AdminPaymentsRoute
   AdminPermissionsRoute: typeof AdminPermissionsRoute
   AdminQrRoute: typeof AdminQrRoute
@@ -1173,6 +1193,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminNotificationsRoute: AdminNotificationsRoute,
   AdminOffersRoute: AdminOffersRoute,
   AdminPackagesRoute: AdminPackagesRoute,
+  AdminPaymentMethodsRoute: AdminPaymentMethodsRoute,
   AdminPaymentsRoute: AdminPaymentsRoute,
   AdminPermissionsRoute: AdminPermissionsRoute,
   AdminQrRoute: AdminQrRoute,

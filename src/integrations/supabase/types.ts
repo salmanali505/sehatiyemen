@@ -193,10 +193,14 @@ export type Database = {
       }
       bookings: {
         Row: {
+          amount: number | null
           appointment_date: string
           appointment_time: string
           booking_number: string
+          confirmed_at: string | null
+          confirmed_by: string | null
           created_at: string
+          currency: string | null
           doctor_id: string | null
           doctor_name: string | null
           family_member_id: string | null
@@ -206,18 +210,28 @@ export type Database = {
           patient_gender: Database["public"]["Enums"]["gender_type"] | null
           patient_name: string
           patient_phone: string
+          payment_method_code: string | null
+          payment_method_id: string | null
+          payment_proof_url: string | null
+          payment_reference: string | null
+          payment_status: string
           provider_id: string
           provider_name: string
           provider_type: string | null
           service_name: string | null
           status: Database["public"]["Enums"]["booking_status"]
+          updated_at: string
           user_id: string
         }
         Insert: {
+          amount?: number | null
           appointment_date: string
           appointment_time: string
           booking_number?: string
+          confirmed_at?: string | null
+          confirmed_by?: string | null
           created_at?: string
+          currency?: string | null
           doctor_id?: string | null
           doctor_name?: string | null
           family_member_id?: string | null
@@ -227,18 +241,28 @@ export type Database = {
           patient_gender?: Database["public"]["Enums"]["gender_type"] | null
           patient_name: string
           patient_phone: string
+          payment_method_code?: string | null
+          payment_method_id?: string | null
+          payment_proof_url?: string | null
+          payment_reference?: string | null
+          payment_status?: string
           provider_id: string
           provider_name: string
           provider_type?: string | null
           service_name?: string | null
           status?: Database["public"]["Enums"]["booking_status"]
+          updated_at?: string
           user_id: string
         }
         Update: {
+          amount?: number | null
           appointment_date?: string
           appointment_time?: string
           booking_number?: string
+          confirmed_at?: string | null
+          confirmed_by?: string | null
           created_at?: string
+          currency?: string | null
           doctor_id?: string | null
           doctor_name?: string | null
           family_member_id?: string | null
@@ -248,11 +272,17 @@ export type Database = {
           patient_gender?: Database["public"]["Enums"]["gender_type"] | null
           patient_name?: string
           patient_phone?: string
+          payment_method_code?: string | null
+          payment_method_id?: string | null
+          payment_proof_url?: string | null
+          payment_reference?: string | null
+          payment_status?: string
           provider_id?: string
           provider_name?: string
           provider_type?: string | null
           service_name?: string | null
           status?: Database["public"]["Enums"]["booking_status"]
+          updated_at?: string
           user_id?: string
         }
         Relationships: [
@@ -261,6 +291,13 @@ export type Database = {
             columns: ["family_member_id"]
             isOneToOne: false
             referencedRelation: "family_members"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_payment_method_id_fkey"
+            columns: ["payment_method_id"]
+            isOneToOne: false
+            referencedRelation: "payment_methods"
             referencedColumns: ["id"]
           },
         ]
@@ -687,6 +724,54 @@ export type Database = {
           price_yearly?: number
           sort_order?: number
           tier?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      payment_methods: {
+        Row: {
+          account_details: Json | null
+          code: string
+          created_at: string
+          enabled: boolean
+          id: string
+          instructions: string | null
+          logo_url: string | null
+          name_ar: string
+          name_en: string | null
+          requires_proof: boolean
+          sort_order: number
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          account_details?: Json | null
+          code: string
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          instructions?: string | null
+          logo_url?: string | null
+          name_ar: string
+          name_en?: string | null
+          requires_proof?: boolean
+          sort_order?: number
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          account_details?: Json | null
+          code?: string
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          instructions?: string | null
+          logo_url?: string | null
+          name_ar?: string
+          name_en?: string | null
+          requires_proof?: boolean
+          sort_order?: number
+          type?: string
           updated_at?: string
         }
         Relationships: []
