@@ -90,11 +90,21 @@ function BookingItem({ b, statusLabel, statusClass }: { b: Booking; statusLabel:
           {b.doctor_name && <p className="text-xs text-primary font-semibold mt-0.5">{b.doctor_name}</p>}
           {b.service_name && <p className="text-xs text-muted-foreground mt-0.5">{b.service_name}</p>}
         </div>
-        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${statusClass}`}>{statusLabel}</span>
+        <div className="flex flex-col items-end gap-1">
+          <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${statusClass}`}>{statusLabel}</span>
+          {b.payment_status && <PayBadge status={b.payment_status} />}
+        </div>
       </div>
+      {b.amount ? (
+        <div className="mt-2 text-[11px] text-muted-foreground flex items-center justify-between">
+          <span>المبلغ</span>
+          <span className="font-bold text-foreground">{Number(b.amount).toLocaleString("ar-EG")} {b.currency || "ر.ي"}</span>
+        </div>
+      ) : null}
       <div className="flex items-center gap-3 mt-3 pt-3 border-t border-border/40 text-xs text-muted-foreground">
         <span className="flex items-center gap-1"><Calendar size={12} />{b.appointment_date}</span>
         <span className="flex items-center gap-1"><Clock size={12} />{b.appointment_time.slice(0, 5)}</span>
+
         <button
           onClick={() => setShowQr((v) => !v)}
           className="ms-auto flex items-center gap-1 rounded-full bg-primary/10 text-primary font-bold px-3 py-1"
