@@ -364,8 +364,10 @@ export const ADMIN_MENU: MenuSection[] = [
   {
     id: "finance", title: "المركز المالي", icon: Banknote,
     items: [
+      link("fn-methods", "طرق الدفع", "/admin/payment-methods", Wallet),
       link("fn-txn", "المعاملات", "/admin/payments", ReceiptText, "payments"),
       link("fn-pay", "المدفوعات", "/admin/payments", CreditCard),
+
       soon("fn-ref", "المرتجعات", Undo2),
       soon("fn-inv", "الفواتير", Receipt),
       link("fn-rev", "الإيرادات", "/admin/finance", Coins),
