@@ -1,6 +1,6 @@
-import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
-import { ArrowRight, ChevronLeft, Check, Calendar, Clock, User } from "lucide-react";
+import { ArrowRight, ChevronLeft, Check, Calendar, Clock, User, Wallet, Upload, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { getProvider, doctors as allDoctors } from "@/lib/mockData";
@@ -14,6 +14,36 @@ export const Route = createFileRoute("/book/$providerId")({
 
 const TIMES = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "16:00", "16:30", "17:00", "17:30", "18:00"];
 const RESERVED = new Set(["10:30", "16:30"]);
+const TOTAL_STEPS = 5;
+
+type PM = {
+  id: string; code: string; name_ar: string; type: string;
+  instructions: string | null; account_details: any; logo_url: string | null;
+  requires_proof: boolean;
+};
+
+async function fileToDataUrl(file: File, max = 1400, quality = 0.85): Promise<string> {
+  const dataUrl = await new Promise<string>((res, rej) => {
+    const r = new FileReader();
+    r.onload = () => res(String(r.result));
+    r.onerror = () => rej(r.error);
+    r.readAsDataURL(file);
+  });
+  const img = await new Promise<HTMLImageElement>((res, rej) => {
+    const i = new Image();
+    i.onload = () => res(i);
+    i.onerror = () => rej(new Error("Invalid image"));
+    i.src = dataUrl;
+  });
+  const scale = Math.min(1, max / Math.max(img.width, img.height));
+  const w = Math.round(img.width * scale);
+  const h = Math.round(img.height * scale);
+  const canvas = document.createElement("canvas");
+  canvas.width = w; canvas.height = h;
+  const ctx = canvas.getContext("2d")!;
+  ctx.drawImage(img, 0, 0, w, h);
+  return canvas.toDataURL("image/jpeg", quality);
+}
 
 function BookingFlow() {
   const { providerId } = Route.useParams();
@@ -31,26 +61,65 @@ function BookingFlow() {
   const [bookingNumber, setBookingNumber] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
+  const [methods, setMethods] = useState<PM[]>([]);
+  const [methodId, setMethodId] = useState<string | null>(null);
+  const [paymentRef, setPaymentRef] = useState("");
+  const [proof, setProof] = useState<string | null>(null);
+  const [uploadingProof, setUploadingProof] = useState(false);
+
   useEffect(() => { if (!loading && !user) navigate({ to: "/auth" }); }, [loading, user, navigate]);
+  useEffect(() => {
+    supabase.from("payment_methods").select("*").eq("enabled", true).order("sort_order")
+      .then(({ data }) => setMethods((data ?? []) as PM[]));
+  }, []);
+
   if (!p) return <div className="p-6 text-center">المزود غير موجود</div>;
 
   const providerDoctors = allDoctors.filter((d) => p.doctors.includes(d.id));
-  const next = () => setStep((s) => Math.min(s + 1, 5));
+  const selectedMethod = methods.find((m) => m.id === methodId) || null;
+  const service = serviceIdx !== null ? p.services[serviceIdx] : null;
+  const amount = service?.price ?? 0;
+
+  const next = () => setStep((s) => Math.min(s + 1, TOTAL_STEPS + 1));
   const back = () => step === 1 ? navigate({ to: "/provider/$id", params: { id: providerId } }) : setStep((s) => s - 1);
 
   const canNext = () => {
     if (step === 1) return doctorId !== null || providerDoctors.length === 0;
     if (step === 2) return serviceIdx !== null || p.services.length === 0;
     if (step === 3) return time !== null;
-    if (step === 4) return name && phone && age;
+    if (step === 4) return !!(name && phone && age);
+    if (step === 5) {
+      if (!methodId) return false;
+      if (selectedMethod?.requires_proof && !proof) return false;
+      return true;
+    }
     return false;
   };
 
+  async function onPickProof(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+    if (!file.type.startsWith("image/")) return toast.error("اختر ملف صورة");
+    setUploadingProof(true);
+    try {
+      const url = await fileToDataUrl(file);
+      setProof(url);
+      toast.success("تم إرفاق الإثبات");
+    } catch (err: any) {
+      toast.error(err?.message ?? "فشل رفع الصورة");
+    } finally {
+      setUploadingProof(false);
+    }
+  }
+
   const submit = async () => {
-    if (!user || !time) return;
+    if (!user || !time || !selectedMethod) return;
     setSubmitting(true);
     const doctor = providerDoctors.find((d) => d.id === doctorId);
-    const service = serviceIdx !== null ? p.services[serviceIdx] : null;
+    const paymentStatus =
+      selectedMethod.type === "cash" ? "on_arrival" :
+      selectedMethod.requires_proof ? "pending_review" : "unpaid";
     const { data, error } = await supabase.from("bookings").insert({
       user_id: user.id,
       provider_id: p.id, provider_name: p.name, provider_type: p.typeLabel,
@@ -58,15 +127,21 @@ function BookingFlow() {
       service_name: service?.name ?? null,
       patient_name: name, patient_phone: phone, patient_age: parseInt(age), patient_gender: gender,
       notes, appointment_date: date, appointment_time: time, status: "pending",
+      amount, currency: "YER",
+      payment_method_id: selectedMethod.id,
+      payment_method_code: selectedMethod.code,
+      payment_status: paymentStatus,
+      payment_reference: paymentRef.trim() || null,
+      payment_proof_url: proof,
     }).select("booking_number").single();
     setSubmitting(false);
     if (error) { toast.error("فشل الحجز: " + error.message); return; }
     setBookingNumber(data.booking_number);
-    setStep(5);
+    setStep(TOTAL_STEPS + 1);
     toast.success("تم الحجز بنجاح");
   };
 
-  if (step === 5 && bookingNumber) {
+  if (step === TOTAL_STEPS + 1 && bookingNumber) {
     return (
       <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6">
         <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="w-20 h-20 rounded-full bg-success flex items-center justify-center mb-4">
@@ -77,14 +152,13 @@ function BookingFlow() {
         <div className="mt-6 bg-card rounded-3xl p-6 shadow-float w-full max-w-sm border border-border/40">
           <p className="text-xs text-muted-foreground text-center">رقم الحجز</p>
           <p className="text-2xl font-black text-center text-primary mt-1">{bookingNumber}</p>
-          <div className="mt-4 mx-auto w-40 h-40 bg-muted rounded-2xl flex items-center justify-center">
-            <div className="text-center"><div className="text-4xl">▦</div><p className="text-[10px] text-muted-foreground mt-1">QR Code</p></div>
-          </div>
           <div className="mt-4 space-y-2 text-sm">
             <Row k="المزود" v={p.name} />
             <Row k="التاريخ" v={date} />
             <Row k="الوقت" v={time!} />
             <Row k="المريض" v={name} />
+            {selectedMethod && <Row k="طريقة الدفع" v={selectedMethod.name_ar} />}
+            {amount > 0 && <Row k="المبلغ" v={`${amount.toLocaleString("ar-EG")} ر.ي`} />}
           </div>
         </div>
         <button onClick={() => navigate({ to: "/bookings" })}
@@ -106,11 +180,11 @@ function BookingFlow() {
           </div>
         </div>
         <div className="flex gap-1.5 mt-4">
-          {[1, 2, 3, 4].map((s) => (
+          {Array.from({ length: TOTAL_STEPS }, (_, i) => i + 1).map((s) => (
             <div key={s} className={`flex-1 h-1.5 rounded-full ${s <= step ? "gradient-primary" : "bg-muted"}`} />
           ))}
         </div>
-        <p className="text-[11px] text-muted-foreground mt-2">الخطوة {step} من 4</p>
+        <p className="text-[11px] text-muted-foreground mt-2">الخطوة {step} من {TOTAL_STEPS}</p>
       </div>
 
       <div className="px-4">
@@ -200,12 +274,68 @@ function BookingFlow() {
             </div>
           </div>
         )}
+
+        {step === 5 && (
+          <div>
+            <h2 className="font-black mb-3 flex items-center gap-2"><Wallet size={16} /> طريقة الدفع</h2>
+            {amount > 0 && (
+              <div className="bg-card rounded-2xl p-3 mb-3 border border-border/40 flex items-center justify-between">
+                <span className="text-xs text-muted-foreground">المبلغ المطلوب</span>
+                <span className="font-black text-primary">{amount.toLocaleString("ar-EG")} ر.ي</span>
+              </div>
+            )}
+            {methods.length === 0 ? (
+              <div className="bg-card rounded-2xl p-6 text-center text-sm text-muted-foreground">
+                لا توجد طرق دفع مفعّلة حالياً. تواصل مع الإدارة.
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {methods.map((m) => (
+                  <button key={m.id} onClick={() => setMethodId(m.id)}
+                    className={`w-full text-right bg-card rounded-2xl p-4 border-2 transition ${methodId === m.id ? "border-primary shadow-glow" : "border-transparent shadow-card"}`}>
+                    <div className="flex items-center justify-between gap-2">
+                      <h4 className="font-bold text-sm">{m.name_ar}</h4>
+                      {m.requires_proof && <span className="text-[10px] rounded-full bg-warning/15 text-warning px-2 py-0.5 font-bold">يتطلب إثباتاً</span>}
+                    </div>
+                    {m.instructions && <p className="text-[11px] text-muted-foreground mt-1">{m.instructions}</p>}
+                    {methodId === m.id && m.account_details && Object.keys(m.account_details).length > 0 && (
+                      <div className="mt-2 bg-muted rounded-xl p-2 text-[11px] font-mono text-right space-y-0.5" dir="ltr">
+                        {Object.entries(m.account_details).map(([k, v]) => (
+                          <div key={k}><span className="text-muted-foreground">{k}:</span> {String(v)}</div>
+                        ))}
+                      </div>
+                    )}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {selectedMethod && selectedMethod.type !== "cash" && (
+              <div className="mt-3 space-y-2">
+                <input placeholder="رقم مرجع/إشعار التحويل (اختياري)" value={paymentRef} onChange={(e) => setPaymentRef(e.target.value)}
+                  dir="ltr" className="w-full bg-card rounded-2xl p-3 text-sm border border-border/40 shadow-card text-right" />
+                {selectedMethod.requires_proof && (
+                  <div>
+                    <label className="w-full bg-card rounded-2xl p-4 text-sm border-2 border-dashed border-primary/40 shadow-card cursor-pointer flex items-center justify-center gap-2 font-bold text-primary">
+                      {uploadingProof ? <Loader2 className="animate-spin" size={16} /> : <Upload size={16} />}
+                      {proof ? "تغيير صورة الإثبات" : "ارفع صورة إثبات التحويل"}
+                      <input type="file" accept="image/*" className="hidden" onChange={onPickProof} />
+                    </label>
+                    {proof && (
+                      <img src={proof} alt="إثبات" className="mt-2 w-full max-h-64 object-contain rounded-2xl border border-border/40" />
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       <div className="fixed bottom-0 inset-x-0 p-4 glass border-t border-border/40">
-        <button onClick={step === 4 ? submit : next} disabled={!canNext() || submitting}
+        <button onClick={step === TOTAL_STEPS ? submit : next} disabled={!canNext() || submitting}
           className="w-full gradient-primary text-primary-foreground font-black py-4 rounded-2xl shadow-glow flex items-center justify-center gap-2 disabled:opacity-40">
-          {submitting ? "جاري الحجز..." : step === 4 ? "تأكيد الحجز" : "متابعة"} <ChevronLeft size={18} />
+          {submitting ? "جاري الحجز..." : step === TOTAL_STEPS ? "تأكيد الحجز" : "متابعة"} <ChevronLeft size={18} />
         </button>
       </div>
     </div>
