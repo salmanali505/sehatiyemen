@@ -44,6 +44,12 @@ function BookingsAdmin() {
     toast.success("تم التحديث"); load();
   }
 
+  async function setPay(id: string, payment_status: string) {
+    const { error } = await supabase.from("bookings").update({ payment_status }).eq("id", id);
+    if (error) return toast.error(error.message);
+    toast.success("تم تحديث الدفع"); load();
+  }
+
   const filtered = items.filter((b) => !q || b.booking_number?.includes(q) || b.patient_name?.includes(q) || b.provider_name?.includes(q));
 
   return (
