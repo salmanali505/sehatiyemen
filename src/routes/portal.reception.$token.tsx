@@ -18,6 +18,17 @@ type Booking = {
   appointment_date: string; appointment_time: string; service_name: string | null;
   doctor_name: string | null; provider_id: string; provider_name: string;
   status: "pending" | "confirmed" | "completed" | "cancelled";
+  amount: number | null; currency: string | null;
+  payment_method_code: string | null; payment_status: string | null;
+  payment_reference: string | null; payment_proof_url: string | null;
+};
+
+const PAY: Record<string, { l: string; c: string }> = {
+  unpaid: { l: "غير مدفوع", c: "bg-muted text-muted-foreground" },
+  on_arrival: { l: "عند الوصول", c: "bg-primary/10 text-primary" },
+  pending_review: { l: "بانتظار التحقق", c: "bg-warning/15 text-warning" },
+  paid: { l: "مدفوع", c: "bg-success/15 text-success" },
+  refunded: { l: "مسترجع", c: "bg-destructive/10 text-destructive" },
 };
 
 function ReceptionPortal() {
