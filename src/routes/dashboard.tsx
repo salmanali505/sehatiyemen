@@ -111,6 +111,13 @@ function ProviderDashboard() {
     toast.success("تم تحديث الحالة");
   }
 
+  async function setPayment(id: string, payment_status: string) {
+    const { error } = await supabase.from("bookings").update({ payment_status }).eq("id", id);
+    if (error) return toast.error(error.message);
+    setBookings((b) => b.map((x) => (x.id === id ? { ...x, payment_status } : x)));
+    toast.success("تم تحديث حالة الدفع");
+  }
+
   if (authLoading || rolesLoading) {
     return <div className="min-h-screen flex items-center justify-center"><Loader2 className="animate-spin text-primary" /></div>;
   }
