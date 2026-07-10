@@ -218,8 +218,45 @@ function ProviderDashboard() {
                           </p>
                         )}
                       </div>
-                      <span className={`text-[10px] font-bold rounded-full px-2.5 py-1 ${status.color}`}>{status.label}</span>
+                      <div className="flex flex-col items-end gap-1">
+                        <span className={`text-[10px] font-bold rounded-full px-2.5 py-1 ${status.color}`}>{status.label}</span>
+                        {b.payment_status && (
+                          <span className={`text-[10px] font-bold rounded-full px-2 py-0.5 ${(PAY_LABEL[b.payment_status] ?? PAY_LABEL.unpaid).c}`}>
+                            {(PAY_LABEL[b.payment_status] ?? PAY_LABEL.unpaid).l}
+                          </span>
+                        )}
+                      </div>
                     </div>
+                    {(b.amount || b.payment_method_code || b.payment_reference || b.payment_proof_url) && (
+                      <div className="mt-3 rounded-2xl border border-border/60 bg-muted/40 p-3 space-y-2">
+                        <div className="flex flex-wrap items-center gap-3 text-[11px]">
+                          {b.amount ? (
+                            <span className="font-bold">المبلغ: {Number(b.amount).toLocaleString("ar-EG")} {b.currency || "ر.ي"}</span>
+                          ) : null}
+                          {b.payment_method_code && (
+                            <span className="rounded-full bg-primary/10 text-primary px-2 py-0.5 font-bold font-mono" dir="ltr">
+                              {b.payment_method_code}
+                            </span>
+                          )}
+                          {b.payment_reference && (
+                            <span className="text-muted-foreground">مرجع: <span className="font-mono">{b.payment_reference}</span></span>
+                          )}
+                        </div>
+                        {b.payment_proof_url && (
+                          <a href={b.payment_proof_url} target="_blank" rel="noreferrer" className="block">
+                            <img src={b.payment_proof_url} alt="إثبات الدفع" className="max-h-40 rounded-xl border" />
+                          </a>
+                        )}
+                        {b.payment_status === "pending_review" && (
+                          <div className="flex gap-2 pt-1">
+                            <button onClick={() => setPayment(b.id, "paid")}
+                              className="flex-1 rounded-xl bg-success/15 text-success text-[11px] font-bold py-1.5">✓ تأكيد الدفع</button>
+                            <button onClick={() => setPayment(b.id, "unpaid")}
+                              className="flex-1 rounded-xl bg-destructive/15 text-destructive text-[11px] font-bold py-1.5">✕ رفض</button>
+                          </div>
+                        )}
+                      </div>
+                    )}
                     <div className="mt-3 flex flex-wrap gap-2">
                       {STATUSES.filter((s) => s.value !== b.status).map((s) => (
                         <button
