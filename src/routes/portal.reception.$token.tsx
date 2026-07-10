@@ -223,8 +223,38 @@ function ReceptionPortal() {
                         </p>
                       )}
                     </div>
-                    <StatusPill status={b.status} />
+                    <div className="flex flex-col items-end gap-1">
+                      <StatusPill status={b.status} />
+                      {b.payment_status && (
+                        <span className={`text-[10px] font-bold rounded-full px-2 py-0.5 ${(PAY[b.payment_status] ?? PAY.unpaid).c}`}>
+                          {(PAY[b.payment_status] ?? PAY.unpaid).l}
+                        </span>
+                      )}
+                    </div>
                   </div>
+                  {(b.amount || b.payment_method_code || b.payment_proof_url) && (
+                    <div className="mt-3 rounded-2xl border border-border/60 bg-muted/40 p-3 space-y-2">
+                      <div className="flex flex-wrap items-center gap-3 text-[11px]">
+                        {b.amount ? <span className="font-bold">المبلغ: {Number(b.amount).toLocaleString("ar-EG")} {b.currency || "ر.ي"}</span> : null}
+                        {b.payment_method_code && <span className="rounded-full bg-primary/10 text-primary px-2 py-0.5 font-mono font-bold" dir="ltr">{b.payment_method_code}</span>}
+                        {b.payment_reference && <span className="text-muted-foreground">مرجع: <span className="font-mono">{b.payment_reference}</span></span>}
+                      </div>
+                      {b.payment_proof_url && (
+                        <a href={b.payment_proof_url} target="_blank" rel="noreferrer" className="block">
+                          <img src={b.payment_proof_url} alt="إثبات الدفع" className="max-h-40 rounded-xl border" />
+                        </a>
+                      )}
+                      {b.payment_status === "pending_review" && (
+                        <div className="flex gap-2">
+                          <button onClick={() => setPayment(b.id, "paid")} className="flex-1 rounded-xl bg-success/15 text-success text-[11px] font-bold py-1.5">✓ تأكيد الدفع</button>
+                          <button onClick={() => setPayment(b.id, "unpaid")} className="flex-1 rounded-xl bg-destructive/15 text-destructive text-[11px] font-bold py-1.5">✕ رفض</button>
+                        </div>
+                      )}
+                      {b.payment_status === "on_arrival" && (
+                        <button onClick={() => setPayment(b.id, "paid")} className="w-full rounded-xl bg-success/15 text-success text-[11px] font-bold py-1.5">تم استلام المبلغ نقداً</button>
+                      )}
+                    </div>
+                  )}
                   <div className="mt-3 flex flex-wrap gap-2">
                     {b.status === "pending" && (
                       <button onClick={() => updateStatus(b.id, "confirmed")} className="rounded-xl bg-primary/10 text-primary text-[11px] font-bold px-3 py-1.5">✓ تأكيد</button>
