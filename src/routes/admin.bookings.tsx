@@ -10,11 +10,18 @@ export const Route = createFileRoute("/admin/bookings")({
   component: BookingsAdmin,
 });
 
-type B = { id: string; booking_number: string; patient_name: string; provider_name: string; appointment_date: string; appointment_time: string; status: string; created_at: string };
+type B = { id: string; booking_number: string; patient_name: string; provider_name: string; appointment_date: string; appointment_time: string; status: string; created_at: string; amount: number | null; currency: string | null; payment_method_code: string | null; payment_status: string | null; payment_reference: string | null; payment_proof_url: string | null };
 const TABS = [
   { k: "all", t: "الكل" }, { k: "pending", t: "جديدة" }, { k: "confirmed", t: "مؤكدة" },
   { k: "completed", t: "مكتملة" }, { k: "cancelled", t: "ملغاة" }, { k: "no_show", t: "غير مكتملة" },
 ];
+const PAY: Record<string, { l: string; c: string }> = {
+  unpaid: { l: "غير مدفوع", c: "bg-muted text-muted-foreground" },
+  on_arrival: { l: "عند الوصول", c: "bg-primary/10 text-primary" },
+  pending_review: { l: "بانتظار التحقق", c: "bg-warning/15 text-warning" },
+  paid: { l: "مدفوع", c: "bg-success/15 text-success" },
+  refunded: { l: "مسترجع", c: "bg-destructive/10 text-destructive" },
+};
 
 function BookingsAdmin() {
   const [items, setItems] = useState<B[]>([]);
@@ -35,6 +42,12 @@ function BookingsAdmin() {
     const { error } = await supabase.from("bookings").update({ status: s as any }).eq("id", id);
     if (error) return toast.error(error.message);
     toast.success("تم التحديث"); load();
+  }
+
+  async function setPay(id: string, payment_status: string) {
+    const { error } = await supabase.from("bookings").update({ payment_status }).eq("id", id);
+    if (error) return toast.error(error.message);
+    toast.success("تم تحديث الدفع"); load();
   }
 
   const filtered = items.filter((b) => !q || b.booking_number?.includes(q) || b.patient_name?.includes(q) || b.provider_name?.includes(q));
@@ -59,22 +72,45 @@ function BookingsAdmin() {
         : filtered.length === 0 ? <EmptyState icon={Calendar} title="لا توجد حجوزات" />
         : <div className="rounded-3xl border bg-card overflow-hidden divide-y">
             {filtered.map((b) => (
-              <div key={b.id} className="p-3 flex flex-wrap items-center gap-3">
-                <div className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center font-extrabold text-xs">
-                  {b.booking_number?.slice(-4) || "—"}
+              <div key={b.id} className="p-3 space-y-2">
+                <div className="flex flex-wrap items-center gap-3">
+                  <div className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center font-extrabold text-xs">
+                    {b.booking_number?.slice(-4) || "—"}
+                  </div>
+                  <div className="flex-1 min-w-[160px]">
+                    <p className="font-bold text-sm">{b.patient_name} → {b.provider_name}</p>
+                    <p className="text-[10px] text-muted-foreground">{b.appointment_date} • {b.appointment_time} • {b.booking_number}</p>
+                  </div>
+                  {b.payment_status && (
+                    <span className={`text-[10px] font-bold rounded-full px-2 py-0.5 ${(PAY[b.payment_status] ?? PAY.unpaid).c}`}>
+                      {(PAY[b.payment_status] ?? PAY.unpaid).l}
+                    </span>
+                  )}
+                  <select value={b.status} onChange={(e) => setStatus(b.id, e.target.value)}
+                    className="rounded-xl border border-input bg-background px-2 py-1.5 text-xs">
+                    <option value="pending">قيد المراجعة</option>
+                    <option value="confirmed">مؤكدة</option>
+                    <option value="completed">مكتملة</option>
+                    <option value="cancelled">ملغاة</option>
+                    <option value="no_show">غير مكتمل</option>
+                  </select>
                 </div>
-                <div className="flex-1 min-w-[160px]">
-                  <p className="font-bold text-sm">{b.patient_name} → {b.provider_name}</p>
-                  <p className="text-[10px] text-muted-foreground">{b.appointment_date} • {b.appointment_time} • {b.booking_number}</p>
-                </div>
-                <select value={b.status} onChange={(e) => setStatus(b.id, e.target.value)}
-                  className="rounded-xl border border-input bg-background px-2 py-1.5 text-xs">
-                  <option value="pending">قيد المراجعة</option>
-                  <option value="confirmed">مؤكدة</option>
-                  <option value="completed">مكتملة</option>
-                  <option value="cancelled">ملغاة</option>
-                  <option value="no_show">غير مكتمل</option>
-                </select>
+                {(b.amount || b.payment_method_code || b.payment_proof_url) && (
+                  <div className="rounded-2xl border border-border/60 bg-muted/40 p-2 flex flex-wrap items-center gap-2 text-[11px]">
+                    {b.amount ? <span className="font-bold">{Number(b.amount).toLocaleString("ar-EG")} {b.currency || "ر.ي"}</span> : null}
+                    {b.payment_method_code && <span className="rounded-full bg-primary/10 text-primary px-2 py-0.5 font-mono font-bold" dir="ltr">{b.payment_method_code}</span>}
+                    {b.payment_reference && <span className="text-muted-foreground">مرجع: <span className="font-mono">{b.payment_reference}</span></span>}
+                    {b.payment_proof_url && <a href={b.payment_proof_url} target="_blank" rel="noreferrer" className="text-primary font-bold underline">إثبات الدفع</a>}
+                    <select value={b.payment_status ?? "unpaid"} onChange={(e) => setPay(b.id, e.target.value)}
+                      className="ms-auto rounded-xl border border-input bg-background px-2 py-1 text-[11px]">
+                      <option value="unpaid">غير مدفوع</option>
+                      <option value="on_arrival">عند الوصول</option>
+                      <option value="pending_review">بانتظار التحقق</option>
+                      <option value="paid">مدفوع</option>
+                      <option value="refunded">مسترجع</option>
+                    </select>
+                  </div>
+                )}
               </div>
             ))}
           </div>}

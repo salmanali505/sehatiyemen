@@ -25,6 +25,20 @@ type Booking = {
   provider_id: string;
   status: "pending" | "confirmed" | "completed" | "cancelled";
   created_at: string;
+  amount: number | null;
+  currency: string | null;
+  payment_method_code: string | null;
+  payment_status: string | null;
+  payment_reference: string | null;
+  payment_proof_url: string | null;
+};
+
+const PAY_LABEL: Record<string, { l: string; c: string }> = {
+  unpaid: { l: "غير مدفوع", c: "bg-muted text-muted-foreground" },
+  on_arrival: { l: "دفع عند الوصول", c: "bg-primary/10 text-primary" },
+  pending_review: { l: "بانتظار التحقق", c: "bg-warning/15 text-warning" },
+  paid: { l: "مدفوع", c: "bg-success/15 text-success" },
+  refunded: { l: "مسترجع", c: "bg-destructive/10 text-destructive" },
 };
 
 const STATUSES: { value: Booking["status"]; label: string; color: string }[] = [
@@ -95,6 +109,13 @@ function ProviderDashboard() {
     if (error) return toast.error(error.message);
     setBookings((b) => b.map((x) => (x.id === id ? { ...x, status } : x)));
     toast.success("تم تحديث الحالة");
+  }
+
+  async function setPayment(id: string, payment_status: string) {
+    const { error } = await supabase.from("bookings").update({ payment_status }).eq("id", id);
+    if (error) return toast.error(error.message);
+    setBookings((b) => b.map((x) => (x.id === id ? { ...x, payment_status } : x)));
+    toast.success("تم تحديث حالة الدفع");
   }
 
   if (authLoading || rolesLoading) {
@@ -197,8 +218,45 @@ function ProviderDashboard() {
                           </p>
                         )}
                       </div>
-                      <span className={`text-[10px] font-bold rounded-full px-2.5 py-1 ${status.color}`}>{status.label}</span>
+                      <div className="flex flex-col items-end gap-1">
+                        <span className={`text-[10px] font-bold rounded-full px-2.5 py-1 ${status.color}`}>{status.label}</span>
+                        {b.payment_status && (
+                          <span className={`text-[10px] font-bold rounded-full px-2 py-0.5 ${(PAY_LABEL[b.payment_status] ?? PAY_LABEL.unpaid).c}`}>
+                            {(PAY_LABEL[b.payment_status] ?? PAY_LABEL.unpaid).l}
+                          </span>
+                        )}
+                      </div>
                     </div>
+                    {(b.amount || b.payment_method_code || b.payment_reference || b.payment_proof_url) && (
+                      <div className="mt-3 rounded-2xl border border-border/60 bg-muted/40 p-3 space-y-2">
+                        <div className="flex flex-wrap items-center gap-3 text-[11px]">
+                          {b.amount ? (
+                            <span className="font-bold">المبلغ: {Number(b.amount).toLocaleString("ar-EG")} {b.currency || "ر.ي"}</span>
+                          ) : null}
+                          {b.payment_method_code && (
+                            <span className="rounded-full bg-primary/10 text-primary px-2 py-0.5 font-bold font-mono" dir="ltr">
+                              {b.payment_method_code}
+                            </span>
+                          )}
+                          {b.payment_reference && (
+                            <span className="text-muted-foreground">مرجع: <span className="font-mono">{b.payment_reference}</span></span>
+                          )}
+                        </div>
+                        {b.payment_proof_url && (
+                          <a href={b.payment_proof_url} target="_blank" rel="noreferrer" className="block">
+                            <img src={b.payment_proof_url} alt="إثبات الدفع" className="max-h-40 rounded-xl border" />
+                          </a>
+                        )}
+                        {b.payment_status === "pending_review" && (
+                          <div className="flex gap-2 pt-1">
+                            <button onClick={() => setPayment(b.id, "paid")}
+                              className="flex-1 rounded-xl bg-success/15 text-success text-[11px] font-bold py-1.5">✓ تأكيد الدفع</button>
+                            <button onClick={() => setPayment(b.id, "unpaid")}
+                              className="flex-1 rounded-xl bg-destructive/15 text-destructive text-[11px] font-bold py-1.5">✕ رفض</button>
+                          </div>
+                        )}
+                      </div>
+                    )}
                     <div className="mt-3 flex flex-wrap gap-2">
                       {STATUSES.filter((s) => s.value !== b.status).map((s) => (
                         <button
