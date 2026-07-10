@@ -10,11 +10,18 @@ export const Route = createFileRoute("/admin/bookings")({
   component: BookingsAdmin,
 });
 
-type B = { id: string; booking_number: string; patient_name: string; provider_name: string; appointment_date: string; appointment_time: string; status: string; created_at: string };
+type B = { id: string; booking_number: string; patient_name: string; provider_name: string; appointment_date: string; appointment_time: string; status: string; created_at: string; amount: number | null; currency: string | null; payment_method_code: string | null; payment_status: string | null; payment_reference: string | null; payment_proof_url: string | null };
 const TABS = [
   { k: "all", t: "الكل" }, { k: "pending", t: "جديدة" }, { k: "confirmed", t: "مؤكدة" },
   { k: "completed", t: "مكتملة" }, { k: "cancelled", t: "ملغاة" }, { k: "no_show", t: "غير مكتملة" },
 ];
+const PAY: Record<string, { l: string; c: string }> = {
+  unpaid: { l: "غير مدفوع", c: "bg-muted text-muted-foreground" },
+  on_arrival: { l: "عند الوصول", c: "bg-primary/10 text-primary" },
+  pending_review: { l: "بانتظار التحقق", c: "bg-warning/15 text-warning" },
+  paid: { l: "مدفوع", c: "bg-success/15 text-success" },
+  refunded: { l: "مسترجع", c: "bg-destructive/10 text-destructive" },
+};
 
 function BookingsAdmin() {
   const [items, setItems] = useState<B[]>([]);
