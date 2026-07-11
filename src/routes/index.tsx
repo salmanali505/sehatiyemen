@@ -101,17 +101,17 @@ function HomePage() {
             </div>
           </div>
 
-          <div className="mt-8 mx-4 p-5 rounded-3xl gradient-hero text-white shadow-glow relative overflow-hidden">
+          <Link to="/family" className="block mt-8 mx-4 p-5 rounded-3xl gradient-hero text-white shadow-glow relative overflow-hidden">
             <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-accent/30 rounded-full blur-3xl" />
             <div className="relative">
               <p className="text-xs font-bold text-white/80">عائلتك بأمان</p>
               <h3 className="text-xl font-black mt-1">احجز لأفراد عائلتك</h3>
               <p className="text-sm text-white/85 mt-1">أضف أفراد عائلتك واحجز لهم بضغطة واحدة</p>
-              <button className="mt-3 bg-white text-primary px-5 py-2 rounded-full text-xs font-black shadow-lg">
+              <span className="mt-3 inline-block bg-white text-primary px-5 py-2 rounded-full text-xs font-black shadow-lg">
                 أضف عائلة
-              </button>
+              </span>
             </div>
-          </div>
+          </Link>
         </div>
 
         <BottomNav />
