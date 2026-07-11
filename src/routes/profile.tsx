@@ -19,7 +19,6 @@ function ProfilePage() {
   useEffect(() => { if (!loading && !user) navigate({ to: "/auth" }); }, [user, loading, navigate]);
 
   const items = [
-    { icon: Settings, label: "تعديل الملف الشخصي والتوثيق", to: "/profile/edit" as const, accent: true },
     { icon: Sparkles, label: "المساعد الصحي الذكي", to: "/assistant" as const },
     { icon: Calendar, label: "حجوزاتي", to: "/bookings" as const },
     { icon: Heart, label: "المفضلة", to: "/favorites" as const },
@@ -40,10 +39,14 @@ function ProfilePage() {
           <div className="w-20 h-20 rounded-full bg-white/20 backdrop-blur flex items-center justify-center border-2 border-white/40">
             <UserIcon className="text-white" size={36} />
           </div>
-          <div className="flex-1 text-white">
-            <h2 className="text-xl font-black">{user?.user_metadata?.full_name || "مستخدم صحتي"}</h2>
-            <p className="text-sm text-white/80 mt-0.5">{user?.email}</p>
+          <div className="flex-1 text-white min-w-0">
+            <h2 className="text-xl font-black truncate">{user?.user_metadata?.full_name || "مستخدم صحتي"}</h2>
+            <p className="text-sm text-white/80 mt-0.5 truncate">{user?.email}</p>
           </div>
+          <Link to="/profile/edit" aria-label="تعديل الملف الشخصي"
+            className="w-11 h-11 rounded-full bg-white/20 backdrop-blur border border-white/40 flex items-center justify-center text-white shrink-0">
+            <Settings size={18} />
+          </Link>
         </div>
       </div>
 
