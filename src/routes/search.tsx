@@ -5,16 +5,23 @@ import { providers, doctors, categories } from "@/lib/mockData";
 import { BottomNav } from "@/components/BottomNav";
 import { useSelectedCity } from "@/lib/useCities";
 
+type SearchParams = { kind?: string; q?: string };
+
 export const Route = createFileRoute("/search")({
   head: () => ({ meta: [{ title: "بحث | صحتي" }] }),
+  validateSearch: (s: Record<string, unknown>): SearchParams => ({
+    kind: typeof s.kind === "string" ? s.kind : undefined,
+    q: typeof s.q === "string" ? s.q : undefined,
+  }),
   component: SearchPage,
 });
 
 const norm = (s: string) => s.toLowerCase().normalize("NFKD").replace(/[\u064B-\u065F\u0670]/g, "").trim();
 
 function SearchPage() {
-  const [q, setQ] = useState("");
-  const [filter, setFilter] = useState<string>("all");
+  const sp = Route.useSearch();
+  const [q, setQ] = useState(sp.q ?? "");
+  const [filter, setFilter] = useState<string>(sp.kind ?? "all");
   const [openOnly, setOpenOnly] = useState(false);
   const [cityScope, setCityScope] = useState<"city" | "all">("city");
   const { city } = useSelectedCity();

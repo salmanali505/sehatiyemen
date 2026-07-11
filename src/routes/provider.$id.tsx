@@ -49,7 +49,7 @@ function ProviderPage() {
   const providerDoctors = allDoctors.filter((d) => p.doctors.includes(d.id));
 
   return (
-    <div className="min-h-screen bg-background pb-40">
+    <div className="min-h-screen bg-background pb-56">
       <div className="relative h-56">
         <img src={p.cover} alt={p.name} className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
@@ -164,7 +164,7 @@ function ProviderPage() {
         </div>
       </div>
 
-      <div className="fixed bottom-0 inset-x-0 p-4 glass border-t border-border/40">
+      <div className="fixed bottom-0 inset-x-0 p-4 pb-[max(1rem,env(safe-area-inset-bottom))] glass border-t border-border/40 z-40">
         <button onClick={() => navigate({ to: "/book/$providerId", params: { providerId: p.id } })}
           className="w-full gradient-primary text-primary-foreground font-black py-4 rounded-2xl shadow-glow flex items-center justify-center gap-2">
           احجز موعد الآن <ChevronLeft size={18} />

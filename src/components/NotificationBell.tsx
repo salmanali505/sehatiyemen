@@ -1,5 +1,5 @@
 import { Bell } from "lucide-react";
-import { Link } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
@@ -7,6 +7,7 @@ import { useAuth } from "@/lib/auth-context";
 
 export function NotificationBell() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [unread, setUnread] = useState(0);
 
   useEffect(() => {
@@ -29,16 +30,21 @@ export function NotificationBell() {
   }, [user]);
 
   return (
-    <Link to="/notifications" className="relative w-10 h-10 rounded-full glass flex items-center justify-center shadow-card">
+    <button
+      type="button"
+      onClick={() => navigate({ to: "/notifications" })}
+      aria-label="الإشعارات"
+      className="relative w-10 h-10 rounded-full glass flex items-center justify-center shadow-card"
+    >
       <Bell size={18} className="text-primary" />
       {unread > 0 && (
         <motion.span
           initial={{ scale: 0 }} animate={{ scale: 1 }}
-          className="absolute -top-1 -left-1 min-w-[18px] h-[18px] px-1 bg-destructive text-destructive-foreground text-[10px] font-extrabold rounded-full flex items-center justify-center border-2 border-background"
+          className="absolute -top-1 -left-1 min-w-[18px] h-[18px] px-1 bg-destructive text-destructive-foreground text-[10px] font-extrabold rounded-full flex items-center justify-center border-2 border-background pointer-events-none"
         >
           {unread > 99 ? "99+" : unread}
         </motion.span>
       )}
-    </Link>
+    </button>
   );
 }
