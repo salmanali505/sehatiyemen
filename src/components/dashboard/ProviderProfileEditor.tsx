@@ -50,7 +50,7 @@ export default function ProviderProfileEditor({ userId }: { userId: string }) {
     const { error } = await supabase.from("providers").update({
       name: draft.name, city: draft.city, address: draft.address, phone: draft.phone,
       description: draft.description, image_url: draft.image_url, logo_url: draft.logo_url,
-      cover_url: draft.cover_url, gallery_urls: draft.gallery_urls,
+      cover_url: draft.cover_url, gallery_urls: draft.gallery_urls ?? [],
     }).eq("id", draft.id);
     setSaving(false);
     if (error) return toast.error(error.message);
