@@ -54,10 +54,11 @@ export default function ProviderProfileEditor({ userId }: { userId: string }) {
   async function save() {
     if (!draft) return;
     setSaving(true);
-    const { error } = await supabase.from("providers").update({
+    const { error } = await (supabase as any).from("providers").update({
       name: draft.name, city: draft.city, address: draft.address, phone: draft.phone,
       description: draft.description, image_url: draft.image_url, logo_url: draft.logo_url,
       cover_url: draft.cover_url, gallery_urls: draft.gallery_urls ?? [],
+      whatsapp: draft.whatsapp, working_hours: draft.working_hours ?? null,
     }).eq("id", draft.id);
     setSaving(false);
     if (error) return toast.error(error.message);
