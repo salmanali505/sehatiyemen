@@ -125,10 +125,40 @@ export default function ProviderProfileEditor({ userId }: { userId: string }) {
             <input value={p.phone ?? ""} onChange={(e) => setDraft({ ...p, phone: e.target.value })} dir="ltr"
               className="mt-1 w-full rounded-2xl border border-input bg-background px-3 py-2 text-sm" />
           </label>
-          <label className="text-xs font-bold">العنوان
+          <label className="text-xs font-bold">واتساب
+            <input value={p.whatsapp ?? ""} onChange={(e) => setDraft({ ...p, whatsapp: e.target.value })} dir="ltr" placeholder="+9677..."
+              className="mt-1 w-full rounded-2xl border border-input bg-background px-3 py-2 text-sm" />
+          </label>
+          <label className="text-xs font-bold md:col-span-2">العنوان
             <input value={p.address ?? ""} onChange={(e) => setDraft({ ...p, address: e.target.value })}
               className="mt-1 w-full rounded-2xl border border-input bg-background px-3 py-2 text-sm" />
           </label>
+        </div>
+
+        <div className="rounded-2xl border p-3 space-y-2">
+          <p className="text-xs font-bold">أوقات العمل</p>
+          <div className="grid gap-2">
+            {DAYS.map((d) => {
+              const wh = (p.working_hours ?? {}) as Record<string, { open?: string; close?: string; closed?: boolean }>;
+              const row = wh[d.k] ?? {};
+              const setRow = (patch: any) => setDraft({ ...p, working_hours: { ...wh, [d.k]: { ...row, ...patch } } });
+              return (
+                <div key={d.k} className="flex items-center gap-2 text-xs">
+                  <span className="w-16 font-bold">{d.n}</span>
+                  <label className="flex items-center gap-1">
+                    <input type="checkbox" checked={!row.closed} onChange={(e) => setRow({ closed: !e.target.checked })} /> مفتوح
+                  </label>
+                  {!row.closed && <>
+                    <input type="time" value={row.open ?? ""} onChange={(e) => setRow({ open: e.target.value })} dir="ltr"
+                      className="rounded-xl border border-input bg-background px-2 py-1" />
+                    <span>-</span>
+                    <input type="time" value={row.close ?? ""} onChange={(e) => setRow({ close: e.target.value })} dir="ltr"
+                      className="rounded-xl border border-input bg-background px-2 py-1" />
+                  </>}
+                </div>
+              );
+            })}
+          </div>
         </div>
 
         <label className="text-xs font-bold block">وصف النشاط
