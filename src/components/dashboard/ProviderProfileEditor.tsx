@@ -20,7 +20,14 @@ type Provider = {
   verified: boolean;
   featured: boolean;
   rating: number | null;
+  whatsapp: string | null;
+  working_hours: any;
 };
+
+const DAYS = [
+  { k: "sat", n: "السبت" }, { k: "sun", n: "الأحد" }, { k: "mon", n: "الإثنين" },
+  { k: "tue", n: "الثلاثاء" }, { k: "wed", n: "الأربعاء" }, { k: "thu", n: "الخميس" }, { k: "fri", n: "الجمعة" },
+];
 
 export default function ProviderProfileEditor({ userId }: { userId: string }) {
   const [items, setItems] = useState<Provider[]>([]);
