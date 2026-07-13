@@ -82,10 +82,15 @@ export type Database = {
           id: string
           image_url: string | null
           link_url: string | null
+          moderation_status: string
           placement: string
           priority: number
           provider_id: string | null
+          rejection_reason: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
           starts_at: string | null
+          submitted_at: string | null
           subtitle: string | null
           title: string
           updated_at: string
@@ -98,10 +103,15 @@ export type Database = {
           id?: string
           image_url?: string | null
           link_url?: string | null
+          moderation_status?: string
           placement?: string
           priority?: number
           provider_id?: string | null
+          rejection_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
           starts_at?: string | null
+          submitted_at?: string | null
           subtitle?: string | null
           title: string
           updated_at?: string
@@ -114,10 +124,15 @@ export type Database = {
           id?: string
           image_url?: string | null
           link_url?: string | null
+          moderation_status?: string
           placement?: string
           priority?: number
           provider_id?: string | null
+          rejection_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
           starts_at?: string | null
+          submitted_at?: string | null
           subtitle?: string | null
           title?: string
           updated_at?: string
@@ -621,8 +636,13 @@ export type Database = {
           id: string
           image_url: string | null
           kind: string
+          moderation_status: string
           provider_id: string | null
+          rejection_reason: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
           starts_at: string | null
+          submitted_at: string | null
           title: string
           updated_at: string
         }
@@ -638,8 +658,13 @@ export type Database = {
           id?: string
           image_url?: string | null
           kind?: string
+          moderation_status?: string
           provider_id?: string | null
+          rejection_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
           starts_at?: string | null
+          submitted_at?: string | null
           title: string
           updated_at?: string
         }
@@ -655,8 +680,13 @@ export type Database = {
           id?: string
           image_url?: string | null
           kind?: string
+          moderation_status?: string
           provider_id?: string | null
+          rejection_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
           starts_at?: string | null
+          submitted_at?: string | null
           title?: string
           updated_at?: string
         }
@@ -854,6 +884,115 @@ export type Database = {
         }
         Relationships: []
       }
+      provider_doctors: {
+        Row: {
+          active: boolean
+          bio: string | null
+          created_at: string
+          featured: boolean
+          id: string
+          name: string
+          photo_url: string | null
+          provider_id: string
+          schedule: Json | null
+          sort_order: number | null
+          specialty: string | null
+          updated_at: string
+          years_experience: number | null
+        }
+        Insert: {
+          active?: boolean
+          bio?: string | null
+          created_at?: string
+          featured?: boolean
+          id?: string
+          name: string
+          photo_url?: string | null
+          provider_id: string
+          schedule?: Json | null
+          sort_order?: number | null
+          specialty?: string | null
+          updated_at?: string
+          years_experience?: number | null
+        }
+        Update: {
+          active?: boolean
+          bio?: string | null
+          created_at?: string
+          featured?: boolean
+          id?: string
+          name?: string
+          photo_url?: string | null
+          provider_id?: string
+          schedule?: Json | null
+          sort_order?: number | null
+          specialty?: string | null
+          updated_at?: string
+          years_experience?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "provider_doctors_provider_id_fkey"
+            columns: ["provider_id"]
+            isOneToOne: false
+            referencedRelation: "providers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      provider_services: {
+        Row: {
+          active: boolean
+          created_at: string
+          currency: string | null
+          description: string | null
+          duration_minutes: number | null
+          id: string
+          image_url: string | null
+          name: string
+          price: number | null
+          provider_id: string
+          sort_order: number | null
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          currency?: string | null
+          description?: string | null
+          duration_minutes?: number | null
+          id?: string
+          image_url?: string | null
+          name: string
+          price?: number | null
+          provider_id: string
+          sort_order?: number | null
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          currency?: string | null
+          description?: string | null
+          duration_minutes?: number | null
+          id?: string
+          image_url?: string | null
+          name?: string
+          price?: number | null
+          provider_id?: string
+          sort_order?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "provider_services_provider_id_fkey"
+            columns: ["provider_id"]
+            isOneToOne: false
+            referencedRelation: "providers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       providers: {
         Row: {
           address: string | null
@@ -866,7 +1005,9 @@ export type Database = {
           gallery_urls: string[]
           id: string
           image_url: string | null
+          latitude: number | null
           logo_url: string | null
+          longitude: number | null
           must_change_password: boolean
           name: string
           owner_user_id: string | null
@@ -880,6 +1021,8 @@ export type Database = {
           updated_at: string
           username: string | null
           verified: boolean
+          whatsapp: string | null
+          working_hours: Json | null
         }
         Insert: {
           address?: string | null
@@ -892,7 +1035,9 @@ export type Database = {
           gallery_urls?: string[]
           id?: string
           image_url?: string | null
+          latitude?: number | null
           logo_url?: string | null
+          longitude?: number | null
           must_change_password?: boolean
           name: string
           owner_user_id?: string | null
@@ -906,6 +1051,8 @@ export type Database = {
           updated_at?: string
           username?: string | null
           verified?: boolean
+          whatsapp?: string | null
+          working_hours?: Json | null
         }
         Update: {
           address?: string | null
@@ -918,7 +1065,9 @@ export type Database = {
           gallery_urls?: string[]
           id?: string
           image_url?: string | null
+          latitude?: number | null
           logo_url?: string | null
+          longitude?: number | null
           must_change_password?: boolean
           name?: string
           owner_user_id?: string | null
@@ -932,6 +1081,8 @@ export type Database = {
           updated_at?: string
           username?: string | null
           verified?: boolean
+          whatsapp?: string | null
+          working_hours?: Json | null
         }
         Relationships: [
           {
@@ -997,6 +1148,8 @@ export type Database = {
           id: string
           provider_id: string
           rating: number
+          reply: string | null
+          reply_at: string | null
           user_id: string
         }
         Insert: {
@@ -1005,6 +1158,8 @@ export type Database = {
           id?: string
           provider_id: string
           rating: number
+          reply?: string | null
+          reply_at?: string | null
           user_id: string
         }
         Update: {
@@ -1013,6 +1168,8 @@ export type Database = {
           id?: string
           provider_id?: string
           rating?: number
+          reply?: string | null
+          reply_at?: string | null
           user_id?: string
         }
         Relationships: []

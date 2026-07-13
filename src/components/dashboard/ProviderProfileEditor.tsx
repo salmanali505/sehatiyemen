@@ -20,7 +20,14 @@ type Provider = {
   verified: boolean;
   featured: boolean;
   rating: number | null;
+  whatsapp: string | null;
+  working_hours: any;
 };
+
+const DAYS = [
+  { k: "sat", n: "السبت" }, { k: "sun", n: "الأحد" }, { k: "mon", n: "الإثنين" },
+  { k: "tue", n: "الثلاثاء" }, { k: "wed", n: "الأربعاء" }, { k: "thu", n: "الخميس" }, { k: "fri", n: "الجمعة" },
+];
 
 export default function ProviderProfileEditor({ userId }: { userId: string }) {
   const [items, setItems] = useState<Provider[]>([]);
@@ -47,10 +54,11 @@ export default function ProviderProfileEditor({ userId }: { userId: string }) {
   async function save() {
     if (!draft) return;
     setSaving(true);
-    const { error } = await supabase.from("providers").update({
+    const { error } = await (supabase as any).from("providers").update({
       name: draft.name, city: draft.city, address: draft.address, phone: draft.phone,
       description: draft.description, image_url: draft.image_url, logo_url: draft.logo_url,
       cover_url: draft.cover_url, gallery_urls: draft.gallery_urls ?? [],
+      whatsapp: draft.whatsapp, working_hours: draft.working_hours ?? null,
     }).eq("id", draft.id);
     setSaving(false);
     if (error) return toast.error(error.message);
@@ -117,10 +125,40 @@ export default function ProviderProfileEditor({ userId }: { userId: string }) {
             <input value={p.phone ?? ""} onChange={(e) => setDraft({ ...p, phone: e.target.value })} dir="ltr"
               className="mt-1 w-full rounded-2xl border border-input bg-background px-3 py-2 text-sm" />
           </label>
-          <label className="text-xs font-bold">العنوان
+          <label className="text-xs font-bold">واتساب
+            <input value={p.whatsapp ?? ""} onChange={(e) => setDraft({ ...p, whatsapp: e.target.value })} dir="ltr" placeholder="+9677..."
+              className="mt-1 w-full rounded-2xl border border-input bg-background px-3 py-2 text-sm" />
+          </label>
+          <label className="text-xs font-bold md:col-span-2">العنوان
             <input value={p.address ?? ""} onChange={(e) => setDraft({ ...p, address: e.target.value })}
               className="mt-1 w-full rounded-2xl border border-input bg-background px-3 py-2 text-sm" />
           </label>
+        </div>
+
+        <div className="rounded-2xl border p-3 space-y-2">
+          <p className="text-xs font-bold">أوقات العمل</p>
+          <div className="grid gap-2">
+            {DAYS.map((d) => {
+              const wh = (p.working_hours ?? {}) as Record<string, { open?: string; close?: string; closed?: boolean }>;
+              const row = wh[d.k] ?? {};
+              const setRow = (patch: any) => setDraft({ ...p, working_hours: { ...wh, [d.k]: { ...row, ...patch } } });
+              return (
+                <div key={d.k} className="flex items-center gap-2 text-xs">
+                  <span className="w-16 font-bold">{d.n}</span>
+                  <label className="flex items-center gap-1">
+                    <input type="checkbox" checked={!row.closed} onChange={(e) => setRow({ closed: !e.target.checked })} /> مفتوح
+                  </label>
+                  {!row.closed && <>
+                    <input type="time" value={row.open ?? ""} onChange={(e) => setRow({ open: e.target.value })} dir="ltr"
+                      className="rounded-xl border border-input bg-background px-2 py-1" />
+                    <span>-</span>
+                    <input type="time" value={row.close ?? ""} onChange={(e) => setRow({ close: e.target.value })} dir="ltr"
+                      className="rounded-xl border border-input bg-background px-2 py-1" />
+                  </>}
+                </div>
+              );
+            })}
+          </div>
         </div>
 
         <label className="text-xs font-bold block">وصف النشاط

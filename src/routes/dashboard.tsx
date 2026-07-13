@@ -7,6 +7,11 @@ import { useRoles } from "@/lib/useRoles";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import ProviderProfileEditor from "@/components/dashboard/ProviderProfileEditor";
+import OffersManager from "@/components/dashboard/OffersManager";
+import AdsManager from "@/components/dashboard/AdsManager";
+import ServicesManager from "@/components/dashboard/ServicesManager";
+import DoctorsManager from "@/components/dashboard/DoctorsManager";
+import ReviewsManager from "@/components/dashboard/ReviewsManager";
 
 export const Route = createFileRoute("/dashboard")({
   component: ProviderDashboard,
@@ -176,6 +181,11 @@ function ProviderDashboard() {
         </Link>
 
         {user && <ProviderProfileEditor userId={user.id} />}
+        <ServicesManager providerIds={providerIds} />
+        <DoctorsManager providerIds={providerIds} />
+        <OffersManager providerIds={providerIds} />
+        <AdsManager providerIds={providerIds} />
+        <ReviewsManager providerIds={providerIds} />
 
 
 
