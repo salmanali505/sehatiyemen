@@ -181,6 +181,11 @@ function ProviderDashboard() {
         </Link>
 
         {user && <ProviderProfileEditor userId={user.id} />}
+        <ServicesManager providerIds={providerIds} />
+        <DoctorsManager providerIds={providerIds} />
+        <OffersManager providerIds={providerIds} />
+        <AdsManager providerIds={providerIds} />
+        <ReviewsManager providerIds={providerIds} />
 
 
 
