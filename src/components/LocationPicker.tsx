@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { MapPin, Check, X } from "lucide-react";
 import { useCities, useSelectedCity } from "@/lib/useCities";
 
