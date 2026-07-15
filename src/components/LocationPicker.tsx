@@ -74,7 +74,8 @@ export function LocationPicker() {
               </div>
             )}
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );
