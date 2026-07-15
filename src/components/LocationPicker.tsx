@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { MapPin, Check, X } from "lucide-react";
 import { useCities, useSelectedCity } from "@/lib/useCities";
 
@@ -25,7 +26,7 @@ export function LocationPicker() {
         <span className="text-xs font-bold max-w-[80px] truncate">{city}</span>
       </button>
 
-      {open && (
+      {open && typeof document !== "undefined" && createPortal(
         <div
           className="fixed inset-0 z-[80] bg-black/50 backdrop-blur-sm flex items-end"
           onClick={() => setOpen(false)}
@@ -73,7 +74,8 @@ export function LocationPicker() {
               </div>
             )}
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );
