@@ -143,6 +143,8 @@
 
 @layer utilities {
   .gradient-primary { background-image: var(--gradient-primary); }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   .gradient-health { background-image: var(--gradient-health); }
   .gradient-green { background-image: var(--gradient-green); }
   .gradient-hero { background-image: var(--gradient-hero); }
