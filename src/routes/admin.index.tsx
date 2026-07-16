@@ -1,10 +1,11 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import {
   Shield, ArrowRight, Loader2, Users, Building2, Calendar, TrendingUp, TrendingDown,
   ChevronLeft, Sparkles, Search, Stethoscope, DollarSign, CreditCard, Bell,
-  Activity, UserPlus, ClipboardCheck, Wallet,
+  Activity, UserPlus, ClipboardCheck, Wallet, Megaphone, Percent, Home as HomeIcon,
+  Settings, BarChart3, MessageSquare,
 } from "lucide-react";
 import {
   AreaChart, Area, ResponsiveContainer, XAxis, YAxis, Tooltip, CartesianGrid,
@@ -14,6 +15,13 @@ import { useAuth } from "@/lib/auth-context";
 import { useRoles } from "@/lib/useRoles";
 import { supabase } from "@/integrations/supabase/client";
 import { CENTERS, GROUPS, type Center } from "@/lib/adminCenters";
+import DashHero from "@/components/dashboard/DashHero";
+import DashCard from "@/components/dashboard/DashCard";
+import DashKpi from "@/components/dashboard/DashKpi";
+import DashPeriodChips, { type Period } from "@/components/dashboard/DashPeriodChips";
+import { DashQuickActions } from "@/components/dashboard/DashQuickAction";
+import { useAuth as _useAuth } from "@/lib/auth-context";
+
 
 export const Route = createFileRoute("/admin/")({
   component: AdminHub,
