@@ -120,7 +120,7 @@ function ReceptionMgmt() {
           </select>
         )}
 
-        <div className="rounded-3xl border bg-card p-4 space-y-3">
+        <div id="new-rec" className="rounded-3xl border bg-card p-4 space-y-3 shadow-sm">
           <h2 className="font-bold flex items-center gap-2"><Plus size={16} /> موظف استقبال جديد</h2>
           <input value={form.full_name} onChange={(e) => setForm({ ...form, full_name: e.target.value })} placeholder="اسم الحساب (مثال: استقبال صباحي)" className="w-full rounded-2xl border border-input bg-background px-3 py-2.5 text-sm" />
           <input value={form.employee_name} onChange={(e) => setForm({ ...form, employee_name: e.target.value })} placeholder="اسم الموظف" className="w-full rounded-2xl border border-input bg-background px-3 py-2.5 text-sm" />
