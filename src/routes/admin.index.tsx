@@ -167,16 +167,51 @@ function AdminHub() {
   const grouped: Record<string, Center[]> = {};
   filtered.forEach((c) => { (grouped[c.group] ??= []).push(c); });
 
+  const displayName = (user?.user_metadata as any)?.full_name || user?.email?.split("@")[0] || "المشرف";
+  const topCenters = CENTERS.slice(0, 12);
+
   return (
-    <div className="min-h-screen bg-background pb-8" dir="rtl">
+    <div className="min-h-screen bg-gradient-to-b from-muted/40 to-background pb-16" dir="rtl">
+      <DashHero
+        title={`مرحباً، ${displayName}`}
+        subtitle="مركز التحكم الكامل لمنصة صحتي"
+        greeting="لوحة التحكم العليا"
+        avatarFallback={displayName.charAt(0).toUpperCase()}
+        back="/"
+        notifCount={stats.pendingProviders + stats.pendingPayments + stats.openTickets}
+      />
 
+      <main className="mx-auto max-w-7xl px-4 py-6 -mt-12 relative z-10 space-y-6">
+        {/* Quick actions */}
+        <DashQuickActions items={[
+          { to: "/admin/facilities", icon: Building2, label: "المنشآت", hue: "primary" },
+          { to: "/admin/verification", icon: Shield, label: "التوثيق", hue: "warning" },
+          { to: "/admin/ads", icon: Megaphone, label: "الإعلانات", hue: "warning" },
+          { to: "/admin/offers", icon: Percent, label: "العروض", hue: "accent" },
+          { to: "/admin/notifications", icon: Bell, label: "بث إشعار", hue: "primary" },
+          { to: "/admin/home", icon: HomeIcon, label: "الرئيسية", hue: "success" },
+          { to: "/admin/settings", icon: Settings, label: "الإعدادات", hue: "primary" },
+        ]} />
 
-      <main className="mx-auto max-w-7xl px-4 py-6 space-y-6">
+        {/* Big card grid — control centers */}
+        <section>
+          <div className="flex items-center justify-between mb-3 px-1">
+            <h2 className="text-sm font-black">مراكز التحكم</h2>
+            <Link to="/admin" className="text-[11px] font-bold text-primary">الكل ({CENTERS.length})</Link>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+            {topCenters.map((c) => (
+              <DashCard key={c.id} to={c.to} icon={c.icon} title={c.title} desc={c.desc} hue={c.hue as any} />
+            ))}
+          </div>
+        </section>
+
         {/* Alerts */}
         {(stats.pendingProviders + stats.pendingPayments + stats.openTickets) > 0 && (
           <section className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <AlertCard count={stats.pendingProviders} label="منشآت بانتظار المراجعة" to="/admin/facilities" tone="warning" />
             <AlertCard count={stats.pendingPayments} label="مدفوعات معلّقة" to="/admin/payments" tone="destructive" />
+
             <AlertCard count={stats.openTickets} label="تذاكر دعم مفتوحة" to="/admin/support" tone="primary" />
           </section>
         )}
