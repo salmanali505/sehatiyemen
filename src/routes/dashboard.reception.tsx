@@ -1,12 +1,15 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Users, Plus, Copy, Trash2, Loader2, ShieldOff, Phone, Save } from "lucide-react";
+import { ArrowRight, Users, Plus, Copy, Trash2, Loader2, ShieldOff, Phone, Save, Calendar } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { useRoles } from "@/lib/useRoles";
 import { supabase } from "@/integrations/supabase/client";
 import { generateSecureToken, buildAccessUrl } from "@/lib/tokens";
 import { toast } from "sonner";
+import DashHero from "@/components/dashboard/DashHero";
+import { DashQuickActions } from "@/components/dashboard/DashQuickAction";
+
 
 export const Route = createFileRoute("/dashboard/reception")({
   head: () => ({ meta: [{ title: "إدارة الاستقبال | صحتي" }] }),
