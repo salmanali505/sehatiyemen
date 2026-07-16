@@ -20,7 +20,7 @@ import DashCard from "@/components/dashboard/DashCard";
 import DashKpi from "@/components/dashboard/DashKpi";
 import DashPeriodChips, { type Period } from "@/components/dashboard/DashPeriodChips";
 import { DashQuickActions } from "@/components/dashboard/DashQuickAction";
-import { useAuth as _useAuth } from "@/lib/auth-context";
+
 
 
 export const Route = createFileRoute("/admin/")({
