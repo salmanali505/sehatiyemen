@@ -92,17 +92,25 @@ function ReceptionMgmt() {
   if (aL || rL || loading) return <div className="min-h-screen flex items-center justify-center"><Loader2 className="animate-spin text-primary" /></div>;
   if (!isProvider && !isAdmin) { nav({ to: "/" }); return null; }
 
-  return (
-    <div className="min-h-screen bg-background pb-12" dir="rtl">
-      <header className="sticky top-0 z-30 backdrop-blur-xl bg-background/85 border-b">
-        <div className="mx-auto max-w-3xl px-4 py-4 flex items-center gap-3">
-          <Link to="/dashboard" className="rounded-xl p-2 hover:bg-muted"><ArrowRight size={20} /></Link>
-          <div className="flex-1"><h1 className="font-extrabold text-lg">إدارة موظفي الاستقبال</h1><p className="text-xs text-muted-foreground">إنشاء حسابات مع روابط دخول مخصّصة</p></div>
-          <div className="w-10 h-10 rounded-2xl gradient-primary flex items-center justify-center shadow-glow"><Users className="text-primary-foreground" size={18} /></div>
-        </div>
-      </header>
+  const selectedName = providers.find((p) => p.id === selectedProv)?.name || "الاستقبال";
 
-      <main className="mx-auto max-w-3xl px-4 py-6 space-y-4">
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-muted/40 to-background pb-16" dir="rtl">
+      <DashHero
+        title="لوحة موظف الاستقبال"
+        subtitle={`${selectedName} • ${recs.filter((r) => r.active).length} حساب نشط`}
+        greeting="مرحباً بعودتك،"
+        avatarFallback="R"
+        back="/dashboard"
+      />
+
+      <main className="mx-auto max-w-3xl px-4 py-6 -mt-12 relative z-10 space-y-4">
+        <DashQuickActions items={[
+          { onClick: () => document.getElementById("new-rec")?.scrollIntoView({ behavior: "smooth" }), icon: Plus, label: "حساب جديد", hue: "primary" },
+          { to: "/bookings", icon: Calendar, label: "حجوزات اليوم", hue: "success" },
+          { to: "/dashboard", icon: ArrowRight, label: "لوحة المزود", hue: "accent" },
+        ]} />
+
         {providers.length > 1 && (
           <select value={selectedProv} onChange={(e) => setSelectedProv(e.target.value)} className="w-full rounded-2xl border border-input bg-background px-3 py-2.5 text-sm">
             {providers.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
