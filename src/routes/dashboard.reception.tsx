@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Users, Plus, Copy, Trash2, Loader2, ShieldOff, Phone, Save, Calendar } from "lucide-react";
+import { ArrowRight, Users, Plus, Copy, Trash2, Loader2, ShieldOff, Phone, Calendar, Home, Settings, QrCode } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { useRoles } from "@/lib/useRoles";
 import { supabase } from "@/integrations/supabase/client";
@@ -9,6 +9,7 @@ import { generateSecureToken, buildAccessUrl } from "@/lib/tokens";
 import { toast } from "sonner";
 import DashHero from "@/components/dashboard/DashHero";
 import { DashQuickActions } from "@/components/dashboard/DashQuickAction";
+import DashBottomNav from "@/components/dashboard/DashBottomNav";
 
 
 export const Route = createFileRoute("/dashboard/reception")({
@@ -98,7 +99,7 @@ function ReceptionMgmt() {
   const selectedName = providers.find((p) => p.id === selectedProv)?.name || "الاستقبال";
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-muted/40 to-background pb-16" dir="rtl">
+    <div className="min-h-screen bg-gradient-to-b from-muted/40 to-background pb-32" dir="rtl">
       <DashHero
         title="لوحة موظف الاستقبال"
         subtitle={`${selectedName} • ${recs.filter((r) => r.active).length} حساب نشط`}
@@ -166,6 +167,16 @@ function ReceptionMgmt() {
           )}
         </div>
       </main>
+
+      <DashBottomNav
+        items={[
+          { to: "/dashboard/reception", icon: Home,     label: "الرئيسية", active: true },
+          { to: "/bookings",            icon: Calendar, label: "الحجوزات" },
+          { to: "/search",              icon: Users,    label: "العملاء" },
+          { to: "/profile",             icon: Settings, label: "الإعدادات" },
+        ]}
+        center={{ icon: QrCode, label: "مسح QR", to: "/admin/qr" }}
+      />
     </div>
   );
 }

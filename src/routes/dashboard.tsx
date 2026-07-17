@@ -3,8 +3,8 @@ import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import {
   ArrowRight, Building2, Calendar, CheckCircle2, Clock, Loader2, Phone, Star, User,
-  Stethoscope, Briefcase, Megaphone, Percent, MessageSquare, Image as ImageIcon,
-  Settings, BarChart3, Users as UsersIcon, Plus, Wallet, Bell,
+  Stethoscope, Briefcase, Megaphone, Percent, Image as ImageIcon,
+  Settings, BarChart3, Users as UsersIcon, Plus, Wallet, Bell, Home,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { useRoles } from "@/lib/useRoles";
@@ -21,6 +21,7 @@ import DashCard from "@/components/dashboard/DashCard";
 import DashKpi from "@/components/dashboard/DashKpi";
 import DashPeriodChips, { type Period } from "@/components/dashboard/DashPeriodChips";
 import { DashQuickActions } from "@/components/dashboard/DashQuickAction";
+import DashBottomNav from "@/components/dashboard/DashBottomNav";
 
 export const Route = createFileRoute("/dashboard")({
   component: ProviderDashboard,
@@ -153,7 +154,7 @@ function ProviderDashboard() {
   const providerCount = providerNames.length;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-muted/40 to-background pb-16" dir="rtl">
+    <div className="min-h-screen bg-gradient-to-b from-muted/40 to-background pb-32" dir="rtl">
       <DashHero
         title={providerName}
         subtitle={providerCount > 1 ? `${providerCount} منشآت مرتبطة بحسابك` : "إليك ما حدث مع منشأتك اليوم"}
@@ -297,6 +298,16 @@ function ProviderDashboard() {
           </section>
         )}
       </main>
+
+      <DashBottomNav
+        items={[
+          { onClick: () => setTab("home"),     icon: Home,     label: "الرئيسية", active: tab === "home" },
+          { onClick: () => setTab("bookings"), icon: Calendar, label: "الحجوزات", active: tab === "bookings" },
+          { onClick: () => setTab("services"), icon: Briefcase, label: "الخدمات", active: tab === "services" },
+          { onClick: () => setTab("profile"),  icon: Settings, label: "الإعدادات", active: tab === "profile" },
+        ]}
+        center={{ icon: Plus, label: "إضافة", onClick: () => setTab("services") }}
+      />
     </div>
   );
 }
