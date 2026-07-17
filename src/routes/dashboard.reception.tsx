@@ -167,6 +167,16 @@ function ReceptionMgmt() {
           )}
         </div>
       </main>
+
+      <DashBottomNav
+        items={[
+          { to: "/dashboard/reception", icon: Home,     label: "الرئيسية", active: true },
+          { to: "/bookings",            icon: Calendar, label: "الحجوزات" },
+          { to: "/search",              icon: Users,    label: "العملاء" },
+          { to: "/profile",             icon: Settings, label: "الإعدادات" },
+        ]}
+        center={{ icon: QrCode, label: "مسح QR", to: "/admin/qr" }}
+      />
     </div>
   );
 }
