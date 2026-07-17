@@ -99,7 +99,7 @@ function ReceptionMgmt() {
   const selectedName = providers.find((p) => p.id === selectedProv)?.name || "الاستقبال";
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-muted/40 to-background pb-16" dir="rtl">
+    <div className="min-h-screen bg-gradient-to-b from-muted/40 to-background pb-32" dir="rtl">
       <DashHero
         title="لوحة موظف الاستقبال"
         subtitle={`${selectedName} • ${recs.filter((r) => r.active).length} حساب نشط`}
