@@ -3,8 +3,8 @@ import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import {
   ArrowRight, Building2, Calendar, CheckCircle2, Clock, Loader2, Phone, Star, User,
-  Stethoscope, Briefcase, Megaphone, Percent, MessageSquare, Image as ImageIcon,
-  Settings, BarChart3, Users as UsersIcon, Plus, Wallet, Bell,
+  Stethoscope, Briefcase, Megaphone, Percent, Image as ImageIcon,
+  Settings, BarChart3, Users as UsersIcon, Plus, Wallet, Bell, Home,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { useRoles } from "@/lib/useRoles";
@@ -21,6 +21,7 @@ import DashCard from "@/components/dashboard/DashCard";
 import DashKpi from "@/components/dashboard/DashKpi";
 import DashPeriodChips, { type Period } from "@/components/dashboard/DashPeriodChips";
 import { DashQuickActions } from "@/components/dashboard/DashQuickAction";
+import DashBottomNav from "@/components/dashboard/DashBottomNav";
 
 export const Route = createFileRoute("/dashboard")({
   component: ProviderDashboard,
