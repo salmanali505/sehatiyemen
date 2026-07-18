@@ -172,7 +172,7 @@ function AdminHub() {
   const topCenters = CENTERS.slice(0, 12);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-muted/40 to-background pb-16" dir="rtl">
+    <div className="min-h-screen bg-gradient-to-b from-muted/40 to-background pb-32 md:pb-16" dir="rtl">
       <DashHero
         title={`مرحباً، ${displayName}`}
         subtitle="مركز التحكم الكامل لمنصة صحتي"
