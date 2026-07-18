@@ -1,7 +1,7 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Users, Plus, Copy, Trash2, Loader2, ShieldOff, Phone, Calendar, Home, Settings, QrCode } from "lucide-react";
+import { ArrowRight, Users, Plus, Copy, Trash2, Loader2, ShieldOff, Phone, Calendar, Home, Settings, QrCode, UserCheck, CreditCard, CalendarCheck } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { useRoles } from "@/lib/useRoles";
 import { supabase } from "@/integrations/supabase/client";
@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import DashHero from "@/components/dashboard/DashHero";
 import { DashQuickActions } from "@/components/dashboard/DashQuickAction";
 import DashBottomNav from "@/components/dashboard/DashBottomNav";
+import DashKpi from "@/components/dashboard/DashKpi";
 
 
 export const Route = createFileRoute("/dashboard/reception")({
@@ -33,6 +34,7 @@ function ReceptionMgmt() {
   const [recs, setRecs] = useState<Rec[]>([]);
   const [tokens, setTokens] = useState<Tok[]>([]);
   const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState({ today: 0, pending: 0, confirmed: 0 });
   const [form, setForm] = useState({ full_name: "", employee_name: "", phone: "" });
 
   useEffect(() => { if (!aL && !user) nav({ to: "/auth" }); }, [aL, user, nav]);
@@ -53,12 +55,21 @@ function ReceptionMgmt() {
   useEffect(() => { if (selectedProv) loadRecs(); }, [selectedProv]);
 
   async function loadRecs() {
-    const [{ data: r }, { data: t }] = await Promise.all([
+    const today = new Date().toISOString().slice(0, 10);
+    const [{ data: r }, { data: t }, { data: bToday }, { data: bPending }] = await Promise.all([
       supabase.from("reception_users").select("*").eq("provider_id", selectedProv).order("created_at", { ascending: false }),
       supabase.from("access_tokens").select("id, token, active, reception_user_id").eq("kind", "reception").eq("provider_id", selectedProv),
+      supabase.from("bookings").select("id, status", { count: "exact" }).eq("provider_id", selectedProv).eq("appointment_date", today),
+      supabase.from("bookings").select("id, payment_status").eq("provider_id", selectedProv).eq("payment_status", "pending"),
     ]);
     setRecs((r ?? []) as Rec[]);
     setTokens((t ?? []) as Tok[]);
+    const todayList = (bToday ?? []) as Array<{ status: string }>;
+    setStats({
+      today: todayList.length,
+      confirmed: todayList.filter((b) => b.status === "confirmed").length,
+      pending: (bPending ?? []).length,
+    });
   }
 
   async function create() {
@@ -109,10 +120,18 @@ function ReceptionMgmt() {
       />
 
       <main className="mx-auto max-w-3xl px-4 py-6 -mt-12 relative z-10 space-y-4">
+        <section className="grid grid-cols-2 gap-3">
+          <DashKpi icon={Users}         label="حسابات نشطة" value={recs.filter((r) => r.active).length} hue="primary" />
+          <DashKpi icon={UserCheck}     label="إجمالي الحسابات" value={recs.length} hue="accent" />
+          <DashKpi icon={CalendarCheck} label="حجوزات اليوم" value={stats.today} hue="success" />
+          <DashKpi icon={CreditCard}    label="مدفوعات معلّقة" value={stats.pending} hue="warning" />
+        </section>
+
         <DashQuickActions items={[
           { onClick: () => document.getElementById("new-rec")?.scrollIntoView({ behavior: "smooth" }), icon: Plus, label: "حساب جديد", hue: "primary" },
           { to: "/bookings", icon: Calendar, label: "حجوزات اليوم", hue: "success" },
-          { to: "/dashboard", icon: ArrowRight, label: "لوحة المزود", hue: "accent" },
+          { to: "/admin/qr", icon: QrCode, label: "مسح QR", hue: "accent" },
+          { to: "/dashboard", icon: ArrowRight, label: "لوحة المزود", hue: "warning" },
         ]} />
 
         {providers.length > 1 && (
