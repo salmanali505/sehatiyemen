@@ -34,6 +34,7 @@ function ReceptionMgmt() {
   const [recs, setRecs] = useState<Rec[]>([]);
   const [tokens, setTokens] = useState<Tok[]>([]);
   const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState({ today: 0, pending: 0, confirmed: 0 });
   const [form, setForm] = useState({ full_name: "", employee_name: "", phone: "" });
 
   useEffect(() => { if (!aL && !user) nav({ to: "/auth" }); }, [aL, user, nav]);
