@@ -55,12 +55,21 @@ function ReceptionMgmt() {
   useEffect(() => { if (selectedProv) loadRecs(); }, [selectedProv]);
 
   async function loadRecs() {
-    const [{ data: r }, { data: t }] = await Promise.all([
+    const today = new Date().toISOString().slice(0, 10);
+    const [{ data: r }, { data: t }, { data: bToday }, { data: bPending }] = await Promise.all([
       supabase.from("reception_users").select("*").eq("provider_id", selectedProv).order("created_at", { ascending: false }),
       supabase.from("access_tokens").select("id, token, active, reception_user_id").eq("kind", "reception").eq("provider_id", selectedProv),
+      supabase.from("bookings").select("id, status", { count: "exact" }).eq("provider_id", selectedProv).eq("appointment_date", today),
+      supabase.from("bookings").select("id, payment_status").eq("provider_id", selectedProv).eq("payment_status", "pending"),
     ]);
     setRecs((r ?? []) as Rec[]);
     setTokens((t ?? []) as Tok[]);
+    const todayList = (bToday ?? []) as Array<{ status: string }>;
+    setStats({
+      today: todayList.length,
+      confirmed: todayList.filter((b) => b.status === "confirmed").length,
+      pending: (bPending ?? []).length,
+    });
   }
 
   async function create() {
