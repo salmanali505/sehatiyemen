@@ -20,6 +20,7 @@ import DashCard from "@/components/dashboard/DashCard";
 import DashKpi from "@/components/dashboard/DashKpi";
 import DashPeriodChips, { type Period } from "@/components/dashboard/DashPeriodChips";
 import { DashQuickActions } from "@/components/dashboard/DashQuickAction";
+import DashBottomNav from "@/components/dashboard/DashBottomNav";
 
 
 
