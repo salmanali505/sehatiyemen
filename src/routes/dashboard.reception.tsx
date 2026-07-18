@@ -120,10 +120,18 @@ function ReceptionMgmt() {
       />
 
       <main className="mx-auto max-w-3xl px-4 py-6 -mt-12 relative z-10 space-y-4">
+        <section className="grid grid-cols-2 gap-3">
+          <DashKpi icon={Users}         label="حسابات نشطة" value={recs.filter((r) => r.active).length} hue="primary" />
+          <DashKpi icon={UserCheck}     label="إجمالي الحسابات" value={recs.length} hue="accent" />
+          <DashKpi icon={CalendarCheck} label="حجوزات اليوم" value={stats.today} hue="success" />
+          <DashKpi icon={CreditCard}    label="مدفوعات معلّقة" value={stats.pending} hue="warning" />
+        </section>
+
         <DashQuickActions items={[
           { onClick: () => document.getElementById("new-rec")?.scrollIntoView({ behavior: "smooth" }), icon: Plus, label: "حساب جديد", hue: "primary" },
           { to: "/bookings", icon: Calendar, label: "حجوزات اليوم", hue: "success" },
-          { to: "/dashboard", icon: ArrowRight, label: "لوحة المزود", hue: "accent" },
+          { to: "/admin/qr", icon: QrCode, label: "مسح QR", hue: "accent" },
+          { to: "/dashboard", icon: ArrowRight, label: "لوحة المزود", hue: "warning" },
         ]} />
 
         {providers.length > 1 && (
