@@ -1,7 +1,7 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Users, Plus, Copy, Trash2, Loader2, ShieldOff, Phone, Calendar, Home, Settings, QrCode } from "lucide-react";
+import { ArrowRight, Users, Plus, Copy, Trash2, Loader2, ShieldOff, Phone, Calendar, Home, Settings, QrCode, UserCheck, CreditCard, CalendarCheck } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { useRoles } from "@/lib/useRoles";
 import { supabase } from "@/integrations/supabase/client";
@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import DashHero from "@/components/dashboard/DashHero";
 import { DashQuickActions } from "@/components/dashboard/DashQuickAction";
 import DashBottomNav from "@/components/dashboard/DashBottomNav";
+import DashKpi from "@/components/dashboard/DashKpi";
 
 
 export const Route = createFileRoute("/dashboard/reception")({
