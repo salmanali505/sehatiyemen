@@ -20,6 +20,7 @@ import DashCard from "@/components/dashboard/DashCard";
 import DashKpi from "@/components/dashboard/DashKpi";
 import DashPeriodChips, { type Period } from "@/components/dashboard/DashPeriodChips";
 import { DashQuickActions } from "@/components/dashboard/DashQuickAction";
+import DashBottomNav from "@/components/dashboard/DashBottomNav";
 
 
 
@@ -171,7 +172,7 @@ function AdminHub() {
   const topCenters = CENTERS.slice(0, 12);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-muted/40 to-background pb-16" dir="rtl">
+    <div className="min-h-screen bg-gradient-to-b from-muted/40 to-background pb-32 md:pb-16" dir="rtl">
       <DashHero
         title={`مرحباً، ${displayName}`}
         subtitle="مركز التحكم الكامل لمنصة صحتي"
@@ -368,8 +369,20 @@ function AdminHub() {
           </section>
         ))}
 
-        {busy && <div className="fixed bottom-4 left-4 rounded-full bg-card border shadow-md px-3 py-1.5 text-xs flex items-center gap-2"><Loader2 size={12} className="animate-spin text-primary" /> تحديث البيانات...</div>}
+        {busy && <div className="fixed bottom-24 md:bottom-4 left-4 rounded-full bg-card border shadow-md px-3 py-1.5 text-xs flex items-center gap-2 z-30"><Loader2 size={12} className="animate-spin text-primary" /> تحديث البيانات...</div>}
       </main>
+
+      <div className="md:hidden">
+        <DashBottomNav
+          items={[
+            { to: "/admin", icon: HomeIcon, label: "الرئيسية", active: true },
+            { to: "/admin/facilities", icon: Building2, label: "المنشآت" },
+            { to: "/admin/bookings", icon: Calendar, label: "الحجوزات" },
+            { to: "/admin/settings", icon: Settings, label: "الإعدادات" },
+          ]}
+          center={{ icon: Sparkles, label: "مساعد ذكي", to: "/admin/smart" }}
+        />
+      </div>
     </div>
   );
 }
