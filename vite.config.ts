@@ -9,12 +9,19 @@ import { mcpPlugin } from "@lovable.dev/mcp-js/stacks/tanstack/vite";
 
 export default defineConfig({
   tanstackStart: {
-    // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
-    // nitro/vite builds from this
+    // Redirect TanStack Start's bundled server entry to src/server.ts
     server: { entry: "server" },
   },
+  nitro: {
+    // إجبار المحرك على توليد موقع ثابت متوافق مع جيت هاب بايجز
+    preset: "github-pages",
+    prerender: {
+      routes: ["/"],
+    },
+  },
   vite: {
-    base: '/sehatiyemen/',
+    // تحديد المسار الصحيح للمستودع لقرءاة التنسيقات
+    base: "/sehatiyemen/",
     plugins: [mcpPlugin()],
   },
 });
