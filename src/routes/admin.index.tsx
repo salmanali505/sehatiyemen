@@ -58,6 +58,17 @@ function AdminHub() {
   const [newUsers, setNewUsers] = useState<any[]>([]);
   const [recentPayments, setRecentPayments] = useState<any[]>([]);
   const [busy, setBusy] = useState(true);
+  const [period, setPeriod] = useState<Period>("month");
+
+  const periodDays = period === "day" ? 1 : period === "week" ? 7 : period === "month" ? 30 : 90;
+  const trendView = useMemo(() => trend.slice(trend.length - periodDays), [trend, periodDays]);
+  const prevView = useMemo(() => trend.slice(Math.max(0, trend.length - periodDays * 2), trend.length - periodDays), [trend, periodDays]);
+  const totalB = trendView.reduce((s, x) => s + x.bookings, 0);
+  const totalR = trendView.reduce((s, x) => s + x.revenue, 0);
+  const prevB = prevView.reduce((s, x) => s + x.bookings, 0);
+  const prevR = prevView.reduce((s, x) => s + x.revenue, 0);
+  const dB = prevB ? Math.round(((totalB - prevB) / prevB) * 100) : (totalB ? 100 : 0);
+  const dR = prevR ? Math.round(((totalR - prevR) / prevR) * 100) : (totalR ? 100 : 0);
 
   useEffect(() => { if (!aL && !user) nav({ to: "/auth" }); }, [aL, user, nav]);
   useEffect(() => { if (isAdmin) void load(); }, [isAdmin]);
