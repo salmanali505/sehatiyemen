@@ -58,6 +58,17 @@ function AdminHub() {
   const [newUsers, setNewUsers] = useState<any[]>([]);
   const [recentPayments, setRecentPayments] = useState<any[]>([]);
   const [busy, setBusy] = useState(true);
+  const [period, setPeriod] = useState<Period>("month");
+
+  const periodDays = period === "day" ? 1 : period === "week" ? 7 : period === "month" ? 30 : 90;
+  const trendView = useMemo(() => trend.slice(trend.length - periodDays), [trend, periodDays]);
+  const prevView = useMemo(() => trend.slice(Math.max(0, trend.length - periodDays * 2), trend.length - periodDays), [trend, periodDays]);
+  const totalB = trendView.reduce((s, x) => s + x.bookings, 0);
+  const totalR = trendView.reduce((s, x) => s + x.revenue, 0);
+  const prevB = prevView.reduce((s, x) => s + x.bookings, 0);
+  const prevR = prevView.reduce((s, x) => s + x.revenue, 0);
+  const dB = prevB ? Math.round(((totalB - prevB) / prevB) * 100) : (totalB ? 100 : 0);
+  const dR = prevR ? Math.round(((totalR - prevR) / prevR) * 100) : (totalR ? 100 : 0);
 
   useEffect(() => { if (!aL && !user) nav({ to: "/auth" }); }, [aL, user, nav]);
   useEffect(() => { if (isAdmin) void load(); }, [isAdmin]);
@@ -68,7 +79,7 @@ function AdminHub() {
     const today = new Date(now); today.setHours(0, 0, 0, 0);
     const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
     const yearStart = new Date(now.getFullYear(), 0, 1);
-    const thirtyAgo = new Date(now); thirtyAgo.setDate(now.getDate() - 29); thirtyAgo.setHours(0, 0, 0, 0);
+    const thirtyAgo = new Date(now); thirtyAgo.setDate(now.getDate() - 89); thirtyAgo.setHours(0, 0, 0, 0);
 
     const [u, p, b, r, bt, bm, by, subsA, subsE, ads, adsA, fav, byT, pend, pendPay, tix,
       bk30, pay30, recB, recP, regs, doctorsB, payRecent, statusB] = await Promise.all([
@@ -114,20 +125,20 @@ function AdminHub() {
       pendingProviders: pend.count ?? 0, pendingPayments: pendPay.count ?? 0, openTickets: tix.count ?? 0,
     });
 
-    // 30-day trend
+    // 90-day trend
     const days: { day: string; bookings: number; revenue: number }[] = [];
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < 90; i++) {
       const d = new Date(thirtyAgo); d.setDate(thirtyAgo.getDate() + i);
       days.push({ day: `${d.getDate()}/${d.getMonth() + 1}`, bookings: 0, revenue: 0 });
     }
     for (const x of bk30.data ?? []) {
       const idx = Math.floor((+new Date(x.created_at) - +thirtyAgo) / 86400000);
-      if (idx >= 0 && idx < 30) days[idx].bookings++;
+      if (idx >= 0 && idx < 90) days[idx].bookings++;
     }
     for (const x of pay30.data ?? []) {
       if (x.status !== "paid") continue;
       const idx = Math.floor((+new Date(x.created_at) - +thirtyAgo) / 86400000);
-      if (idx >= 0 && idx < 30) days[idx].revenue += Number(x.amount || 0);
+      if (idx >= 0 && idx < 90) days[idx].revenue += Number(x.amount || 0);
     }
     setTrend(days);
 
@@ -239,13 +250,22 @@ function AdminHub() {
         {/* Charts */}
         <section className="grid grid-cols-1 lg:grid-cols-3 gap-3">
           <div className="lg:col-span-2 rounded-3xl border bg-card p-4">
-            <div className="flex items-center gap-2 mb-3">
+            <div className="flex items-center gap-2 mb-3 flex-wrap">
               <Activity size={16} className="text-primary" />
-              <h3 className="font-extrabold">تطور الحجوزات والإيرادات — آخر 30 يوم</h3>
+              <h3 className="font-extrabold flex-1">تطور الحجوزات والإيرادات</h3>
+              <div className="w-full md:w-auto">
+                <DashPeriodChips value={period} onChange={setPeriod} />
+              </div>
             </div>
+
+            <div className="grid grid-cols-2 gap-2 mb-3">
+              <SummaryPill label="حجوزات الفترة" value={totalB.toLocaleString("ar")} delta={dB} hue="primary" icon={Calendar} />
+              <SummaryPill label="إيرادات الفترة" value={`$${totalR.toLocaleString()}`} delta={dR} hue="warning" icon={DollarSign} />
+            </div>
+
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={trend}>
+                <AreaChart data={trendView}>
                   <defs>
                     <linearGradient id="gb" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity={0.6} />
@@ -257,9 +277,10 @@ function AdminHub() {
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                  <XAxis dataKey="day" tick={{ fontSize: 10 }} />
+                  <XAxis dataKey="day" tick={{ fontSize: 10 }} interval="preserveStartEnd" />
                   <YAxis tick={{ fontSize: 10 }} />
                   <Tooltip contentStyle={{ borderRadius: 12, border: "1px solid hsl(var(--border))", background: "hsl(var(--card))" }} />
+                  <Legend wrapperStyle={{ fontSize: 10 }} />
                   <Area type="monotone" dataKey="bookings" name="حجوزات" stroke="hsl(var(--primary))" fill="url(#gb)" strokeWidth={2} />
                   <Area type="monotone" dataKey="revenue" name="إيرادات" stroke="hsl(var(--warning))" fill="url(#gr)" strokeWidth={2} />
                 </AreaChart>
@@ -456,6 +477,25 @@ function FeedCard({ title, icon: Icon, hue, children, empty, to }: any) {
 }
 
 function Empty() { return <div className="h-full flex items-center justify-center text-xs text-muted-foreground">لا توجد بيانات</div>; }
+
+function SummaryPill({ label, value, delta, hue, icon: Icon }: { label: string; value: string; delta: number; hue: string; icon: any }) {
+  const positive = delta >= 0;
+  return (
+    <div className="rounded-2xl border bg-gradient-to-br from-muted/40 to-transparent p-3 flex items-center gap-3">
+      <div className={`w-10 h-10 rounded-2xl bg-${hue}/10 text-${hue} flex items-center justify-center shrink-0`}>
+        <Icon size={18} />
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="text-[10px] text-muted-foreground">{label}</p>
+        <p className="text-lg font-black tabular-nums truncate">{value}</p>
+      </div>
+      <span className={`inline-flex items-center gap-0.5 text-[10px] font-black rounded-full px-2 py-1 shrink-0 ${positive ? "bg-success/12 text-success" : "bg-destructive/10 text-destructive"}`}>
+        {positive ? <TrendingUp size={10} /> : <TrendingDown size={10} />}
+        {Math.abs(delta)}%
+      </span>
+    </div>
+  );
+}
 
 function CenterCard({ c }: { c: Center }) {
   return (
