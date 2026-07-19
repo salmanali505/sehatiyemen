@@ -68,7 +68,7 @@ function AdminHub() {
     const today = new Date(now); today.setHours(0, 0, 0, 0);
     const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
     const yearStart = new Date(now.getFullYear(), 0, 1);
-    const thirtyAgo = new Date(now); thirtyAgo.setDate(now.getDate() - 29); thirtyAgo.setHours(0, 0, 0, 0);
+    const thirtyAgo = new Date(now); thirtyAgo.setDate(now.getDate() - 89); thirtyAgo.setHours(0, 0, 0, 0);
 
     const [u, p, b, r, bt, bm, by, subsA, subsE, ads, adsA, fav, byT, pend, pendPay, tix,
       bk30, pay30, recB, recP, regs, doctorsB, payRecent, statusB] = await Promise.all([
