@@ -114,20 +114,20 @@ function AdminHub() {
       pendingProviders: pend.count ?? 0, pendingPayments: pendPay.count ?? 0, openTickets: tix.count ?? 0,
     });
 
-    // 30-day trend
+    // 90-day trend
     const days: { day: string; bookings: number; revenue: number }[] = [];
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < 90; i++) {
       const d = new Date(thirtyAgo); d.setDate(thirtyAgo.getDate() + i);
       days.push({ day: `${d.getDate()}/${d.getMonth() + 1}`, bookings: 0, revenue: 0 });
     }
     for (const x of bk30.data ?? []) {
       const idx = Math.floor((+new Date(x.created_at) - +thirtyAgo) / 86400000);
-      if (idx >= 0 && idx < 30) days[idx].bookings++;
+      if (idx >= 0 && idx < 90) days[idx].bookings++;
     }
     for (const x of pay30.data ?? []) {
       if (x.status !== "paid") continue;
       const idx = Math.floor((+new Date(x.created_at) - +thirtyAgo) / 86400000);
-      if (idx >= 0 && idx < 30) days[idx].revenue += Number(x.amount || 0);
+      if (idx >= 0 && idx < 90) days[idx].revenue += Number(x.amount || 0);
     }
     setTrend(days);
 
