@@ -250,13 +250,22 @@ function AdminHub() {
         {/* Charts */}
         <section className="grid grid-cols-1 lg:grid-cols-3 gap-3">
           <div className="lg:col-span-2 rounded-3xl border bg-card p-4">
-            <div className="flex items-center gap-2 mb-3">
+            <div className="flex items-center gap-2 mb-3 flex-wrap">
               <Activity size={16} className="text-primary" />
-              <h3 className="font-extrabold">تطور الحجوزات والإيرادات — آخر 30 يوم</h3>
+              <h3 className="font-extrabold flex-1">تطور الحجوزات والإيرادات</h3>
+              <div className="w-full md:w-auto">
+                <DashPeriodChips value={period} onChange={setPeriod} />
+              </div>
             </div>
+
+            <div className="grid grid-cols-2 gap-2 mb-3">
+              <SummaryPill label="حجوزات الفترة" value={totalB.toLocaleString("ar")} delta={dB} hue="primary" icon={Calendar} />
+              <SummaryPill label="إيرادات الفترة" value={`$${totalR.toLocaleString()}`} delta={dR} hue="warning" icon={DollarSign} />
+            </div>
+
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={trend}>
+                <AreaChart data={trendView}>
                   <defs>
                     <linearGradient id="gb" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity={0.6} />
@@ -268,9 +277,10 @@ function AdminHub() {
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                  <XAxis dataKey="day" tick={{ fontSize: 10 }} />
+                  <XAxis dataKey="day" tick={{ fontSize: 10 }} interval="preserveStartEnd" />
                   <YAxis tick={{ fontSize: 10 }} />
                   <Tooltip contentStyle={{ borderRadius: 12, border: "1px solid hsl(var(--border))", background: "hsl(var(--card))" }} />
+                  <Legend wrapperStyle={{ fontSize: 10 }} />
                   <Area type="monotone" dataKey="bookings" name="حجوزات" stroke="hsl(var(--primary))" fill="url(#gb)" strokeWidth={2} />
                   <Area type="monotone" dataKey="revenue" name="إيرادات" stroke="hsl(var(--warning))" fill="url(#gr)" strokeWidth={2} />
                 </AreaChart>
