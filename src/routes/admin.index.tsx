@@ -478,6 +478,25 @@ function FeedCard({ title, icon: Icon, hue, children, empty, to }: any) {
 
 function Empty() { return <div className="h-full flex items-center justify-center text-xs text-muted-foreground">لا توجد بيانات</div>; }
 
+function SummaryPill({ label, value, delta, hue, icon: Icon }: { label: string; value: string; delta: number; hue: string; icon: any }) {
+  const positive = delta >= 0;
+  return (
+    <div className="rounded-2xl border bg-gradient-to-br from-muted/40 to-transparent p-3 flex items-center gap-3">
+      <div className={`w-10 h-10 rounded-2xl bg-${hue}/10 text-${hue} flex items-center justify-center shrink-0`}>
+        <Icon size={18} />
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="text-[10px] text-muted-foreground">{label}</p>
+        <p className="text-lg font-black tabular-nums truncate">{value}</p>
+      </div>
+      <span className={`inline-flex items-center gap-0.5 text-[10px] font-black rounded-full px-2 py-1 shrink-0 ${positive ? "bg-success/12 text-success" : "bg-destructive/10 text-destructive"}`}>
+        {positive ? <TrendingUp size={10} /> : <TrendingDown size={10} />}
+        {Math.abs(delta)}%
+      </span>
+    </div>
+  );
+}
+
 function CenterCard({ c }: { c: Center }) {
   return (
     <Link to={c.to} className="group rounded-3xl border bg-card p-4 shadow-sm hover:shadow-glow hover:border-primary/40 transition flex items-start gap-3">
