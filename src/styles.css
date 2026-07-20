@@ -150,6 +150,9 @@
 
 @layer utilities {
   .gradient-primary { background-image: var(--gradient-primary); }
+  .gradient-dash-header { background-image: var(--gradient-dash-header); }
+  .gradient-dash-accent { background-image: var(--gradient-dash-accent); }
+  .shadow-accent-glow { box-shadow: var(--shadow-accent-glow); }
   .no-scrollbar::-webkit-scrollbar { display: none; }
   .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   .gradient-health { background-image: var(--gradient-health); }
