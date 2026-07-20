@@ -35,7 +35,7 @@ export default function DashHero({
   return (
     <div className="relative">
       <div
-        className={`gradient-primary relative overflow-hidden px-4 rounded-b-[40px] shadow-glow
+        className={`gradient-dash-header relative overflow-hidden px-4 rounded-b-[40px] shadow-glow
           ${compact ? "pt-10 pb-14" : "pt-12 pb-24"}`}
       >
         {/* Decorative glows */}
