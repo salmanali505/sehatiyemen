@@ -2,12 +2,22 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from "
 import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 
+export type AccountType = "patient" | "doctor" | "facility" | "staff";
+
 interface AuthCtx {
   user: User | null;
   session: Session | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
-  signUp: (email: string, password: string, fullName: string, phone: string) => Promise<{ error: Error | null }>;
+  signUp: (
+    email: string,
+    password: string,
+    fullName: string,
+    phone: string,
+    accountType?: AccountType,
+  ) => Promise<{ error: Error | null; needsVerification?: boolean }>;
+  verifyEmailOtp: (email: string, token: string) => Promise<{ error: Error | null }>;
+  resendEmailOtp: (email: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
 }
 
@@ -38,14 +48,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       return { error: error as Error | null };
     },
-    signUp: async (email, password, fullName, phone) => {
-      const { error } = await supabase.auth.signUp({
+    signUp: async (email, password, fullName, phone, accountType = "patient") => {
+      const { data, error } = await supabase.auth.signUp({
         email, password,
         options: {
           emailRedirectTo: typeof window !== "undefined" ? window.location.origin : undefined,
-          data: { full_name: fullName, phone },
+          data: { full_name: fullName, phone, account_type: accountType },
         },
       });
+      if (error) return { error: error as Error };
+      const needsVerification = !data.session;
+      return { error: null, needsVerification };
+    },
+    verifyEmailOtp: async (email, token) => {
+      const { error } = await supabase.auth.verifyOtp({ email, token, type: "email" });
+      return { error: error as Error | null };
+    },
+    resendEmailOtp: async (email) => {
+      const { error } = await supabase.auth.resend({ type: "signup", email });
       return { error: error as Error | null };
     },
     signOut: async () => { await supabase.auth.signOut(); },
