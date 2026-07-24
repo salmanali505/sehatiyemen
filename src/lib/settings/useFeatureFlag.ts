@@ -11,15 +11,14 @@ let loading: Promise<void> | null = null;
 async function loadAll() {
   if (loaded) return;
   if (loading) return loading;
-  loading = supabase
-    .from("feature_flags")
-    .select("key, enabled, audience")
-    .then(({ data }) => {
-      (data ?? []).forEach((f: any) => cache.set(f.key, f));
-      loaded = true;
-      subs.forEach((fn) => fn());
-    })
-    .then(() => undefined);
+  loading = (async () => {
+    const { data } = await supabase
+      .from("feature_flags")
+      .select("key, enabled, audience");
+    (data ?? []).forEach((f: any) => cache.set(f.key, f));
+    loaded = true;
+    subs.forEach((fn) => fn());
+  })();
   return loading;
 }
 
