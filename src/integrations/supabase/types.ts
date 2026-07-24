@@ -458,6 +458,36 @@ export type Database = {
         }
         Relationships: []
       }
+      feature_flags: {
+        Row: {
+          audience: string
+          created_at: string
+          description: string | null
+          enabled: boolean
+          id: string
+          key: string
+          updated_at: string
+        }
+        Insert: {
+          audience?: string
+          created_at?: string
+          description?: string | null
+          enabled?: boolean
+          id?: string
+          key: string
+          updated_at?: string
+        }
+        Update: {
+          audience?: string
+          created_at?: string
+          description?: string | null
+          enabled?: boolean
+          id?: string
+          key?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       featured_content: {
         Row: {
           active: boolean
@@ -1405,6 +1435,15 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      log_audit_event: {
+        Args: {
+          _action: string
+          _entity: string
+          _entity_id?: string
+          _meta?: Json
+        }
+        Returns: undefined
       }
     }
     Enums: {
