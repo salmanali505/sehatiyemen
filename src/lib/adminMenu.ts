@@ -439,6 +439,7 @@ export const ADMIN_MENU: MenuSection[] = [
     items: [
       { id: "sy-gen", title: "عام", icon: Info, children: [
         link("sy-info", "معلومات المنصة", "/admin/settings", Info),
+        link("sy-flags", "الميزات (Feature Flags)", "/admin/flags", ToggleLeft),
         soon("sy-name", "اسم المنصة", Type),
         soon("sy-logo", "الشعار", Img),
         soon("sy-fav", "أيقونة المتصفح", Sparkles),
