@@ -50,6 +50,7 @@ import { Route as AdminPackagesRouteImport } from './routes/admin.packages'
 import { Route as AdminOffersRouteImport } from './routes/admin.offers'
 import { Route as AdminNotificationsRouteImport } from './routes/admin.notifications'
 import { Route as AdminHomeRouteImport } from './routes/admin.home'
+import { Route as AdminFlagsRouteImport } from './routes/admin.flags'
 import { Route as AdminFinanceRouteImport } from './routes/admin.finance'
 import { Route as AdminFacilitiesRouteImport } from './routes/admin.facilities'
 import { Route as AdminDoctorsRouteImport } from './routes/admin.doctors'
@@ -273,6 +274,11 @@ const AdminHomeRoute = AdminHomeRouteImport.update({
   path: '/home',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminFlagsRoute = AdminFlagsRouteImport.update({
+  id: '/flags',
+  path: '/flags',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminFinanceRoute = AdminFinanceRouteImport.update({
   id: '/finance',
   path: '/finance',
@@ -390,6 +396,7 @@ export interface FileRoutesByFullPath {
   '/admin/doctors': typeof AdminDoctorsRoute
   '/admin/facilities': typeof AdminFacilitiesRoute
   '/admin/finance': typeof AdminFinanceRoute
+  '/admin/flags': typeof AdminFlagsRoute
   '/admin/home': typeof AdminHomeRoute
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/offers': typeof AdminOffersRoute
@@ -449,6 +456,7 @@ export interface FileRoutesByTo {
   '/admin/doctors': typeof AdminDoctorsRoute
   '/admin/facilities': typeof AdminFacilitiesRoute
   '/admin/finance': typeof AdminFinanceRoute
+  '/admin/flags': typeof AdminFlagsRoute
   '/admin/home': typeof AdminHomeRoute
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/offers': typeof AdminOffersRoute
@@ -510,6 +518,7 @@ export interface FileRoutesById {
   '/admin/doctors': typeof AdminDoctorsRoute
   '/admin/facilities': typeof AdminFacilitiesRoute
   '/admin/finance': typeof AdminFinanceRoute
+  '/admin/flags': typeof AdminFlagsRoute
   '/admin/home': typeof AdminHomeRoute
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/offers': typeof AdminOffersRoute
@@ -572,6 +581,7 @@ export interface FileRouteTypes {
     | '/admin/doctors'
     | '/admin/facilities'
     | '/admin/finance'
+    | '/admin/flags'
     | '/admin/home'
     | '/admin/notifications'
     | '/admin/offers'
@@ -631,6 +641,7 @@ export interface FileRouteTypes {
     | '/admin/doctors'
     | '/admin/facilities'
     | '/admin/finance'
+    | '/admin/flags'
     | '/admin/home'
     | '/admin/notifications'
     | '/admin/offers'
@@ -691,6 +702,7 @@ export interface FileRouteTypes {
     | '/admin/doctors'
     | '/admin/facilities'
     | '/admin/finance'
+    | '/admin/flags'
     | '/admin/home'
     | '/admin/notifications'
     | '/admin/offers'
@@ -1039,6 +1051,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminHomeRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/flags': {
+      id: '/admin/flags'
+      path: '/flags'
+      fullPath: '/admin/flags'
+      preLoaderRoute: typeof AdminFlagsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/finance': {
       id: '/admin/finance'
       path: '/finance'
@@ -1173,6 +1192,7 @@ interface AdminRouteChildren {
   AdminDoctorsRoute: typeof AdminDoctorsRoute
   AdminFacilitiesRoute: typeof AdminFacilitiesRoute
   AdminFinanceRoute: typeof AdminFinanceRoute
+  AdminFlagsRoute: typeof AdminFlagsRoute
   AdminHomeRoute: typeof AdminHomeRoute
   AdminNotificationsRoute: typeof AdminNotificationsRoute
   AdminOffersRoute: typeof AdminOffersRoute
@@ -1209,6 +1229,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminDoctorsRoute: AdminDoctorsRoute,
   AdminFacilitiesRoute: AdminFacilitiesRoute,
   AdminFinanceRoute: AdminFinanceRoute,
+  AdminFlagsRoute: AdminFlagsRoute,
   AdminHomeRoute: AdminHomeRoute,
   AdminNotificationsRoute: AdminNotificationsRoute,
   AdminOffersRoute: AdminOffersRoute,
