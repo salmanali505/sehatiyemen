@@ -28,7 +28,7 @@ function ProviderGate() {
       if (data.provider_id) sessionStorage.setItem("sehati.providerId", data.provider_id);
       await supabase.from("access_tokens").update({ last_used_at: new Date().toISOString() }).eq("id", data.id);
       setState("ok");
-      nav({ to: "/dashboard", replace: true });
+      nav({ to: "/dashboard", search: {} as any, replace: true });
     })();
   }, [token, nav]);
 

@@ -64,7 +64,7 @@ function ProfilePage() {
         })}
 
         {isProvider && (
-          <Link to="/dashboard" className="bg-card rounded-2xl p-4 shadow-card flex items-center gap-3 border border-accent/40">
+          <Link to="/dashboard" search={{} as any} className="bg-card rounded-2xl p-4 shadow-card flex items-center gap-3 border border-accent/40">
             <div className="w-10 h-10 rounded-xl bg-accent/15 text-accent flex items-center justify-center"><Building2 size={18} /></div>
             <span className="flex-1 font-bold text-sm">لوحة مزوّد الخدمة</span>
             <ChevronLeft className="text-muted-foreground" size={18} />

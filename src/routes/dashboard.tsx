@@ -23,9 +23,13 @@ import DashPeriodChips, { type Period } from "@/components/dashboard/DashPeriodC
 import { DashQuickActions } from "@/components/dashboard/DashQuickAction";
 import DashBottomNav from "@/components/dashboard/DashBottomNav";
 
+const TABS = ["home", "profile", "services", "doctors", "offers", "ads", "reviews", "bookings"] as const;
 export const Route = createFileRoute("/dashboard")({
   component: ProviderDashboard,
   head: () => ({ meta: [{ title: "لوحة مزوّد الخدمة | صحتي" }] }),
+  validateSearch: (s: Record<string, unknown>) => ({
+    tab: (TABS as readonly string[]).includes(String(s.tab)) ? (s.tab as Tab) : undefined,
+  }),
 });
 
 type Booking = {
@@ -59,12 +63,14 @@ function ProviderDashboard() {
   const { user, loading: authLoading } = useAuth();
   const { isProvider, isAdmin, loading: rolesLoading } = useRoles();
   const nav = useNavigate();
+  const search = Route.useSearch();
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [providerIds, setProviderIds] = useState<string[]>([]);
   const [providerNames, setProviderNames] = useState<string[]>([]);
   const [logo, setLogo] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const [tab, setTab] = useState<Tab>("home");
+  const tab: Tab = (search.tab ?? "home") as Tab;
+  const setTab = (t: Tab) => nav({ to: "/dashboard", search: (t === "home" ? {} : { tab: t }) as any, replace: true });
   const [period, setPeriod] = useState<Period>("day");
 
   useEffect(() => { if (!authLoading && !user) nav({ to: "/auth" }); }, [authLoading, user, nav]);

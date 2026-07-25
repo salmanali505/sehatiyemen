@@ -6,3 +6,7 @@ export { useFeatureFlag, useAllFlags } from "@/lib/settings/useFeatureFlag";
 export { useDashRole, useDashMenu } from "@/lib/dash/permissions";
 export { useRealtimeTable } from "@/lib/dash/realtime";
 export { useRoles } from "@/lib/useRoles";
+
+export * as Provider from "./provider";
+export * as Admin from "./admin";
+
