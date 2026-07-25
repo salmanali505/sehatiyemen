@@ -70,7 +70,7 @@ function ProviderDashboard() {
   const [logo, setLogo] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const tab: Tab = (search.tab ?? "home") as Tab;
-  const setTab = (t: Tab) => nav({ to: "/dashboard", search: t === "home" ? {} : { tab: t }, replace: true });
+  const setTab = (t: Tab) => nav({ to: "/dashboard", search: (t === "home" ? {} : { tab: t }) as any, replace: true });
   const [period, setPeriod] = useState<Period>("day");
 
   useEffect(() => { if (!authLoading && !user) nav({ to: "/auth" }); }, [authLoading, user, nav]);
