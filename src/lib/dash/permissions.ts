@@ -67,14 +67,14 @@ const ADMIN_NAV: DashNavItem[] = [
 
 const PROVIDER_NAV: DashNavItem[] = [
   { to: "/dashboard", label: "الرئيسية", icon: LayoutDashboard, group: "عام" },
-  { to: "/dashboard", label: "الحجوزات", icon: Calendar, group: "العمليات" },
-  { to: "/dashboard", label: "الخدمات", icon: Package, group: "الملف" },
-  { to: "/dashboard", label: "الأطباء", icon: Stethoscope, group: "الملف" },
-  { to: "/dashboard", label: "العروض", icon: Gift, group: "التسويق" },
-  { to: "/dashboard", label: "الإعلانات", icon: Megaphone, group: "التسويق" },
-  { to: "/dashboard", label: "التقييمات", icon: Star, group: "التفاعل" },
-  { to: "/dashboard", label: "الاستقبال", icon: UserPlus, group: "التشغيل" },
-  { to: "/dashboard", label: "الملف الشخصي", icon: User, group: "الإعدادات" },
+  { to: "/dashboard?tab=bookings", label: "الحجوزات", icon: Calendar, group: "العمليات" },
+  { to: "/dashboard?tab=services", label: "الخدمات", icon: Package, group: "الملف" },
+  { to: "/dashboard?tab=doctors", label: "الأطباء", icon: Stethoscope, group: "الملف" },
+  { to: "/dashboard?tab=offers", label: "العروض", icon: Gift, group: "التسويق" },
+  { to: "/dashboard?tab=ads", label: "الإعلانات", icon: Megaphone, group: "التسويق" },
+  { to: "/dashboard?tab=reviews", label: "التقييمات", icon: Star, group: "التفاعل" },
+  { to: "/dashboard/reception", label: "الاستقبال", icon: UserPlus, group: "التشغيل" },
+  { to: "/dashboard?tab=profile", label: "الملف الشخصي", icon: User, group: "الإعدادات" },
 ];
 
 const RECEPTION_NAV: DashNavItem[] = [
