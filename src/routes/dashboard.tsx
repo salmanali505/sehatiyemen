@@ -23,9 +23,13 @@ import DashPeriodChips, { type Period } from "@/components/dashboard/DashPeriodC
 import { DashQuickActions } from "@/components/dashboard/DashQuickAction";
 import DashBottomNav from "@/components/dashboard/DashBottomNav";
 
+const TABS = ["home", "profile", "services", "doctors", "offers", "ads", "reviews", "bookings"] as const;
 export const Route = createFileRoute("/dashboard")({
   component: ProviderDashboard,
   head: () => ({ meta: [{ title: "لوحة مزوّد الخدمة | صحتي" }] }),
+  validateSearch: (s: Record<string, unknown>) => ({
+    tab: (TABS as readonly string[]).includes(String(s.tab)) ? (s.tab as Tab) : undefined,
+  }),
 });
 
 type Booking = {
