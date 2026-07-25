@@ -66,6 +66,20 @@ function AssistantPage() {
     }
   };
 
+  if (!aiEnabled) {
+    return (
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6 text-center" dir="rtl">
+        <div className="w-16 h-16 rounded-3xl bg-muted flex items-center justify-center mb-4">
+          <Sparkles className="text-muted-foreground" size={28} />
+        </div>
+        <h1 className="font-extrabold text-lg mb-2">المساعد الذكي غير متاح حالياً</h1>
+        <p className="text-sm text-muted-foreground mb-6">تم إيقاف هذه الميزة مؤقتاً من قبل الإدارة.</p>
+        <Link to="/" className="rounded-2xl gradient-primary text-primary-foreground px-5 py-2.5 text-sm font-bold shadow-glow">العودة للرئيسية</Link>
+        <BottomNav />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background pb-32 flex flex-col" dir="rtl">
       {/* Header */}
