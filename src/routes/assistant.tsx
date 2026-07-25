@@ -6,6 +6,7 @@ import { ArrowRight, Send, Sparkles, Loader2, Stethoscope } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { chatWithAssistant } from "@/lib/ai.functions";
 import { BottomNav } from "@/components/BottomNav";
+import { useFeatureFlag } from "@/lib/settings/useFeatureFlag";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/assistant")({
