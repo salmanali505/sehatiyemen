@@ -37,6 +37,8 @@ function AssistantPage() {
   const [pending, setPending] = useState(false);
   const scrollerRef = useRef<HTMLDivElement>(null);
 
+  const aiEnabled = useFeatureFlag("ai_assistant", true);
+
   useEffect(() => {
     if (!loading && !user) nav({ to: "/auth" });
   }, [loading, user, nav]);
