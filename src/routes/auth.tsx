@@ -118,6 +118,14 @@ function AuthPage() {
             <Field icon={Lock} placeholder="تأكيد كلمة المرور" value={confirmPassword} onChange={setConfirmPassword} type="password" />
           )}
 
+          {mode === "signin" && (
+            <div className="text-end">
+              <Link to="/forgot-password" className="text-xs font-bold text-primary">
+                نسيت كلمة المرور؟
+              </Link>
+            </div>
+          )}
+
           <button type="submit" disabled={loading}
             className="w-full gradient-primary text-primary-foreground font-black py-3.5 rounded-2xl shadow-glow flex items-center justify-center gap-2 disabled:opacity-50">
             {loading ? "جاري المعالجة..." : (mode === "signin" ? "تسجيل الدخول" : "إنشاء الحساب")}
