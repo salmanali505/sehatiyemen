@@ -18,6 +18,8 @@ interface AuthCtx {
   ) => Promise<{ error: Error | null; needsVerification?: boolean }>;
   verifyEmailOtp: (email: string, token: string) => Promise<{ error: Error | null }>;
   resendEmailOtp: (email: string) => Promise<{ error: Error | null }>;
+  requestPasswordReset: (email: string) => Promise<{ error: Error | null }>;
+  updatePassword: (newPassword: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
 }
 
