@@ -70,8 +70,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const { error } = await supabase.auth.resend({ type: "signup", email });
       return { error: error as Error | null };
     },
+    requestPasswordReset: async (email) => {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo:
+          typeof window !== "undefined" ? `${window.location.origin}/reset-password` : undefined,
+      });
+      return { error: error as Error | null };
+    },
+    updatePassword: async (newPassword) => {
+      const { error } = await supabase.auth.updateUser({ password: newPassword });
+      return { error: error as Error | null };
+    },
     signOut: async () => { await supabase.auth.signOut(); },
   };
+
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
