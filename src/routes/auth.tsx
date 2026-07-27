@@ -83,30 +83,11 @@ function AuthPage() {
 
           {mode === "signup" && (
             <>
-              <div>
-                <label className="block text-xs font-bold text-muted-foreground mb-2">نوع الحساب</label>
-                <div className="grid grid-cols-3 gap-2">
-                  {ACCOUNT_TYPES.map(({ value, label, icon: Icon }) => (
-                    <button
-                      key={value}
-                      type="button"
-                      onClick={() => setAccountType(value)}
-                      className={`flex flex-col items-center gap-1 py-3 rounded-2xl border-2 text-xs font-bold transition-all ${
-                        accountType === value
-                          ? "border-primary bg-primary/5 text-primary"
-                          : "border-border bg-muted text-muted-foreground"
-                      }`}
-                    >
-                      <Icon size={18} />
-                      {label}
-                    </button>
-                  ))}
-                </div>
-              </div>
               <Field icon={User} placeholder="الاسم الكامل" value={name} onChange={setName} />
               <Field icon={Phone} placeholder="رقم الهاتف" value={phone} onChange={setPhone} type="tel" />
             </>
           )}
+
           <Field icon={Mail} placeholder="البريد الإلكتروني" value={email} onChange={setEmail} type="email" />
           <Field icon={Lock} placeholder="كلمة المرور" value={password} onChange={setPassword} type="password" />
           {mode === "signup" && (
