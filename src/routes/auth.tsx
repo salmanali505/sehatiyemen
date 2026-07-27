@@ -1,9 +1,9 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Mail, Lock, User, Phone, ArrowRight, ArrowLeft, Stethoscope, Building2, HeartPulse } from "lucide-react";
+import { Mail, Lock, User, Phone, ArrowRight, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
-import { useAuth, type AccountType } from "@/lib/auth-context";
+import { useAuth } from "@/lib/auth-context";
 import { SehatiLogo } from "@/components/SehatiLogo";
 
 export const Route = createFileRoute("/auth")({
@@ -11,11 +11,6 @@ export const Route = createFileRoute("/auth")({
   component: AuthPage,
 });
 
-const ACCOUNT_TYPES: { value: AccountType; label: string; icon: React.ElementType }[] = [
-  { value: "patient", label: "مريض", icon: HeartPulse },
-  { value: "doctor", label: "طبيب", icon: Stethoscope },
-  { value: "facility", label: "منشأة صحية", icon: Building2 },
-];
 
 function AuthPage() {
   const navigate = useNavigate();
