@@ -1,9 +1,9 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Mail, Lock, User, Phone, ArrowRight, ArrowLeft, Stethoscope, Building2, HeartPulse } from "lucide-react";
+import { Mail, Lock, User, Phone, ArrowRight, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
-import { useAuth, type AccountType } from "@/lib/auth-context";
+import { useAuth } from "@/lib/auth-context";
 import { SehatiLogo } from "@/components/SehatiLogo";
 
 export const Route = createFileRoute("/auth")({
@@ -11,11 +11,6 @@ export const Route = createFileRoute("/auth")({
   component: AuthPage,
 });
 
-const ACCOUNT_TYPES: { value: AccountType; label: string; icon: React.ElementType }[] = [
-  { value: "patient", label: "مريض", icon: HeartPulse },
-  { value: "doctor", label: "طبيب", icon: Stethoscope },
-  { value: "facility", label: "منشأة صحية", icon: Building2 },
-];
 
 function AuthPage() {
   const navigate = useNavigate();
@@ -26,7 +21,7 @@ function AuthPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
-  const [accountType, setAccountType] = useState<AccountType>("patient");
+  const accountType = "patient" as const;
   const [loading, setLoading] = useState(false);
 
   useEffect(() => { if (user) navigate({ to: "/" }); }, [user, navigate]);
@@ -88,30 +83,11 @@ function AuthPage() {
 
           {mode === "signup" && (
             <>
-              <div>
-                <label className="block text-xs font-bold text-muted-foreground mb-2">نوع الحساب</label>
-                <div className="grid grid-cols-3 gap-2">
-                  {ACCOUNT_TYPES.map(({ value, label, icon: Icon }) => (
-                    <button
-                      key={value}
-                      type="button"
-                      onClick={() => setAccountType(value)}
-                      className={`flex flex-col items-center gap-1 py-3 rounded-2xl border-2 text-xs font-bold transition-all ${
-                        accountType === value
-                          ? "border-primary bg-primary/5 text-primary"
-                          : "border-border bg-muted text-muted-foreground"
-                      }`}
-                    >
-                      <Icon size={18} />
-                      {label}
-                    </button>
-                  ))}
-                </div>
-              </div>
               <Field icon={User} placeholder="الاسم الكامل" value={name} onChange={setName} />
               <Field icon={Phone} placeholder="رقم الهاتف" value={phone} onChange={setPhone} type="tel" />
             </>
           )}
+
           <Field icon={Mail} placeholder="البريد الإلكتروني" value={email} onChange={setEmail} type="email" />
           <Field icon={Lock} placeholder="كلمة المرور" value={password} onChange={setPassword} type="password" />
           {mode === "signup" && (
