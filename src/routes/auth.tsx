@@ -21,7 +21,7 @@ function AuthPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
-  const [accountType, setAccountType] = useState<AccountType>("patient");
+  const accountType = "patient" as const;
   const [loading, setLoading] = useState(false);
 
   useEffect(() => { if (user) navigate({ to: "/" }); }, [user, navigate]);
