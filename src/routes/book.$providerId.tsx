@@ -120,7 +120,7 @@ function BookingFlow() {
     const paymentStatus =
       selectedMethod.type === "cash" ? "on_arrival" :
       selectedMethod.requires_proof ? "pending_review" : "unpaid";
-    const { data, error } = await supabase.from("bookings").insert({
+    const payload = {
       user_id: user.id,
       provider_id: p.id, provider_name: p.name, provider_type: p.typeLabel,
       doctor_id: doctor?.id ?? null, doctor_name: doctor?.name ?? null,
@@ -133,13 +133,37 @@ function BookingFlow() {
       payment_status: paymentStatus,
       payment_reference: paymentRef.trim() || null,
       payment_proof_url: proof,
-    }).select("booking_number").single();
+    };
+
+    // Offline: store the request locally and flush automatically when back online.
+    if (typeof navigator !== "undefined" && !navigator.onLine) {
+      enqueueBooking(payload);
+      setSubmitting(false);
+      setBookingNumber("بانتظار الاتصال");
+      setStep(TOTAL_STEPS + 1);
+      toast.success("لا يوجد إنترنت — تم حفظ الحجز وسيُرسل تلقائياً عند عودة الاتصال");
+      return;
+    }
+
+    const { data, error } = await supabase.from("bookings").insert(payload).select("booking_number").single();
     setSubmitting(false);
-    if (error) { toast.error("فشل الحجز: " + error.message); return; }
+    if (error) {
+      // Network-level failure → queue instead of losing the booking.
+      if (!navigator.onLine || /fetch|network/i.test(error.message)) {
+        enqueueBooking(payload);
+        setBookingNumber("بانتظار الاتصال");
+        setStep(TOTAL_STEPS + 1);
+        toast.success("تعذّر الاتصال — تم حفظ الحجز وسيُرسل تلقائياً");
+        return;
+      }
+      toast.error("فشل الحجز: " + error.message);
+      return;
+    }
     setBookingNumber(data.booking_number);
     setStep(TOTAL_STEPS + 1);
     toast.success("تم الحجز بنجاح");
   };
+
 
   if (step === TOTAL_STEPS + 1 && bookingNumber) {
     return (
