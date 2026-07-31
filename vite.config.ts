@@ -17,7 +17,7 @@ export default defineConfig({
   vite: {
     plugins: [
       mcpPlugin(),
-      VitePWA({
+      ...VitePWA({
         strategies: "generateSW",
         registerType: "autoUpdate",
         injectRegister: null,
@@ -95,7 +95,11 @@ export default defineConfig({
             },
           ],
         },
-      }),
+      }).map((plugin) => ({
+        ...plugin,
+        // Only run the PWA generation in the client build so sw.js lands in dist/client.
+        applyToEnvironment: (env: { name: string }) => env.name === "client",
+      })),
     ],
   },
 });
