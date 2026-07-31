@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { ArrowRight, ChevronLeft, Check, Calendar, Clock, User, Wallet, Upload, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
+import { enqueueBooking } from "@/lib/pwa/booking-queue";
 import { getProvider, doctors as allDoctors } from "@/lib/mockData";
 import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/integrations/supabase/client";
@@ -120,7 +121,7 @@ function BookingFlow() {
     const paymentStatus =
       selectedMethod.type === "cash" ? "on_arrival" :
       selectedMethod.requires_proof ? "pending_review" : "unpaid";
-    const payload = {
+    const payload: any = {
       user_id: user.id,
       provider_id: p.id, provider_name: p.name, provider_type: p.typeLabel,
       doctor_id: doctor?.id ?? null, doctor_name: doctor?.name ?? null,
