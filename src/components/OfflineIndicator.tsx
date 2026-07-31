@@ -60,7 +60,7 @@ export function OfflineIndicator() {
   const tone = !online
     ? "bg-destructive text-destructive-foreground"
     : degraded
-      ? "bg-warning text-warning-foreground"
+      ? "bg-warning text-white"
       : "bg-success text-success-foreground";
 
   const title = !online
