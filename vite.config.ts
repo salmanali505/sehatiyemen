@@ -24,7 +24,7 @@ export default defineConfig({
         filename: "sw.js",
         outDir: "dist/client",
         devOptions: { enabled: false },
-        includeAssets: ["favicon.ico", "pwa-192.png", "pwa-512.png"],
+        includeAssets: ["favicon.png", "favicon.ico", "pwa-192.png", "pwa-512.png", "pwa-512-maskable.png", "apple-touch-icon.png", "offline.html"],
         manifest: {
           id: "/",
           name: "صحتي | Sehati",
@@ -40,12 +40,13 @@ export default defineConfig({
           icons: [
             { src: "/pwa-192.png", sizes: "192x192", type: "image/png", purpose: "any" },
             { src: "/pwa-512.png", sizes: "512x512", type: "image/png", purpose: "any" },
-            { src: "/pwa-512.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
+            { src: "/pwa-512-maskable.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
           ],
         },
         workbox: {
           globPatterns: ["**/*.{js,css,html,ico,png,svg,woff,woff2}"],
-          navigateFallback: "/",
+          additionalManifestEntries: [{ url: "/offline.html", revision: "1" }],
+          navigateFallback: "/offline.html",
           navigateFallbackDenylist: [/^\/~oauth/, /^\/api\//, /^\/\.mcp/],
           cleanupOutdatedCaches: true,
           clientsClaim: true,
