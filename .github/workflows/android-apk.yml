@@ -1,0 +1,85 @@
+name: Build Sehati Android APK
+
+on:
+  workflow_dispatch:
+    inputs:
+      app_url:
+        description: "Published Sehati web app URL"
+        required: true
+        default: "https://sehati-app-v61s.onrender.com"
+
+permissions:
+  contents: read
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build web application
+        run: NITRO_PRESET=node-server npm run build
+
+      - name: Install Capacitor
+        run: npm install --no-save --no-package-lock @capacitor/core@7 @capacitor/cli@7 @capacitor/android@7
+
+      - name: Configure Capacitor
+        env:
+          APP_URL: ${{ inputs.app_url }}
+        run: |
+          cat > capacitor.config.ts <<'EOF'
+          import type { CapacitorConfig } from '@capacitor/cli';
+
+          const config: CapacitorConfig = {
+            appId: 'com.sehati.yemen',
+            appName: 'صحتي | Sehati',
+            webDir: 'dist/client',
+            server: {
+              url: process.env.APP_URL,
+              cleartext: false,
+              androidScheme: 'https',
+            },
+            android: {
+              allowMixedContent: false,
+            },
+          };
+
+          export default config;
+          EOF
+
+      - name: Add Android platform
+        run: npx cap add android
+
+      - name: Sync Android project
+        run: npx cap sync android
+
+      - name: Build debug APK
+        working-directory: android
+        run: ./gradlew assembleDebug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: sehati-android-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 14
