@@ -1,0 +1,42 @@
+name: Validate Sehati
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sehati-validate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Install and production build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Build production application
+        run: npm run build
+
+      - name: Verify generated client assets
+        run: |
+          test -d dist/client
+          test -f dist/client/index.html || find dist/client -maxdepth 2 -type f | head -20
+          echo "Client build output exists."
