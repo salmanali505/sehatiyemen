@@ -6,7 +6,7 @@ on:
       app_url:
         description: "Published Sehati web app URL"
         required: true
-        default: "https://sehati-app-v61s.onrender.com"
+        default: "https://sehati-public.onrender.com"
 
 permissions:
   contents: read
@@ -22,7 +22,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
 
       - name: Set up Java
         uses: actions/setup-java@v4
@@ -34,7 +33,7 @@ jobs:
         uses: android-actions/setup-android@v3
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install --no-audit --no-fund --package-lock=false
 
       - name: Build web application
         run: NITRO_PRESET=node-server npm run build
